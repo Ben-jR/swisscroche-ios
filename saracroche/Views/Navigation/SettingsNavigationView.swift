@@ -118,47 +118,6 @@ struct SettingsNavigationView: View {
               systemImage: "keyboard.fill"
             )
           }
-        } header: {
-          Text("Liens")
-            .appFont(.subheadlineSemiBold)
-        }
-
-        Section {
-          Button {
-            if let version = Bundle.main.infoDictionary?[
-              "CFBundleShortVersionString"
-            ] as? String {
-              let deviceModel = UIDevice.current.modelIdentifier
-              let systemVersion = UIDevice.current.systemVersion
-
-              let deviceInfo = """
-                Appareil : \(deviceModel)
-                Version iOS : \(systemVersion)
-                Version de l'application : \(version)
-                """
-
-              let body = """
-
-                \(deviceInfo)
-                """
-
-              let encodedBody =
-                body.addingPercentEncoding(
-                  withAllowedCharacters: .urlQueryAllowed
-                ) ?? ""
-              let urlString =
-                "mailto:mail@cbouvat.com?subject=Contact%20-%20Saracroche%20iOS&body="
-                + encodedBody
-              if let url = URL(string: urlString) {
-                UIApplication.shared.open(url)
-              }
-            }
-          } label: {
-            Label(
-              "Signaler un bug ou suggérer une fonctionnalité par e-mail",
-              systemImage: "envelope.fill"
-            )
-          }
 
           Button {
             if let url = URL(string: "https://mastodon.social/@cbouvat") {
@@ -168,7 +127,7 @@ struct SettingsNavigationView: View {
             Label("Mastodon @cbouvat", systemImage: "person.bubble.fill")
           }
         } header: {
-          Text("Contact")
+          Text("Liens")
             .appFont(.subheadlineSemiBold)
         } footer: {
           Button {
