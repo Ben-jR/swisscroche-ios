@@ -12,20 +12,60 @@ class CoreDataStack: ObservableObject {
   lazy var persistentContainer: NSPersistentContainer = {
     let container = NSPersistentContainer(name: "DataModel")
 
-    let storeURL = FileManager.default
-      .containerURL(forSecurityApplicationGroupIdentifier: AppConstants.appGroupIdentifier)!
-      .appendingPathComponent("DataModel.sqlite")
+    guard
+      let containerURL = FileManager.default
+        .containerURL(forSecurityApplicationGroupIdentifier: AppConstants.appGroupIdentifier)
+    else {
+      Logger.log(
+        "Failed to get App Group container URL", category: .coreData, type: .fault)
+      return container
+    }
+
+    let storeURL = containerURL.appendingPathComponent("DataModel.sqlite")
 
     let description = NSPersistentStoreDescription(url: storeURL)
     container.persistentStoreDescriptions = [description]
 
     container.loadPersistentStores { _, error in
       if let error {
-        fatalError("Failed to load persistent stores: \(error.localizedDescription)")
+        // Attempt recovery by removing and recreating the store
+        self.handlePersistentStoreError(error: error, storeURL: storeURL, container: container)
       }
     }
     return container
   }()
+
+  /// Handle persistent store loading errors by attempting recovery
+  private func handlePersistentStoreError(
+    error: Error, storeURL: URL, container: NSPersistentContainer
+  ) {
+    Logger.log(
+      "CoreData store failed to load: \(error.localizedDescription)",
+      category: .coreData, type: .error)
+
+    // Destroy the corrupted store and its auxiliary files (-wal, -shm)
+    do {
+      try container.persistentStoreCoordinator.destroyPersistentStore(
+        at: storeURL, ofType: NSSQLiteStoreType, options: nil)
+      Logger.log("Destroyed corrupted store at \(storeURL.path)", category: .coreData)
+    } catch {
+      Logger.log(
+        "Failed to destroy corrupted store: \(error.localizedDescription)",
+        category: .coreData, type: .error)
+    }
+
+    // Attempt to reload a fresh store
+    container.loadPersistentStores { _, reloadError in
+      if let reloadError {
+        // Recovery failed — CoreData operations will not work in this session
+        Logger.log(
+          "Failed to reload store after recovery: \(reloadError.localizedDescription)",
+          category: .coreData, type: .fault)
+      } else {
+        Logger.log("Successfully recovered with a fresh store", category: .coreData)
+      }
+    }
+  }
 
   // MARK: - Background Context
 

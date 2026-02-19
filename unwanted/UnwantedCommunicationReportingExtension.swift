@@ -6,7 +6,6 @@ import SwiftUI
 class UnwantedCommunicationReportingExtension: ILClassificationUIExtensionViewController {
   private let viewModel = UnwantedReportViewModel()
   private var cancellables = Set<AnyCancellable>()
-  private var classificationRequest: ILClassificationRequest?
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -37,21 +36,15 @@ class UnwantedCommunicationReportingExtension: ILClassificationUIExtensionViewCo
     ])
   }
 
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-  }
-
   // Customize UI based on the classification request before the view is loaded
   override func prepare(for classificationRequest: ILClassificationRequest) {
-    self.classificationRequest = classificationRequest
-
     switch classificationRequest {
     case let classificationRequest as ILMessageClassificationRequest:
       viewModel.phoneNumber = classificationRequest.messageCommunications.first?.sender ?? ""
     case let classificationRequest as ILCallClassificationRequest:
       viewModel.phoneNumber = classificationRequest.callCommunications.first?.sender ?? ""
     default:
-      fatalError("Unknown classification request")
+      viewModel.phoneNumber = ""
     }
   }
 

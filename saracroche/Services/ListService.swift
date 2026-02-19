@@ -23,12 +23,6 @@ struct APIListResponse: Codable {
   let version: String
   let name: String
   let patterns: [APIPattern]
-
-  enum CodingKeys: String, CodingKey {
-    case version
-    case name
-    case patterns
-  }
 }
 
 struct APIPattern: Codable {

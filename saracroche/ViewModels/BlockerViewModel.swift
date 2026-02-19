@@ -1,4 +1,3 @@
-import Combine
 import SwiftUI
 
 /// View model for call blocker functionality

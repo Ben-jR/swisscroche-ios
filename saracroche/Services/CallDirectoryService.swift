@@ -58,7 +58,8 @@ class CallDirectoryService {
       CXCallDirectoryManager.sharedInstance.openSettings { error in
         if let error = error {
           Logger.error(
-            "Error opening settings: $error.localizedDescription", category: .callDirectoryService,
+            "Error opening settings: \(error.localizedDescription)",
+            category: .callDirectoryService,
             error: error)
           continuation.resume(throwing: CallDirectoryError.settingsOpenFailed(error))
         } else {

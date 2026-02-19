@@ -2,14 +2,6 @@ import Foundation
 
 /// Service for downloading block lists
 class ListAPIService: APIService {
-  /// User defaults service for persisting block list metadata.
-  private let userDefaultsService: UserDefaultsService
-
-  /// Initialize ListAPIService
-  override init(configuration: URLSessionConfiguration = .default) {
-    self.userDefaultsService = UserDefaultsService()
-    super.init(configuration: configuration)
-  }
 
   /// Download French block list
   func downloadFrenchList() async throws -> [String: Any] {
@@ -20,11 +12,16 @@ class ListAPIService: APIService {
     let request = makeRequest(url: url, method: .get)
     let data = try await performRequest(request)
 
-    // Parse the JSON data
-    guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+    // Parse the JSON data with proper error propagation
+    do {
+      guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+        throw NetworkError.decodingError
+      }
+      return json
+    } catch let error as NetworkError {
+      throw error
+    } catch {
       throw NetworkError.decodingError
     }
-
-    return json
   }
 }

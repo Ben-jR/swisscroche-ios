@@ -6,6 +6,11 @@ import OSLog
 class CallDirectoryHandler: CXCallDirectoryProvider {
   private let logger = Logger(subsystem: "com.saracroche.blocker", category: "CallDirectoryHandler")
 
+  /// Get shared UserDefaults
+  private func sharedUserDefaults() -> UserDefaults? {
+    UserDefaults(suiteName: "group.com.cbouvat.saracroche")
+  }
+
   /// Handle CallKit request
   override func beginRequest(with context: CXCallDirectoryExtensionContext) {
     logger.info("Starting request processing")
@@ -15,17 +20,10 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
     if context.isIncremental {
       incrementalUpdate(to: context)
     } else {
-      // Add fake number to iOS make sure the extension is working
-      context.addBlockingEntry(withNextSequentialPhoneNumber: 1_800_555_5555)
-      context.addIdentificationEntry(withNextSequentialPhoneNumber: 1_888_555_5555, label: "Fake")
+      fullUpdate(to: context)
     }
 
     context.completeRequest()
-  }
-
-  /// Get shared UserDefaults
-  private func sharedUserDefaults() -> UserDefaults? {
-    UserDefaults(suiteName: "group.com.cbouvat.saracroche")
   }
 
   /// Process incremental update
@@ -41,8 +39,49 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
     let action = sharedDefaults.string(forKey: "action") ?? ""
     let numbersData = sharedDefaults.array(forKey: "numbers") as? [[String: Any]] ?? []
 
-    logger.info(
-      "Processing action \(action) with \(numbersData.count) numbers")
+    sharedDefaults.set("", forKey: "action")
+    sharedDefaults.set([], forKey: "numbers")
+
+    if action == "reset" {
+      handleResetAction(to: context)
+      return
+    }
+
+    if action.isEmpty {
+      handleNoAction()
+      return
+    }
+
+    processNumberEntries(numbersData, action: action, context: context)
+  }
+
+  /// Process full update (non-incremental)
+  private func fullUpdate(to context: CXCallDirectoryExtensionContext) {
+    // Add fake numbers to ensure iOS recognizes the extension is working
+    context.addBlockingEntry(withNextSequentialPhoneNumber: 1_800_555_5555)
+    context.addIdentificationEntry(withNextSequentialPhoneNumber: 1_888_555_5555, label: "Fake")
+  }
+
+  /// Handle reset action - clear all entries
+  private func handleResetAction(to context: CXCallDirectoryExtensionContext) {
+    logger.info("Processing reset action")
+    context.removeAllBlockingEntries()
+    context.removeAllIdentificationEntries()
+    logger.info("Reset all blocking and identification entries")
+  }
+
+  /// Handle case where no action is specified
+  private func handleNoAction() {
+    logger.debug("No action specified")
+  }
+
+  /// Process number entries for a specific action
+  private func processNumberEntries(
+    _ numbersData: [[String: Any]],
+    action: String,
+    context: CXCallDirectoryExtensionContext
+  ) {
+    logger.info("Processing action \(action) with \(numbersData.count) numbers")
 
     for numberData in numbersData {
       guard let numberString = numberData["number"] as? String,
@@ -50,45 +89,31 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
       else {
         continue
       }
-
-      let name = numberData["name"] as? String
+      let name = numberData["name"] as? String ?? ""
 
       switch action {
       case "block":
         context.addBlockingEntry(withNextSequentialPhoneNumber: number)
         logger.info(
-          "Blocked number: \(numberString) - \(name ?? "")")
+          "Blocked number: \(number) - \(name)")
       case "identify":
-        context.addIdentificationEntry(withNextSequentialPhoneNumber: number, label: name ?? "")
+        context.addIdentificationEntry(
+          withNextSequentialPhoneNumber: number, label: name)
         logger.info(
-          "Identified number: \(numberString) - \(name ?? "")")
+          "Identified number: \(number) - \(name)")
       case "remove_block":
         context.removeBlockingEntry(withPhoneNumber: number)
         logger.info(
-          "Removed blocking entry: \(numberString)")
+          "Removed blocking entry: \(number)")
       case "remove_identify":
         context.removeIdentificationEntry(withPhoneNumber: number)
         logger.info(
-          "Removed identification entry: \(numberString)")
-      case "reset":
-        context.removeAllBlockingEntries()
-        context.removeAllIdentificationEntries()
-        logger.info(
-          "Reset all blocking and identification entries")
-      case "":
-        // No action specified, do nothing
-        logger.debug(
-          "No action specified")
-        break
+          "Removed identification entry: \(number)")
       default:
         logger.warning(
           "Unknown action: \(action)")
       }
     }
-
-    // Clear the action after processing
-    sharedDefaults.set("", forKey: "action")
-    sharedDefaults.set([], forKey: "numbers")
   }
 }
 

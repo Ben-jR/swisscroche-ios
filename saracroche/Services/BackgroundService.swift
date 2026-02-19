@@ -26,8 +26,13 @@ final class BackgroundService: ObservableObject {
     BGTaskScheduler.shared.register(
       forTaskWithIdentifier: backgroundServiceIdentifier,
       using: nil
-    ) { task in
-      self.handleBackgroundUpdate(task: task as! BGProcessingTask)
+    ) { [weak self] task in
+      guard let processingTask = task as? BGProcessingTask else {
+        Logger.error("Unexpected background task type", category: .backgroundService, error: nil)
+        task.setTaskCompleted(success: false)
+        return
+      }
+      self?.handleBackgroundUpdate(task: processingTask)
     }
   }
 

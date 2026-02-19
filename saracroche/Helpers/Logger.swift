@@ -3,7 +3,7 @@ import OSLog
 /// Centralized logging system for the application
 enum Logger {
   /// Application subsystem identifier
-  private static let subsystem = "com.saracroche"
+  private static let subsystem = "com.cbouvat.saracroche"
 
   /// Available log categories
   enum Category: String {
@@ -17,6 +17,7 @@ enum Logger {
     case callDirectoryHandler = "CallDirectoryHandler"
     case messageFilterExtension = "MessageFilterExtension"
     case notificationService = "NotificationService"
+    case coreData = "CoreData"
   }
 
   /// Logs a message with the specified category and level
@@ -50,7 +51,7 @@ enum Logger {
   static func error(
     _ message: String,
     category: Category,
-    error: Error
+    error: Error? = nil
   ) {
     log(message, category: category, type: .error, error: error)
   }

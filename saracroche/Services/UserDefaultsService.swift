@@ -35,8 +35,7 @@ class UserDefaultsService {
       return true  // First time, always update
     }
 
-    let twentyFourHours: TimeInterval = 24 * 60 * 60
-    return Date().timeIntervalSince(lastUpdate) > twentyFourHours
+    return Date().timeIntervalSince(lastUpdate) > AppConstants.listDownloadInterval
   }
 
   func setLastListDownloadAt(_ date: Date) {

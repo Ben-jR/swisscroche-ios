@@ -48,11 +48,13 @@ class APIService {
     switch httpResponse.statusCode {
     case 200...299:
       return  // Success, no action needed
+    case 300...399:
+      throw NetworkError.serverError(httpResponse.statusCode, "Unexpected redirect")
     case 400...499, 500...599:
       let errorMessage = extractErrorMessage(from: data)
       throw NetworkError.serverError(httpResponse.statusCode, errorMessage)
     default:
-      throw NetworkError.unknown
+      throw NetworkError.serverError(httpResponse.statusCode, nil)
     }
   }
 

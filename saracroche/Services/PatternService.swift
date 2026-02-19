@@ -40,7 +40,17 @@ class PatternService {
           return
         }
 
-        let pattern = NSManagedObject(entity: entityDescription, insertInto: context) as! Pattern
+        guard
+          let pattern = NSManagedObject(entity: entityDescription, insertInto: context) as? Pattern
+        else {
+          Logger.error(
+            "Failed to cast NSManagedObject to Pattern", category: .patternService,
+            error: NSError(
+              domain: "PatternService", code: 2,
+              userInfo: [NSLocalizedDescriptionKey: "Failed to cast NSManagedObject to Pattern"]))
+          continuation.resume(returning: nil)
+          return
+        }
         pattern.pattern = patternString
         pattern.action = action
         pattern.name = name
@@ -279,7 +289,15 @@ class PatternService {
 
     await withCheckedContinuation { continuation in
       context.perform {
-        let patternInContext = context.object(with: objectID) as! Pattern
+        guard let patternInContext = context.object(with: objectID) as? Pattern else {
+          Logger.error(
+            "Failed to cast object to Pattern for update", category: .patternService,
+            error: NSError(
+              domain: "PatternService", code: 3,
+              userInfo: [NSLocalizedDescriptionKey: "Failed to cast object to Pattern"]))
+          continuation.resume()
+          return
+        }
         if let action = action {
           patternInContext.action = action
         }
@@ -307,7 +325,15 @@ class PatternService {
 
     await withCheckedContinuation { continuation in
       context.perform {
-        let patternInContext = context.object(with: objectID) as! Pattern
+        guard let patternInContext = context.object(with: objectID) as? Pattern else {
+          Logger.error(
+            "Failed to cast object to Pattern for completion", category: .patternService,
+            error: NSError(
+              domain: "PatternService", code: 4,
+              userInfo: [NSLocalizedDescriptionKey: "Failed to cast object to Pattern"]))
+          continuation.resume()
+          return
+        }
         patternInContext.completedDate = Date()
         Self.save(context: context)
         continuation.resume()
@@ -323,7 +349,15 @@ class PatternService {
 
     await withCheckedContinuation { continuation in
       context.perform {
-        let patternInContext = context.object(with: objectID) as! Pattern
+        guard let patternInContext = context.object(with: objectID) as? Pattern else {
+          Logger.error(
+            "Failed to cast object to Pattern for deletion", category: .patternService,
+            error: NSError(
+              domain: "PatternService", code: 5,
+              userInfo: [NSLocalizedDescriptionKey: "Failed to cast object to Pattern"]))
+          continuation.resume()
+          return
+        }
         let currentAction = patternInContext.action ?? "block"
         // Skip patterns already marked for removal
         if currentAction.hasPrefix("remove_") {

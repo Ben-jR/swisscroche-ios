@@ -55,9 +55,15 @@ final class MessageFilterService {
   private static let persistentContainer: NSPersistentContainer = {
     let container = NSPersistentContainer(name: "DataModel")
 
-    let storeURL = FileManager.default
-      .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)!
-      .appendingPathComponent("DataModel.sqlite")
+    guard
+      let containerURL = FileManager.default
+        .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)
+    else {
+      logger.fault("Failed to get App Group container URL")
+      return container
+    }
+
+    let storeURL = containerURL.appendingPathComponent("DataModel.sqlite")
 
     let description = NSPersistentStoreDescription(url: storeURL)
     description.isReadOnly = true

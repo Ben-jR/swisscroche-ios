@@ -1,4 +1,3 @@
-import Foundation
 import SwiftUI
 
 /// Status of CallKit blocker extension
