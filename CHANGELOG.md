@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.1] - 2026-02-19
+
+### Added
+- Call directory reset functionality with new `reset` action that clears all blocking and identification entries
+- Support for 3xx redirect status codes in APIService
+
+### Changed
+- Refactored CallDirectoryHandler with improved code structure and separate methods for different actions
+- Increased numberChunkSize from 5,000 to 10,000 for better performance
+- Improved error handling and logging throughout the codebase
+- Fixed potential retain cycle in BackgroundService with weak self reference
+- Enhanced JSON parsing error handling in ListAPIService
+- Replaced hardcoded 24-hour interval with AppConstants.listDownloadInterval
+- Cleaned up redundant code and unused imports
+
+### Fixed
+- Corrected string interpolation in CallDirectoryService error logging
+- Removed unused UserDefaultsService dependency from ListAPIService
+- Fixed entitlements configuration in filter and unwanted extensions
+
 ## [4.1.0] - 2026-02-15
 
 ### Changed
