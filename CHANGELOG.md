@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0] - 2026-02-23
+
+### Added
+- **Retry Logic**: Comprehensive retry mechanism for extension updates with configurable retry counts (`maxRetryCount = 10`) and delays
+- **Error Handling**: New error enums (`BlockerServiceError`, `CallDirectoryError`, `ListServiceError`) for better error management
+- **UI Components**: New card-based home screen components:
+  - `HomeActiveCard`: Shows active blocker status with phone number count
+  - `HomeDisabledCard`: Shows disabled extension state
+  - `HomeInstallCard`: Installation progress card
+  - `HomeUpdateCard`: Update available card
+  - `HomeFeatureCards`: Feature cards for SMS filter and call reporting
+- **Setup Sheets**: New setup sheets for additional features:
+  - `SmsFilterSetupSheet`: Guide for SMS filtering setup
+  - `CallReportingSetupSheet`: Guide for call reporting setup
+  - `UpdateErrorSheet`: Error handling for failed updates
+  - `UpdateInProgressSheet`: Progress indicator for updates
+- **View Models**: New `BlockerStatusViewModel` and `UserPreferencesViewModel` for better state management
+- **Constants**: New timing constants for extension management (`extensionResetDelay`, `extensionReloadDelay`, `extensionReloadRetryDelay`)
+
+### Changed
+- **BlockerService**: Complete refactoring with separate methods for background/foreground updates, progress callbacks, and improved retry logic
+- **BackgroundService**: Enhanced background task handling with better cancellation support and error handling
+- **HomeNavigationView**: Complete UI restructuring from list-based to card-based layout with improved navigation
+- **CallDirectoryHandler**: Improved extension handling with better action processing and error logging
+- **Pattern Processing**: Refactored from batch processing to individual pattern processing with progress tracking
+- **Error Handling**: Moved error enums to separate files and improved error descriptions
+- Updated app version to 4.2.0
+
+### Removed
+- **ExtensionsSetupSheet**: Replaced with separate SMS filter and call reporting setup sheets
+- **Batch Processing**: Removed `maxNumbersPerBatch` limit in favor of individual pattern processing
+- **Legacy UI Components**: Removed old home screen components in favor of new card-based design
+
 ## [4.1.1] - 2026-02-19
 
 ### Added
