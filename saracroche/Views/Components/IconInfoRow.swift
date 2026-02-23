@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Reusable row displaying an icon, title and description.
 /// Used across multiple sheets (donation, business code, reset, etc.).
-struct BenefitRow: View {
+struct IconInfoRow: View {
   let icon: String
   let title: String
   let description: String
@@ -22,21 +22,20 @@ struct BenefitRow: View {
         Text(description)
           .appFont(.caption)
           .foregroundColor(.secondary)
+          .frame(maxWidth: .infinity, alignment: .leading)
       }
-
-      Spacer()
     }
   }
 }
 
 #Preview {
   VStack(spacing: 16) {
-    BenefitRow(
+    IconInfoRow(
       icon: "heart.fill",
       title: "Example",
       description: "A benefit row example"
     )
-    BenefitRow(
+    IconInfoRow(
       icon: "trash.fill",
       title: "Danger",
       description: "A red benefit row",

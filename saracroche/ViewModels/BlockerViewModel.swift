@@ -1,26 +1,29 @@
 import SwiftUI
 
-/// View model for call blocker functionality
+/// View model for pattern statistics, update orchestration, and dates
 @MainActor
-class BlockerViewModel: ObservableObject {
+class BlockerUpdateViewModel: ObservableObject {
 
   // MARK: - Published Properties
 
-  @Published var blockerExtensionStatus: BlockerExtensionStatus = .unknown
   @Published var updateState: BlockerUpdateStatus = .ok
   @Published var lastSuccessfulUpdateAt: Date? = nil
 
   // Statistics for blocked numbers
   @Published var totalPhoneNumbersCount: Int64 = 0
-  @Published var completedPhoneNumbersCount: Int64 = 0
   @Published var completedPatternsCount: Int = 0
   @Published var pendingPatternsCount: Int = 0
+  @Published var totalPatternsCount: Int = 0
   @Published var lastListDownloadAt: Date? = nil
   @Published var lastBackgroundLaunchAt: Date? = nil
 
-  @Published var isBackgroundRefreshEnabled: Bool = false
-  @Published var isNotificationReminderEnabled: Bool = false
-  @Published var isExtensionsSetupDismissed: Bool = false
+  @Published var shouldUpdateList: Bool = false
+  @Published var isCancellationRequested: Bool = false
+  @Published var showErrorSheet: Bool = false
+
+  // Current pattern being processed
+  @Published var currentPatternString: String? = nil
+  @Published var currentPatternAction: String? = nil
 
   // MARK: - Dependencies
 
@@ -31,11 +34,17 @@ class BlockerViewModel: ObservableObject {
 
   // MARK: - Initialization
 
-  init() {
-    self.userDefaults = UserDefaultsService()
-    self.blockerService = BlockerService()
-    self.patternService = PatternService()
-    self.notificationService = NotificationService(userDefaults: self.userDefaults)
+  init(
+    userDefaults: UserDefaultsService = UserDefaultsService(),
+    blockerService: BlockerService = BlockerService(),
+    patternService: PatternService = PatternService(),
+    notificationService: NotificationService? = nil
+  ) {
+    self.userDefaults = userDefaults
+    self.blockerService = blockerService
+    self.patternService = patternService
+    self.notificationService =
+      notificationService ?? NotificationService(userDefaults: userDefaults)
   }
 
   // MARK: - Data Loading
@@ -45,16 +54,29 @@ class BlockerViewModel: ObservableObject {
     lastListDownloadAt = userDefaults.getLastListDownloadAt()
     lastBackgroundLaunchAt = userDefaults.getLastBackgroundLaunchAt()
 
-    isNotificationReminderEnabled = userDefaults.getNotificationReminderEnabled()
-    await notificationService.syncReminderStateOnLaunch()
-    isNotificationReminderEnabled = userDefaults.getNotificationReminderEnabled()
-
-    isExtensionsSetupDismissed = userDefaults.getExtensionsSetupDismissed()
-
     totalPhoneNumbersCount = await patternService.getTotalPhoneNumbersCount()
-    completedPhoneNumbersCount = await patternService.getCompletedPhoneNumbersCount()
     completedPatternsCount = await patternService.getCompletedPatternsCount()
     pendingPatternsCount = await patternService.getPendingPatternsCount()
+    totalPatternsCount = await patternService.getTotalPatternsCount()
+
+    shouldUpdateList = userDefaults.shouldUpdateList()
+  }
+
+  // MARK: - List Download
+
+  /// Downloads the list silently on app launch and refreshes counters
+  func downloadListOnLaunch() async {
+    do {
+      try await blockerService.downloadListIfStale()
+      pendingPatternsCount = await patternService.getPendingPatternsCount()
+      completedPatternsCount = await patternService.getCompletedPatternsCount()
+      totalPhoneNumbersCount = await patternService.getTotalPhoneNumbersCount()
+      shouldUpdateList = userDefaults.shouldUpdateList()
+      lastListDownloadAt = userDefaults.getLastListDownloadAt()
+    } catch {
+      Logger.error(
+        "Silent list download on launch failed", category: .blockerViewModel, error: error)
+    }
   }
 
   // MARK: - Update Management
@@ -62,44 +84,61 @@ class BlockerViewModel: ObservableObject {
   /// Performs update with state management
   func performUpdateWithStateManagement() async {
     // Set starting state
-    updateState = .inProgress
+    updateState = .inProgress(progress: 0.0)
+    isCancellationRequested = false
 
-    // Loop while there are pending patterns OR the list is empty
-    while pendingPatternsCount > 0 || completedPatternsCount == 0 {
-      // Check for cancellation at the beginning of each iteration
-      if Task.isCancelled {
-        Logger.debug("Update task cancelled", category: .blockerViewModel)
-        return
-      }
+    // Calculate total patterns count at the start for progress tracking
+    totalPatternsCount = completedPatternsCount + pendingPatternsCount
 
-      do {
-        // Perform the update with retry handled by the service
-        try await blockerService.performUpdateWithRetry()
-
-        // Check for cancellation after update
-        if Task.isCancelled {
-          Logger.debug("Update task cancelled after performUpdate", category: .blockerViewModel)
-          return
+    do {
+      try await blockerService.performForegroundUpdateWithRetry(
+        onPatternStarted: { [weak self] patternString, action in
+          guard let self = self else { return }
+          await MainActor.run {
+            self.currentPatternString = patternString
+            self.currentPatternAction = action
+          }
+        },
+        onPatternCompleted: { [weak self] completedCount, totalCount in
+          guard let self = self else { return }
+          await MainActor.run {
+            self.completedPatternsCount = completedCount
+            self.totalPatternsCount = totalCount
+            let progress =
+              totalCount > 0 ? Double(completedCount) * 100.0 / Double(totalCount) : 0.0
+            self.updateState = .inProgress(progress: progress)
+          }
         }
-
-        // Refresh counts after each update
-        totalPhoneNumbersCount = await patternService.getTotalPhoneNumbersCount()
-        completedPhoneNumbersCount = await patternService.getCompletedPhoneNumbersCount()
-        completedPatternsCount = await patternService.getCompletedPatternsCount()
-        pendingPatternsCount = await patternService.getPendingPatternsCount()
-      } catch is CancellationError {
-        Logger.debug("Update task cancelled", category: .blockerViewModel)
-        return
-      } catch {
-        Logger.error("Update failed", category: .blockerViewModel, error: error)
-        updateState = .error
-        return
+      )
+    } catch is CancellationError {
+      Logger.debug("Update task cancelled", category: .blockerViewModel)
+      currentPatternString = nil
+      currentPatternAction = nil
+      return
+    } catch {
+      Logger.error("Update failed", category: .blockerViewModel, error: error)
+      if let blockerError = error as? BlockerServiceError {
+        switch blockerError {
+        case .extensionReloadFailed, .maxRetriesExceeded:
+          showErrorSheet = true
+        default:
+          break
+        }
       }
+      currentPatternString = nil
+      currentPatternAction = nil
+      updateState = .ok
+      return
     }
 
-    // Success - refresh dates and set ok state
+    // Success - refresh data and set ok state
+    currentPatternString = nil
+    currentPatternAction = nil
+    completedPatternsCount = await patternService.getCompletedPatternsCount()
+    pendingPatternsCount = await patternService.getPendingPatternsCount()
     lastSuccessfulUpdateAt = userDefaults.getLastSuccessfulUpdateAt()
     lastListDownloadAt = userDefaults.getLastListDownloadAt()
+    shouldUpdateList = userDefaults.shouldUpdateList()
     updateState = .ok
   }
 
@@ -109,56 +148,6 @@ class BlockerViewModel: ObservableObject {
 
     // Refresh data to update counters
     await loadData()
-  }
-
-  // MARK: - Extension Status
-
-  func checkBlockerExtensionStatus() async {
-    do {
-      blockerExtensionStatus = try await blockerService.checkExtensionStatus()
-    } catch {
-      Logger.error("Failed to check extension status", category: .blockerViewModel, error: error)
-      blockerExtensionStatus = .error
-    }
-  }
-
-  func checkBackgroundStatus() async {
-    isBackgroundRefreshEnabled = UIApplication.shared.backgroundRefreshStatus == .available
-  }
-
-  func openSettings() async {
-    do {
-      try await blockerService.openSettings()
-    } catch {
-      Logger.error("Failed to open settings", category: .blockerViewModel, error: error)
-    }
-  }
-
-  // MARK: - Notifications
-
-  /// Enables the notification reminder after requesting permission
-  func enableNotificationReminder() async {
-    let granted = await notificationService.requestAuthorization()
-    if granted {
-      await notificationService.scheduleReminderNotification()
-      userDefaults.setNotificationReminderEnabled(true)
-      isNotificationReminderEnabled = true
-    }
-  }
-
-  /// Disables the notification reminder
-  func disableNotificationReminder() {
-    notificationService.cancelReminderNotification()
-    userDefaults.setNotificationReminderEnabled(false)
-    isNotificationReminderEnabled = false
-  }
-
-  // MARK: - Settings
-
-  /// Dismisses the extensions setup card
-  func dismissExtensionsSetup() {
-    userDefaults.setExtensionsSetupDismissed(true)
-    isExtensionsSetupDismissed = true
   }
 
   func resetApplication() async {

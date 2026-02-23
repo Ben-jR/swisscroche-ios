@@ -1,8 +1,15 @@
 import SwiftUI
 
 struct ResetSheet: View {
+  // MARK: - Environment
   @Environment(\.dismiss) private var dismiss
-  @ObservedObject var blockerViewModel: BlockerViewModel
+
+  // MARK: - Dependencies
+  @ObservedObject var blockerUpdate: BlockerUpdateViewModel
+
+  // MARK: - State
+  @State private var isResetting = false
+  @State private var showResetComplete = false
 
   var body: some View {
     NavigationView {
@@ -25,60 +32,66 @@ struct ResetSheet: View {
               .multilineTextAlignment(.center)
           }
 
-          VStack(alignment: .leading, spacing: 8) {
-            Text("Attention")
-              .appFont(.headlineSemiBold)
-              .frame(maxWidth: .infinity, alignment: .leading)
+          VStack(alignment: .leading, spacing: 16) {
+            Text(
+              "Cette action est irréversible. Toutes les données seront supprimées."
+            )
+            .appFont(.body)
+            .multilineTextAlignment(.leading)
 
             VStack(alignment: .leading, spacing: 16) {
-              Text(
-                "Cette action est irréversible. Toutes les données seront supprimées et l'application se fermera."
+              IconInfoRow(
+                icon: "phone.fill.badge.checkmark",
+                title: "Numéros bloqués supprimés",
+                description: "Tous les numéros et préfixes installés seront effacés",
+                iconColor: .red
               )
-              .appFont(.body)
-              .multilineTextAlignment(.leading)
 
-              VStack(alignment: .leading, spacing: 16) {
-                BenefitRow(
-                  icon: "phone.fill.badge.checkmark",
-                  title: "Numéros bloqués supprimés",
-                  description: "Tous les numéros et préfixes installés seront effacés",
-                  iconColor: .red
-                )
+              IconInfoRow(
+                icon: "gearshape.fill",
+                title: "Réglages réinitialisés",
+                description: "Vos préférences reviendront aux valeurs par défaut",
+                iconColor: .red
+              )
 
-                BenefitRow(
-                  icon: "gearshape.fill",
-                  title: "Réglages réinitialisés",
-                  description: "Vos préférences reviendront aux valeurs par défaut",
-                  iconColor: .red
-                )
-
-                BenefitRow(
-                  icon: "xmark.app.fill",
-                  title: "Fermeture de l'application",
-                  description:
-                    "L'application se fermera automatiquement après la réinitialisation",
-                  iconColor: .red
-                )
-              }
+              IconInfoRow(
+                icon: "xmark.app.fill",
+                title: "Fermeture de l'application",
+                description:
+                  "Vous devrez fermer l'application manuellement après la réinitialisation",
+                iconColor: .red
+              )
             }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-              RoundedRectangle(cornerRadius: 16)
-                .fill(Color.gray.opacity(0.1))
-            )
           }
+          .padding()
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .background(
+            RoundedRectangle(cornerRadius: 16)
+              .fill(Color.gray.opacity(0.1))
+          )
 
           Button {
             Task {
-              await blockerViewModel.resetApplication()
+              isResetting = true
+              await blockerUpdate.resetApplication()
+              isResetting = false
+              showResetComplete = true
             }
           } label: {
-            Label("Réinitialiser", systemImage: "trash.fill")
+            HStack {
+              if isResetting {
+                ProgressView()
+                  .tint(.white)
+              } else {
+                Image(systemName: "trash.fill")
+              }
+              Text("Réinitialiser")
+            }
           }
           .buttonStyle(
             .fullWidth(background: .red, foreground: .white)
           )
+          .disabled(isResetting)
         }
         .padding()
       }
@@ -87,13 +100,18 @@ struct ResetSheet: View {
           Button("Fermer") {
             dismiss()
           }
+          .disabled(isResetting)
         }
       }
+      .sheet(isPresented: $showResetComplete) {
+        ResetCompleteSheet()
+      }
     }
+    .interactiveDismissDisabled(isResetting)
   }
 
 }
 
 #Preview {
-  ResetSheet(blockerViewModel: BlockerViewModel())
+  ResetSheet(blockerUpdate: BlockerUpdateViewModel())
 }

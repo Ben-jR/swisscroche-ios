@@ -2,19 +2,16 @@ import Foundation
 import SwiftUI
 
 /// States of a block list update process
-enum BlockerUpdateStatus {
+enum BlockerUpdateStatus: Equatable {
   case ok
-  case inProgress
-  case error
+  case inProgress(progress: Double)
 
   var description: String {
     switch self {
     case .ok:
       return "À jour"
-    case .inProgress:
-      return "Mise à jour en cours, gardez l'application ouverte"
-    case .error:
-      return "Erreur lors de la mise à jour, redémarrer votre téléphone"
+    case .inProgress(let progress):
+      return String(format: "Mise à jour en cours %.0f%%", progress)
     }
   }
 
@@ -24,8 +21,6 @@ enum BlockerUpdateStatus {
       return "checkmark.circle.fill"
     case .inProgress:
       return "arrow.clockwise.circle.fill"
-    case .error:
-      return "exclamationmark.circle.fill"
     }
   }
 
@@ -35,8 +30,6 @@ enum BlockerUpdateStatus {
       return .green
     case .inProgress:
       return .blue
-    case .error:
-      return .red
     }
   }
 }

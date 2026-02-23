@@ -1,7 +1,12 @@
 import SwiftUI
 
 struct SettingsNavigationView: View {
-  @ObservedObject var blockerViewModel: BlockerViewModel
+  // MARK: - Dependencies
+  @ObservedObject var blockerStatus: BlockerStatusViewModel
+  @ObservedObject var blockerUpdate: BlockerUpdateViewModel
+  @ObservedObject var userPreferences: UserPreferencesViewModel
+
+  // MARK: - State
   @State private var showingBusinessCodeSheet = false
   @State private var showingReinstallSheet = false
   @State private var showingResetSheet = false
@@ -14,7 +19,7 @@ struct SettingsNavigationView: View {
         Section {
           Button {
             Task {
-              await blockerViewModel.openSettings()
+              await blockerStatus.openSettings()
             }
           } label: {
             Label(
@@ -25,13 +30,13 @@ struct SettingsNavigationView: View {
 
           Toggle(
             isOn: Binding(
-              get: { blockerViewModel.isNotificationReminderEnabled },
+              get: { userPreferences.isNotificationReminderEnabled },
               set: { newValue in
                 Task {
                   if newValue {
-                    await blockerViewModel.enableNotificationReminder()
+                    await userPreferences.enableNotificationReminder()
                   } else {
-                    blockerViewModel.disableNotificationReminder()
+                    userPreferences.disableNotificationReminder()
                   }
                 }
               }
@@ -51,7 +56,7 @@ struct SettingsNavigationView: View {
             showingReinstallSheet = true
           } label: {
             Label(
-              "Réinstaller la liste de blocage",
+              "Réinitialiser la liste de blocage",
               systemImage: "arrow.clockwise.circle.fill"
             )
           }
@@ -162,10 +167,10 @@ struct SettingsNavigationView: View {
         BusinessCodeSheet()
       }
       .sheet(isPresented: $showingReinstallSheet) {
-        ReinstallSheet(blockerViewModel: blockerViewModel)
+        ReinstallSheet(blockerUpdate: blockerUpdate)
       }
       .sheet(isPresented: $showingResetSheet) {
-        ResetSheet(blockerViewModel: blockerViewModel)
+        ResetSheet(blockerUpdate: blockerUpdate)
       }
       .sheet(isPresented: $showingDebugSheet) {
         DebugSheet()
@@ -176,6 +181,8 @@ struct SettingsNavigationView: View {
 
 #Preview {
   SettingsNavigationView(
-    blockerViewModel: BlockerViewModel()
+    blockerStatus: BlockerStatusViewModel(),
+    blockerUpdate: BlockerUpdateViewModel(),
+    userPreferences: UserPreferencesViewModel()
   )
 }

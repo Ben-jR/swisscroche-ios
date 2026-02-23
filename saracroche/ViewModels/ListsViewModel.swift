@@ -16,6 +16,7 @@ class ListsViewModel: ObservableObject {
   // UI State
   @Published var patternError: String? = nil
   @Published var isLoading: Bool = false
+  @Published var didModifyPatterns = false
 
   // MARK: - Dependencies
 
@@ -97,6 +98,7 @@ class ListsViewModel: ObservableObject {
       Logger.info("Prefix created: \(patternString)", category: .listsViewModel)
       // Reload data
       await loadData()
+      didModifyPatterns = true
     } else {
       patternError = "Impossible de créer le préfixe."
     }
@@ -108,6 +110,7 @@ class ListsViewModel: ObservableObject {
     await patternService.markPatternForDeletion(pattern)
     Logger.info("Prefix marked for removal: \(pattern.pattern ?? "")", category: .listsViewModel)
     await loadData()
+    didModifyPatterns = true
   }
 
   // MARK: - Validation

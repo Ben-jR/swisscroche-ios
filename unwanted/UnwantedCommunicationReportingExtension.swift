@@ -40,11 +40,11 @@ class UnwantedCommunicationReportingExtension: ILClassificationUIExtensionViewCo
   override func prepare(for classificationRequest: ILClassificationRequest) {
     switch classificationRequest {
     case let classificationRequest as ILMessageClassificationRequest:
-      viewModel.phoneNumber = classificationRequest.messageCommunications.first?.sender ?? ""
+      viewModel.phone = classificationRequest.messageCommunications.first?.sender ?? ""
     case let classificationRequest as ILCallClassificationRequest:
-      viewModel.phoneNumber = classificationRequest.callCommunications.first?.sender ?? ""
+      viewModel.phone = classificationRequest.callCommunications.first?.sender ?? ""
     default:
-      viewModel.phoneNumber = ""
+      viewModel.phone = ""
     }
   }
 
@@ -57,7 +57,7 @@ class UnwantedCommunicationReportingExtension: ILClassificationUIExtensionViewCo
     }
 
     let response = ILClassificationResponse(action: action)
-    let phoneNumber = extractPhoneNumber(from: request)
+    let phone = extractPhoneNumber(from: request)
 
     // Get device ID
     let deviceId = getOrCreateDeviceID()
@@ -75,10 +75,10 @@ class UnwantedCommunicationReportingExtension: ILClassificationUIExtensionViewCo
       isGood = false  // Default to spam for unknown actions
     }
 
-    // Create userInfo with phone number, device ID, and is_good flag
+    // Create userInfo with phone, device ID, and is good flag
     response.userInfo = [
-      "phoneNumber": phoneNumber,
-      "deviceId": deviceId,
+      "phone": phone,
+      "device_id": deviceId,
       "is_good": isGood,
     ]
 
@@ -104,7 +104,6 @@ class UnwantedCommunicationReportingExtension: ILClassificationUIExtensionViewCo
 
     // Store the device ID in UserDefaults
     userDefaults.set(newDeviceID, forKey: deviceIDKey)
-    userDefaults.synchronize()
 
     return newDeviceID
   }

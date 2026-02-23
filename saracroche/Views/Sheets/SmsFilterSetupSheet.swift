@@ -1,14 +1,13 @@
 import SwiftUI
 
-struct ReinstallSheet: View {
+@available(iOS 16.0, *)
+struct SmsFilterSetupSheet: View {
   // MARK: - Environment
   @Environment(\.dismiss) private var dismiss
 
   // MARK: - Dependencies
-  @ObservedObject var blockerUpdate: BlockerUpdateViewModel
-
-  // MARK: - State
-  @State private var isReinstalling = false
+  @ObservedObject var blockerStatus: BlockerStatusViewModel
+  @ObservedObject var userPreferences: UserPreferencesViewModel
 
   var body: some View {
     NavigationView {
@@ -16,37 +15,36 @@ struct ReinstallSheet: View {
         VStack(spacing: 20) {
           VStack(spacing: 16) {
             if #available(iOS 18.0, *) {
-              Image(systemName: "arrow.clockwise.circle.fill")
+              Image(systemName: "message.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.blue)
-                .symbolEffect(.rotate.byLayer, options: .repeat(.periodic(delay: 2)))
+                .symbolEffect(.wiggle.byLayer, options: .repeat(.periodic(delay: 2)))
             } else {
-              Image(systemName: "arrow.clockwise.circle.fill")
+              Image(systemName: "message.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.blue)
             }
 
-            Text("Réinitialiser la liste de blocage")
+            Text("Filtre SMS")
               .appFont(.titleBold)
               .multilineTextAlignment(.center)
           }
 
           VStack(alignment: .leading, spacing: 16) {
             Text(
-              "Les numéros installés seront supprimés de l'extension."
+              "Activez le filtre SMS pour que Saracroche filtre automatiquement les messages indésirables."
             )
             .appFont(.body)
             .multilineTextAlignment(.leading)
 
             VStack(alignment: .leading, spacing: 16) {
               IconInfoRow(
-                icon: "phone.fill.badge.checkmark",
-                title: "Extension réinitialisée",
+                icon: "message.fill",
+                title: "Comment activer",
                 description:
-                  "Les numéros bloqués seront supprimés",
+                  "Réglages > Apps > Messages > Filtrer les messages texte > Saracroche",
                 iconColor: .blue
               )
-
             }
           }
           .padding()
@@ -57,26 +55,23 @@ struct ReinstallSheet: View {
           )
 
           Button {
-            Task {
-              isReinstalling = true
-              await blockerUpdate.reinstallBlockList()
-              dismiss()
-            }
+            blockerStatus.openPhoneSettings()
           } label: {
-            HStack {
-              if isReinstalling {
-                ProgressView()
-                  .tint(.white)
-              } else {
-                Image(systemName: "arrow.clockwise")
-              }
-              Text("Réinitialiser")
-            }
+            Label("Ouvrir les réglages", systemImage: "gear")
+          }
+          .buttonStyle(
+            .fullWidth(background: .gray, foreground: .white)
+          )
+
+          Button {
+            userPreferences.dismissSmsFilterSetup()
+            dismiss()
+          } label: {
+            Label("J'ai activé le filtre SMS", systemImage: "checkmark.circle.fill")
           }
           .buttonStyle(
             .fullWidth(background: .blue, foreground: .white)
           )
-          .disabled(isReinstalling)
         }
         .padding()
       }
@@ -85,15 +80,16 @@ struct ReinstallSheet: View {
           Button("Fermer") {
             dismiss()
           }
-          .disabled(isReinstalling)
         }
       }
     }
-    .interactiveDismissDisabled(isReinstalling)
   }
-
 }
 
+@available(iOS 16.0, *)
 #Preview {
-  ReinstallSheet(blockerUpdate: BlockerUpdateViewModel())
+  SmsFilterSetupSheet(
+    blockerStatus: BlockerStatusViewModel(),
+    userPreferences: UserPreferencesViewModel()
+  )
 }

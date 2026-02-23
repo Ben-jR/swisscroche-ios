@@ -31,36 +31,60 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
     to context: CXCallDirectoryExtensionContext
   ) {
     guard let sharedDefaults = sharedUserDefaults() else {
-      logger.error(
-        "Could not access shared UserDefaults")
+      logger.error("Could not access shared UserDefaults")
       return
     }
 
     let action = sharedDefaults.string(forKey: "action") ?? ""
     let numbersData = sharedDefaults.array(forKey: "numbers") as? [[String: Any]] ?? []
 
+    // Clear shared defaults after reading
     sharedDefaults.set("", forKey: "action")
     sharedDefaults.set([], forKey: "numbers")
 
-    if action == "reset" {
+    // Process action using switch statement
+    switch action {
+    case "reset":
+      // Handle reset action
       handleResetAction(to: context)
-      return
-    }
+      addFakeNumbers(to: context)
 
-    if action.isEmpty {
+    case "":
+      // Handle empty action
       handleNoAction()
-      return
+
+    case "block", "identify", "remove_block", "remove_identify":
+      // Validate we have numbers to process
+      guard !numbersData.isEmpty else {
+        logger.debug("No numbers to process for action: \(action)")
+        return
+      }
+
+      // Process the specific action
+      logger.info("Processing action \(action) with \(numbersData.count) numbers")
+
+      switch action {
+      case "block":
+        processBlockingEntries(numbersData, context: context)
+      case "identify":
+        processIdentificationEntries(numbersData, context: context)
+      case "remove_block":
+        processRemoveBlockingEntries(numbersData, context: context)
+      case "remove_identify":
+        processRemoveIdentificationEntries(numbersData, context: context)
+      default:
+        break  // This case is already handled by the outer switch
+      }
+
+    default:
+      // Handle unknown action
+      if !action.isEmpty {
+        logger.warning("Unknown action: \(action)")
+      }
     }
-
-    processNumberEntries(numbersData, action: action, context: context)
   }
 
-  /// Process full update (non-incremental)
-  private func fullUpdate(to context: CXCallDirectoryExtensionContext) {
-    // Add fake numbers to ensure iOS recognizes the extension is working
-    context.addBlockingEntry(withNextSequentialPhoneNumber: 1_800_555_5555)
-    context.addIdentificationEntry(withNextSequentialPhoneNumber: 1_888_555_5555, label: "Fake")
-  }
+  // MARK: - Action Handlers
 
   /// Handle reset action - clear all entries
   private func handleResetAction(to context: CXCallDirectoryExtensionContext) {
@@ -75,14 +99,28 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
     logger.debug("No action specified")
   }
 
-  /// Process number entries for a specific action
-  private func processNumberEntries(
+  // MARK: - Number Processing Methods
+
+  /// Process blocking entries - add numbers to block list
+  private func processBlockingEntries(
     _ numbersData: [[String: Any]],
-    action: String,
     context: CXCallDirectoryExtensionContext
   ) {
-    logger.info("Processing action \(action) with \(numbersData.count) numbers")
+    for numberData in numbersData {
+      guard let numberString = numberData["number"] as? String,
+        let number = Int64(numberString)
+      else {
+        continue
+      }
+      context.addBlockingEntry(withNextSequentialPhoneNumber: number)
+    }
+  }
 
+  /// Process identification entries - add numbers to identification list
+  private func processIdentificationEntries(
+    _ numbersData: [[String: Any]],
+    context: CXCallDirectoryExtensionContext
+  ) {
     for numberData in numbersData {
       guard let numberString = numberData["number"] as? String,
         let number = Int64(numberString)
@@ -90,30 +128,51 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
         continue
       }
       let name = numberData["name"] as? String ?? ""
-
-      switch action {
-      case "block":
-        context.addBlockingEntry(withNextSequentialPhoneNumber: number)
-        logger.info(
-          "Blocked number: \(number) - \(name)")
-      case "identify":
-        context.addIdentificationEntry(
-          withNextSequentialPhoneNumber: number, label: name)
-        logger.info(
-          "Identified number: \(number) - \(name)")
-      case "remove_block":
-        context.removeBlockingEntry(withPhoneNumber: number)
-        logger.info(
-          "Removed blocking entry: \(number)")
-      case "remove_identify":
-        context.removeIdentificationEntry(withPhoneNumber: number)
-        logger.info(
-          "Removed identification entry: \(number)")
-      default:
-        logger.warning(
-          "Unknown action: \(action)")
-      }
+      context.addIdentificationEntry(withNextSequentialPhoneNumber: number, label: name)
     }
+  }
+
+  /// Process removal of blocking entries
+  private func processRemoveBlockingEntries(
+    _ numbersData: [[String: Any]],
+    context: CXCallDirectoryExtensionContext
+  ) {
+    for numberData in numbersData {
+      guard let numberString = numberData["number"] as? String,
+        let number = Int64(numberString)
+      else {
+        continue
+      }
+      context.removeBlockingEntry(withPhoneNumber: number)
+    }
+  }
+
+  /// Process removal of identification entries
+  private func processRemoveIdentificationEntries(
+    _ numbersData: [[String: Any]],
+    context: CXCallDirectoryExtensionContext
+  ) {
+    for numberData in numbersData {
+      guard let numberString = numberData["number"] as? String,
+        let number = Int64(numberString)
+      else {
+        continue
+      }
+      context.removeIdentificationEntry(withPhoneNumber: number)
+    }
+  }
+
+  // MARK: - Utility Methods
+
+  /// Add fake numbers to ensure iOS recognizes the extension is working
+  private func addFakeNumbers(to context: CXCallDirectoryExtensionContext) {
+    context.addBlockingEntry(withNextSequentialPhoneNumber: 1_800_555_5555)
+    context.addIdentificationEntry(withNextSequentialPhoneNumber: 1_888_555_5555, label: "Fake")
+  }
+
+  /// Process full update (non-incremental)
+  private func fullUpdate(to context: CXCallDirectoryExtensionContext) {
+    addFakeNumbers(to: context)
   }
 }
 

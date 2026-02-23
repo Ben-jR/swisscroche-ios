@@ -58,25 +58,31 @@ final class BackgroundService: ObservableObject {
   private func handleBackgroundUpdate(task: BGProcessingTask) {
     Logger.info("Handling background app refresh", category: .backgroundService)
 
-    // Record the background launch time
+    scheduleBackgroundTask()
     userDefaults.setLastBackgroundLaunchAt(Date())
 
-    scheduleBackgroundTask()
+    let backgroundWork = Task {
+      do {
+        try await BlockerService().performBackgroundUpdate()
+        if !Task.isCancelled {
+          task.setTaskCompleted(success: true)
+        }
+      } catch is CancellationError {
+        Logger.info(
+          "Background update cancelled by expiration handler",
+          category: .backgroundService)
+      } catch {
+        Logger.error("Background update failed", category: .backgroundService, error: error)
+        if !Task.isCancelled {
+          task.setTaskCompleted(success: false)
+        }
+      }
+    }
 
     task.expirationHandler = {
       Logger.info("Background app refresh task expired", category: .backgroundService)
+      backgroundWork.cancel()
       task.setTaskCompleted(success: false)
-    }
-
-    // Use Task to bridge sync context to async
-    Task {
-      do {
-        try await BlockerService().performUpdateWithRetry()
-        task.setTaskCompleted(success: true)
-      } catch {
-        Logger.error("Background update failed", category: .backgroundService, error: error)
-        task.setTaskCompleted(success: false)
-      }
     }
   }
 }

@@ -4,7 +4,7 @@ import IdentityLookup
 import SwiftUI
 
 class UnwantedReportViewModel: ObservableObject {
-  @Published var phoneNumber: String = ""
+  @Published var phone: String = ""
   @Published var selectedAction: ILClassificationAction?
 
   func selectAction(_ action: ILClassificationAction) {
@@ -39,7 +39,7 @@ struct UnwantedCommunicationReportingView: View {
               .font(.title2)
               .fontWeight(.bold)
 
-            Text(viewModel.phoneNumber)
+            Text(viewModel.phone)
               .font(.title3)
               .fontWeight(.semibold)
               .foregroundColor(.orange)

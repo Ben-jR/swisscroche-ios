@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct InfoSheet: View {
+  // MARK: - Environment
   @Environment(\.dismiss) private var dismiss
-  @ObservedObject var blockerViewModel: BlockerViewModel
+
+  // MARK: - Dependencies
+  @ObservedObject var blockerUpdate: BlockerUpdateViewModel
+  @ObservedObject var blockerStatus: BlockerStatusViewModel
 
   var body: some View {
     NavigationView {
@@ -26,38 +30,6 @@ struct InfoSheet: View {
           }
 
           updateInfoView
-
-          VStack(alignment: .leading, spacing: 8) {
-            Text("Besoin d'informations supplémentaires ?")
-              .appFont(.headlineSemiBold)
-
-            VStack(alignment: .leading, spacing: 16) {
-              Text(
-                """
-                Si vous avez d'autres questions ou besoin d'aide, n'hésitez pas à vous rendre sur la page web d'aide.
-                Vous y trouverez la foire aux questions (FAQ).
-                """
-              )
-              .appFont(.body)
-
-              Button {
-                if let url = URL(string: "https://saracroche.org/fr/help") {
-                  UIApplication.shared.open(url)
-                }
-              } label: {
-                Label("Ouvrir la page d'aide", systemImage: "questionmark.circle.fill")
-              }
-              .buttonStyle(
-                .fullWidth(background: .blue, foreground: .white)
-              )
-            }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-              RoundedRectangle(cornerRadius: 16)
-                .fill(Color.gray.opacity(0.1))
-            )
-          }
         }
         .padding()
       }
@@ -73,138 +45,61 @@ struct InfoSheet: View {
 
   @ViewBuilder
   private var updateInfoView: some View {
-    VStack(spacing: 20) {
-      // SECTION: STATISTICS
-      VStack(spacing: 8) {
-        Text("Statistiques")
-          .appFont(.headlineSemiBold)
-          .frame(maxWidth: .infinity, alignment: .leading)
+    VStack(spacing: 16) {
+      statisticsListItem(
+        icon: "phone.circle.fill",
+        value: "\(blockerUpdate.totalPhoneNumbersCount.formatted())",
+        label: "Numéros dans la base de données",
+        color: .green
+      )
 
-        VStack(spacing: 16) {
-          statisticsListItem(
-            icon: "number.circle.fill",
-            value: "\(blockerViewModel.totalPhoneNumbersCount.formatted())",
-            label: "Numéros dans la base de données",
-            color: .green
-          )
+      statisticsListItem(
+        icon: "number.circle.fill",
+        value: "\(blockerUpdate.totalPatternsCount)",
+        label: "Préfixes dans la base de données",
+        color: .green
+      )
 
-          statisticsListItem(
-            icon: "number.circle.fill",
-            value: "\(blockerViewModel.completedPhoneNumbersCount.formatted())",
-            label: "Numéros installés",
-            color: .blue
-          )
+      statisticsListItem(
+        icon: backgroundServiceIcon,
+        value: backgroundServiceText,
+        label: "Service en arrière-plan",
+        color: backgroundServiceColor
+      )
 
-          statisticsListItem(
-            icon: "checkmark.circle.fill",
-            value:
-              "\(blockerViewModel.completedPatternsCount + blockerViewModel.pendingPatternsCount)",
-            label: "Préfixes dans la base de données",
-            color: .green
-          )
-
-          statisticsListItem(
-            icon: "checkmark.circle.fill",
-            value: "\(blockerViewModel.completedPatternsCount)",
-            label: "Préfixes installés",
-            color: .blue
-          )
-
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-          RoundedRectangle(cornerRadius: 16)
-            .fill(Color.gray.opacity(0.1))
+      if let lastListDownloadAt = blockerUpdate.lastListDownloadAt {
+        statisticsListItem(
+          icon: "arrow.down.circle.fill",
+          value: formatDate(lastListDownloadAt),
+          label: "Dernier téléchargement",
+          color: .green
         )
       }
 
-      // SECTION: STATUS
-      VStack(spacing: 8) {
-        Text("État du service")
-          .appFont(.headlineSemiBold)
-          .frame(maxWidth: .infinity, alignment: .leading)
-
-        VStack(spacing: 16) {
-          // Extension status
-          statisticsListItem(
-            icon: extensionStatusIcon,
-            value: extensionStatusText,
-            label: "État de l'extension",
-            color: extensionStatusColor
-          )
-
-          // Background service status
-          statisticsListItem(
-            icon: backgroundServiceIcon,
-            value: backgroundServiceText,
-            label: "Service en arrière-plan",
-            color: backgroundServiceColor
-          )
-
-          // Update status (if applicable)
-          if blockerViewModel.updateState != .ok {
-            statisticsListItem(
-              icon: "arrow.clockwise.circle.fill",
-              value: blockerViewModel.updateState.description,
-              label: "État de la mise à jour",
-              color: .blue
-            )
-          }
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-          RoundedRectangle(cornerRadius: 16)
-            .fill(Color.gray.opacity(0.1))
+      if let lastSuccessfulUpdateAt = blockerUpdate.lastSuccessfulUpdateAt {
+        statisticsListItem(
+          icon: "checkmark.circle.fill",
+          value: formatDate(lastSuccessfulUpdateAt),
+          label: "Dernière mise à jour réussie",
+          color: .green
         )
       }
 
-      // SECTION: DATES
-      VStack(spacing: 8) {
-        Text("Dates et historique")
-          .appFont(.headlineSemiBold)
-          .frame(maxWidth: .infinity, alignment: .leading)
-
-        VStack(spacing: 16) {
-          // Last list download
-          if let lastListDownloadAt = blockerViewModel.lastListDownloadAt {
-            statisticsListItem(
-              icon: "arrow.down.circle.fill",
-              value: formatDate(lastListDownloadAt),
-              label: "Dernier téléchargement",
-              color: .blue
-            )
-          }
-
-          // Last successful update
-          if let lastSuccessfulUpdateAt = blockerViewModel.lastSuccessfulUpdateAt {
-            statisticsListItem(
-              icon: "checkmark.circle.fill",
-              value: formatDate(lastSuccessfulUpdateAt),
-              label: "Dernière mise à jour réussie",
-              color: .green
-            )
-          }
-
-          // Last background launch
-          if let lastBackgroundLaunchAt = blockerViewModel.lastBackgroundLaunchAt {
-            statisticsListItem(
-              icon: "clock.circle.fill",
-              value: formatDate(lastBackgroundLaunchAt),
-              label: "Dernier lancement en arrière-plan",
-              color: .purple
-            )
-          }
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-          RoundedRectangle(cornerRadius: 16)
-            .fill(Color.gray.opacity(0.1))
+      if let lastBackgroundLaunchAt = blockerUpdate.lastBackgroundLaunchAt {
+        statisticsListItem(
+          icon: "clock.circle.fill",
+          value: formatDate(lastBackgroundLaunchAt),
+          label: "Dernier lancement en arrière-plan",
+          color: .green
         )
       }
     }
+    .padding()
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .background(
+      RoundedRectangle(cornerRadius: 16)
+        .fill(Color.gray.opacity(0.1))
+    )
   }
 
   // MARK: - Helpers
@@ -223,11 +118,11 @@ struct InfoSheet: View {
         .frame(width: 24)
 
       VStack(alignment: .leading, spacing: 2) {
-        Text(value)
+        Text(label)
           .appFont(.subheadlineMedium)
           .foregroundColor(.primary)
 
-        Text(label)
+        Text(value)
           .appFont(.caption)
           .foregroundColor(.secondary)
       }
@@ -236,64 +131,19 @@ struct InfoSheet: View {
     }
   }
 
-  private var extensionStatusIcon: String {
-    switch blockerViewModel.blockerExtensionStatus {
-    case .enabled:
-      return "checkmark.circle.fill"
-    case .disabled:
-      return "xmark.circle.fill"
-    case .unknown:
-      return "questionmark.circle.fill"
-    case .error:
-      return "exclamationmark.circle.fill"
-    case .unexpected:
-      return "exclamationmark.triangle.fill"
-    }
-  }
-
-  private var extensionStatusColor: Color {
-    switch blockerViewModel.blockerExtensionStatus {
-    case .enabled:
-      return .green
-    case .disabled:
-      return .red
-    case .unknown:
-      return .orange
-    case .error:
-      return .red
-    case .unexpected:
-      return .orange
-    }
-  }
-
-  private var extensionStatusText: String {
-    switch blockerViewModel.blockerExtensionStatus {
-    case .enabled:
-      return "Extension active"
-    case .disabled:
-      return "Extension désactivée"
-    case .unknown:
-      return "Vérification en cours"
-    case .error:
-      return "Erreur de vérification"
-    case .unexpected:
-      return "Statut inattendu"
-    }
-  }
-
   private var backgroundServiceIcon: String {
-    blockerViewModel.isBackgroundRefreshEnabled
+    blockerStatus.isBackgroundRefreshEnabled
       ? "arrow.clockwise.circle.fill" : "xmark.circle.fill"
   }
 
   private var backgroundServiceColor: Color {
-    blockerViewModel.isBackgroundRefreshEnabled ? .green : .red
+    blockerStatus.isBackgroundRefreshEnabled ? .green : .red
   }
 
   private var backgroundServiceText: String {
-    blockerViewModel.isBackgroundRefreshEnabled
+    blockerStatus.isBackgroundRefreshEnabled
       ? "Service en arrière-plan actif"
-      : "Désactivé - activer dans Réglages > Général > Actualisation en arrière-plan"
+      : "Désactivé - activez dans Réglages > Général > Actualisation en arrière-plan"
   }
 
   private func formatDate(_ date: Date) -> String {
@@ -306,5 +156,8 @@ struct InfoSheet: View {
 }
 
 #Preview {
-  InfoSheet(blockerViewModel: BlockerViewModel())
+  InfoSheet(
+    blockerUpdate: BlockerUpdateViewModel(),
+    blockerStatus: BlockerStatusViewModel()
+  )
 }

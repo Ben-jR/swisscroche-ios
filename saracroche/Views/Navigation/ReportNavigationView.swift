@@ -9,27 +9,31 @@ struct ReportNavigationView: View {
       Form {
         Section {
           VStack(spacing: 16) {
-            TextField("+33612345678", text: $viewModel.phoneNumber)
-              .keyboardType(.phonePad)
-              .textInputAutocapitalization(.never)
-              .autocorrectionDisabled(true)
-              .textFieldStyle(.plain)
-              .padding(12)
-              .background(Color(.systemBackground))
-              .cornerRadius(12)
-              .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                  .stroke(
-                    isPhoneFieldFocused
-                      ? Color("AppColor") : Color(.systemGray4),
-                    lineWidth: 1
-                  )
-              )
-              .focused($isPhoneFieldFocused)
-              .accessibilityLabel("Champ de saisie du numéro de téléphone")
-              .accessibilityHint(
-                "Saisissez le numéro au format E.164, par exemple +33612345678"
-              )
+            VStack(alignment: .leading, spacing: 8) {
+              Text("Numéro de téléphone")
+                .appFont(.subheadlineSemiBold)
+              TextField("+33612345678", text: $viewModel.phoneNumber)
+                .keyboardType(.phonePad)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
+                .textFieldStyle(.plain)
+                .padding(12)
+                .background(Color(.systemBackground))
+                .cornerRadius(16)
+                .overlay(
+                  RoundedRectangle(cornerRadius: 16)
+                    .stroke(
+                      isPhoneFieldFocused
+                        ? Color("AppColor") : Color(.systemGray4),
+                      lineWidth: 1
+                    )
+                )
+                .focused($isPhoneFieldFocused)
+                .accessibilityLabel("Champ de saisie du numéro de téléphone")
+                .accessibilityHint(
+                  "Saisissez le numéro au format E.164, par exemple +33612345678"
+                )
+            }
 
             Text(
               "Saisissez le numéro de téléphone au format international, par exemple +33612345678 pour la France."

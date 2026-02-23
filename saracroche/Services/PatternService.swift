@@ -194,14 +194,11 @@ class PatternService {
     }
   }
 
-  /// Retrieves the oldest pending pattern for processing (FIFO order)
-  /// - Returns: The oldest Pattern entity where completedDate is nil, or nil if none exist
+  /// Retrieves a random pending pattern for processing
+  /// - Returns: A random Pattern entity where completedDate is nil, or nil if none exist
   func retrievePatternForProcessing() async -> Pattern? {
     let pendingPatterns = await getPendingPatterns()
-    return pendingPatterns.sorted {
-      ($0.addedDate ?? .distantPast) < ($1.addedDate ?? .distantPast)
-    }
-    .first
+    return pendingPatterns.randomElement()
   }
 
   /// Fetches all patterns that have been completed
@@ -226,16 +223,6 @@ class PatternService {
           continuation.resume(returning: [])
         }
       }
-    }
-  }
-
-  /// Counts the total number of phone numbers represented by completed patterns
-  /// - Returns: Total count of phone numbers
-  func getCompletedPhoneNumbersCount() async -> Int64 {
-    let completedPatterns = await getCompletedPatterns()
-    return completedPatterns.reduce(0) { total, pattern in
-      guard let patternString = pattern.pattern else { return total }
-      return total + Int64(PhoneNumberHelpers.countPhoneNumbers(for: patternString))
     }
   }
 
@@ -266,6 +253,12 @@ class PatternService {
   /// - Returns: Count of patterns with completedDate == nil
   func getPendingPatternsCount() async -> Int {
     return await getPendingPatterns().count
+  }
+
+  /// Counts the total number of patterns (completed + pending)
+  /// - Returns: Total count of all patterns
+  func getTotalPatternsCount() async -> Int {
+    return await getAllPatterns().count
   }
 
   // MARK: - Update Operations

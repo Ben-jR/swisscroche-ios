@@ -1,8 +1,13 @@
 import SwiftUI
 
 struct ListsNavigationView: View {
+  // MARK: - Dependencies
+  @ObservedObject var blockerUpdate: BlockerUpdateViewModel
   @StateObject private var viewModel = ListsViewModel()
+
+  // MARK: - State
   @State private var showAddPatternSheet = false
+  @State private var showUpdateInProgressSheet = false
 
   var body: some View {
     NavigationView {
@@ -11,7 +16,7 @@ struct ListsNavigationView: View {
         Section {
           if viewModel.apiPatterns.isEmpty {
             VStack {
-              Text("La liste sera téléchargée automatiquement. Veuillez patienter.")
+              Text("La liste sera téléchargée automatiquement.")
                 .appFont(.caption)
                 .foregroundColor(.secondary)
             }
@@ -19,11 +24,10 @@ struct ListsNavigationView: View {
             NavigationLink {
               APIPatternListView(patterns: viewModel.apiPatterns)
             } label: {
-              VStack(alignment: .leading, spacing: 12) {
+              VStack(alignment: .leading, spacing: 8) {
                 // List name
                 Text(viewModel.frenchListName)
                   .appFont(.headline)
-                  .lineLimit(2)
 
                 // Version
                 HStack(spacing: 4) {
@@ -98,7 +102,7 @@ struct ListsNavigationView: View {
             .appFont(.subheadlineSemiBold)
         } footer: {
           Text(
-            "Ajoutez vos propres préfixes pour les bloquer les identifier."
+            "Ajoutez vos propres préfixes pour les bloquer ou les identifier."
           )
           .appFont(.caption)
         }
@@ -106,6 +110,22 @@ struct ListsNavigationView: View {
       .navigationTitle("Listes")
       .sheet(isPresented: $showAddPatternSheet) {
         AddPatternSheet(viewModel: viewModel, isPresented: $showAddPatternSheet)
+      }
+      .sheet(
+        isPresented: $showUpdateInProgressSheet,
+        onDismiss: {
+          Task {
+            await blockerUpdate.loadData()
+          }
+        }
+      ) {
+        UpdateInProgressSheet(blockerUpdate: blockerUpdate)
+      }
+      .onChange(of: viewModel.didModifyPatterns) { didModify in
+        if didModify {
+          viewModel.didModifyPatterns = false
+          showUpdateInProgressSheet = true
+        }
       }
       .onAppear {
         Task {
@@ -117,5 +137,5 @@ struct ListsNavigationView: View {
 }
 
 #Preview {
-  ListsNavigationView()
+  ListsNavigationView(blockerUpdate: BlockerUpdateViewModel())
 }

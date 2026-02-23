@@ -12,7 +12,7 @@ struct DonationSheet: View {
               Image(systemName: "heart.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.pink)
-                .symbolEffect(.bounce.down.byLayer, options: .repeat(.periodic(delay: 0.5)))
+                .symbolEffect(.bounce.down.byLayer, options: .repeat(.periodic(delay: 2.0)))
             } else {
               Image(systemName: "heart.fill")
                 .font(.system(size: 60))
@@ -31,41 +31,40 @@ struct DonationSheet: View {
             )
             .appFont(.body)
             .multilineTextAlignment(.leading)
-
-            Spacer()
+            .padding(.bottom, 8)
 
             Text("Pourquoi donner ?")
               .appFont(.headlineSemiBold)
 
             VStack(alignment: .leading, spacing: 16) {
-              BenefitRow(
+              IconInfoRow(
                 icon: "curlybraces.square.fill",
                 title: "Projet open source",
                 description: "Code source ouvert et transparent"
               )
 
-              BenefitRow(
+              IconInfoRow(
                 icon: "gift.fill",
                 title: "Entièrement gratuit",
                 description:
                   "Pas de pub, pas d'abonnement, pas de version premium"
               )
 
-              BenefitRow(
+              IconInfoRow(
                 icon: "person.fill",
                 title: "Développeur indépendant",
                 description:
                   "Camille développe bénévolement sur son temps libre"
               )
 
-              BenefitRow(
+              IconInfoRow(
                 icon: "arrow.clockwise.circle.fill",
                 title: "Mises à jour régulières",
                 description:
                   "Nouvelles listes de blocage et améliorations continues"
               )
 
-              BenefitRow(
+              IconInfoRow(
                 icon: "lock.shield.fill",
                 title: "Confidentialité respectée",
                 description:
@@ -84,7 +83,7 @@ struct DonationSheet: View {
             } label: {
               HStack {
                 Image(systemName: "creditcard.fill")
-                Text("Carte Bancaire & Apple Pay")
+                Text("Carte Bancaire et Apple Pay")
               }
             }
             .buttonStyle(
@@ -108,35 +107,19 @@ struct DonationSheet: View {
               .fullWidth(background: .blue, foreground: .white)
             )
 
-            HStack(spacing: 12) {
-              Button {
-                if let url = URL(string: "https://github.com/sponsors/cbouvat") {
-                  UIApplication.shared.open(url)
-                }
-              } label: {
-                HStack {
-                  Text("GitHub")
-                }
+            Button {
+              if let url = URL(string: "https://liberapay.com/cbouvat") {
+                UIApplication.shared.open(url)
               }
-              .buttonStyle(
-                .fullWidth(background: .black, foreground: .white)
-              )
-
-              Button {
-                if let url = URL(string: "https://liberapay.com/cbouvat") {
-                  UIApplication.shared.open(url)
-                }
-              } label: {
-                HStack {
-                  Text("Liberapay")
-                }
+            } label: {
+              HStack {
+                Image(systemName: "eurosign.circle.fill")
+                Text("Liberapay")
               }
-              .buttonStyle(
-                .fullWidth(background: .yellow, foreground: .black)
-              )
             }
-
-            Spacer()
+            .buttonStyle(
+              .fullWidth(background: .yellow, foreground: .black)
+            )
 
             Button {
               if let url = URL(

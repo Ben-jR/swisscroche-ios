@@ -20,9 +20,11 @@ struct ReportChoiceButton: View {
           Text(title)
             .appFont(.subheadlineSemiBold)
             .foregroundColor(.primary)
+            .multilineTextAlignment(.leading)
           Text(description)
             .appFont(.caption)
             .foregroundColor(.secondary)
+            .multilineTextAlignment(.leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -34,9 +36,9 @@ struct ReportChoiceButton: View {
       }
       .padding(12)
       .background(isSelected ? color.opacity(0.15) : Color(.systemBackground))
-      .cornerRadius(12)
+      .cornerRadius(16)
       .overlay(
-        RoundedRectangle(cornerRadius: 12)
+        RoundedRectangle(cornerRadius: 16)
           .stroke(isSelected ? color : Color(.systemGray4), lineWidth: 1)
       )
     }

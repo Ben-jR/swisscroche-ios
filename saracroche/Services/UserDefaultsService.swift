@@ -11,7 +11,8 @@ class UserDefaultsService {
     static let lastSuccessfulUpdateAt = "lastSuccessfulUpdateAt"
     static let businessCode = "businessCode"
     static let notificationReminderEnabled = "notificationReminderEnabled"
-    static let extensionsSetupDismissed = "extensionsSetupDismissed"
+    static let smsFilterSetupDismissed = "smsFilterSetupDismissed"
+    static let callReportingSetupDismissed = "callReportingSetupDismissed"
   }
 
   init() {
@@ -86,16 +87,28 @@ class UserDefaultsService {
     userDefaults.removeObject(forKey: Keys.notificationReminderEnabled)
   }
 
-  func setExtensionsSetupDismissed(_ dismissed: Bool) {
-    userDefaults.set(dismissed, forKey: Keys.extensionsSetupDismissed)
+  func setSmsFilterSetupDismissed(_ dismissed: Bool) {
+    userDefaults.set(dismissed, forKey: Keys.smsFilterSetupDismissed)
   }
 
-  func getExtensionsSetupDismissed() -> Bool {
-    return userDefaults.bool(forKey: Keys.extensionsSetupDismissed)
+  func getSmsFilterSetupDismissed() -> Bool {
+    return userDefaults.bool(forKey: Keys.smsFilterSetupDismissed)
   }
 
-  func clearExtensionsSetupDismissed() {
-    userDefaults.removeObject(forKey: Keys.extensionsSetupDismissed)
+  func clearSmsFilterSetupDismissed() {
+    userDefaults.removeObject(forKey: Keys.smsFilterSetupDismissed)
+  }
+
+  func setCallReportingSetupDismissed(_ dismissed: Bool) {
+    userDefaults.set(dismissed, forKey: Keys.callReportingSetupDismissed)
+  }
+
+  func getCallReportingSetupDismissed() -> Bool {
+    return userDefaults.bool(forKey: Keys.callReportingSetupDismissed)
+  }
+
+  func clearCallReportingSetupDismissed() {
+    userDefaults.removeObject(forKey: Keys.callReportingSetupDismissed)
   }
 
   func resetAllData() {
@@ -104,6 +117,7 @@ class UserDefaultsService {
     clearLastSuccessfulUpdateAt()
     clearBusinessCode()
     clearNotificationReminderEnabled()
-    clearExtensionsSetupDismissed()
+    clearSmsFilterSetupDismissed()
+    clearCallReportingSetupDismissed()
   }
 }

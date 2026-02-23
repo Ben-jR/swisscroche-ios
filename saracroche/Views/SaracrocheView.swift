@@ -1,26 +1,36 @@
 import SwiftUI
 
 struct SaracrocheView: View {
-  @StateObject private var blockerViewModel = BlockerViewModel()
+  @StateObject private var blockerStatus = BlockerStatusViewModel()
+  @StateObject private var blockerUpdate = BlockerUpdateViewModel()
+  @StateObject private var userPreferences = UserPreferencesViewModel()
 
   var body: some View {
     TabView {
-      HomeNavigationView(blockerViewModel: blockerViewModel)
-        .tabItem {
-          Label("Accueil", systemImage: "house.fill")
-        }
+      HomeNavigationView(
+        blockerStatus: blockerStatus,
+        blockerUpdate: blockerUpdate,
+        userPreferences: userPreferences
+      )
+      .tabItem {
+        Label("Accueil", systemImage: "house.fill")
+      }
       ReportNavigationView()
         .tabItem {
           Label("Signaler", systemImage: "megaphone.fill")
         }
-      ListsNavigationView()
+      ListsNavigationView(blockerUpdate: blockerUpdate)
         .tabItem {
           Label("Listes", systemImage: "number.square.fill")
         }
-      SettingsNavigationView(blockerViewModel: blockerViewModel)
-        .tabItem {
-          Label("Réglages", systemImage: "gearshape.fill")
-        }
+      SettingsNavigationView(
+        blockerStatus: blockerStatus,
+        blockerUpdate: blockerUpdate,
+        userPreferences: userPreferences
+      )
+      .tabItem {
+        Label("Réglages", systemImage: "gearshape.fill")
+      }
     }
     .tint(.primary)
   }

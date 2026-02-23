@@ -1,10 +1,14 @@
 import SwiftUI
 
 struct AddPatternSheet: View {
+  // MARK: - Environment
   @Environment(\.dismiss) private var dismiss
+
+  // MARK: - Dependencies
   @ObservedObject var viewModel: ListsViewModel
   @Binding var isPresented: Bool
 
+  // MARK: - State
   @State private var patternString: String = ""
   @State private var isBlock: Bool = true
   @State private var name: String = ""
@@ -32,7 +36,7 @@ struct AddPatternSheet: View {
       Form {
         Section {
           VStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 8) {
               Text("Préfixe")
                 .appFont(.subheadlineSemiBold)
               TextField("+33612345####", text: $patternString)
@@ -43,9 +47,9 @@ struct AddPatternSheet: View {
                 .focused($isPatternFieldFocused)
                 .padding(12)
                 .background(Color(.systemBackground))
-                .cornerRadius(12)
+                .cornerRadius(16)
                 .overlay(
-                  RoundedRectangle(cornerRadius: 12)
+                  RoundedRectangle(cornerRadius: 16)
                     .stroke(
                       displayedError != nil
                         ? Color.red
@@ -89,7 +93,7 @@ struct AddPatternSheet: View {
               }
             }
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 8) {
               Text("Nom")
                 .appFont(.subheadlineSemiBold)
               TextField("Spam Marketing", text: $name)
@@ -98,9 +102,9 @@ struct AddPatternSheet: View {
                 .focused($isNameFieldFocused)
                 .padding(12)
                 .background(Color(.systemBackground))
-                .cornerRadius(12)
+                .cornerRadius(16)
                 .overlay(
-                  RoundedRectangle(cornerRadius: 12)
+                  RoundedRectangle(cornerRadius: 16)
                     .stroke(
                       isNameFieldFocused ? Color("AppColor") : Color(.systemGray4),
                       lineWidth: 1

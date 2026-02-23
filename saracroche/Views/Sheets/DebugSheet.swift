@@ -1,9 +1,17 @@
 import SwiftUI
 
 struct DebugSheet: View {
+  // MARK: - Environment
   @Environment(\.dismiss) private var dismiss
+
+  // MARK: - State
   @State private var alertMessage: String?
   @State private var showAlert = false
+
+  // MARK: - Computed Properties
+  private var deviceIdentifier: String {
+    return UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+  }
 
   var body: some View {
     NavigationView {
@@ -14,7 +22,7 @@ struct DebugSheet: View {
               Image(systemName: "hammer.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.red)
-                .symbolEffect(.wiggle.byLayer, options: .repeat(.periodic(delay: 1.0)))
+                .symbolEffect(.wiggle.byLayer, options: .repeat(.periodic(delay: 2.0)))
             } else {
               Image(systemName: "hammer.fill")
                 .font(.system(size: 60))
@@ -27,14 +35,33 @@ struct DebugSheet: View {
           }
 
           VStack(alignment: .leading, spacing: 16) {
-            // Warning
-            VStack(spacing: 8) {
-              Text(
-                "These tools are reserved for testing and may cause instabilities in the application."
-              )
-              .appFont(.body)
-              .multilineTextAlignment(.leading)
+            VStack(spacing: 16) {
+              HStack(spacing: 12) {
+                Image(systemName: "iphone.circle.fill")
+                  .font(.system(size: 20))
+                  .foregroundColor(.blue)
+                  .frame(width: 24)
+
+                VStack(alignment: .leading, spacing: 2) {
+                  Text("UUID Device")
+                    .appFont(.subheadlineMedium)
+                    .foregroundColor(.primary)
+
+                  Text(deviceIdentifier)
+                    .appFont(.caption)
+                    .foregroundColor(.secondary)
+                    .textSelection(.enabled)
+                }
+
+                Spacer()
+              }
             }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+              RoundedRectangle(cornerRadius: 16)
+                .fill(Color.gray.opacity(0.1))
+            )
 
             DebugButton(
               action: {
@@ -73,9 +100,17 @@ struct DebugSheet: View {
               background: .red,
               foreground: .white
             )
+
+            DebugButton(
+              action: {
+                resetUserDefaults()
+              },
+              title: "Reset UserDefaults",
+              background: .red,
+              foreground: .white
+            )
           }
         }
-        .padding()
       }
       .padding()
       .toolbar {
@@ -114,7 +149,7 @@ struct DebugSheet: View {
   private func forceUpdate() {
     Task {
       do {
-        try await BlockerService().performUpdate()
+        try await BlockerService().performBackgroundUpdate()
         DispatchQueue.main.async {
           alertMessage = "✅ Update forced"
           showAlert = true
@@ -146,6 +181,12 @@ struct DebugSheet: View {
     }
   }
 
+  private func resetUserDefaults() {
+    UserDefaultsService().resetAllData()
+    alertMessage = "✅ UserDefaults reset"
+    showAlert = true
+  }
+
   private func clearCoreData() async {
     let patternService = PatternService()
     await patternService.deleteAllPatterns()
@@ -171,4 +212,8 @@ struct DebugButton: View {
         .cornerRadius(24)
     }
   }
+}
+
+#Preview {
+  DebugSheet()
 }

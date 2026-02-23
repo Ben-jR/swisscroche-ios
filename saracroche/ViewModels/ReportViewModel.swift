@@ -17,8 +17,8 @@ class ReportViewModel: ObservableObject {
 
     var title: String {
       switch self {
-      case .success: return "Success"
-      case .error: return "Error"
+      case .success: return "Succès"
+      case .error: return "Erreur"
       case .info: return "Information"
       }
     }
@@ -51,12 +51,12 @@ class ReportViewModel: ObservableObject {
     let isValidFormat = trimmedNumber.matches(e164Regex)
 
     if trimmedNumber.isEmpty {
-      showError("Please enter a phone number.")
+      showError("Veuillez entrer un numéro de téléphone.")
       return false
     }
 
     if !isValidFormat {
-      showError("The number must be in E.164 format (e.g., +33612345678).")
+      showError("Le numéro doit être au format E.164 (par exemple, +33612345678).")
       return false
     }
 
@@ -68,8 +68,8 @@ class ReportViewModel: ObservableObject {
     alertType = .success
     let message =
       isGood
-      ? "Phone number reported as legitimate! Thank you for your contribution 😊"
-      : "Phone number reported as spam! Thank you for your contribution 😊"
+      ? "Numéro de téléphone signalé comme légitime ! Merci pour votre contribution 😊"
+      : "Numéro de téléphone signalé comme spam ! Merci pour votre contribution 😊"
     alertMessage = message
     showAlert = true
   }
@@ -80,7 +80,7 @@ class ReportViewModel: ObservableObject {
       alertMessage = networkError.userMessage
     } else {
       alertType = .error
-      alertMessage = "An unexpected error occurred. Please try again."
+      alertMessage = "Une erreur inattendue s'est produite. Veuillez réessayer."
     }
     showAlert = true
   }

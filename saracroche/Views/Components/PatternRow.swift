@@ -15,7 +15,6 @@ struct PatternRow: View {
           if let name = pattern.name, !name.isEmpty {
             Text(name)
               .appFont(.captionSemiBold)
-              .lineLimit(1)
           }
           Spacer()
           Text("\(calculateBlockedCount(pattern)) numéros")
@@ -27,7 +26,6 @@ struct PatternRow: View {
         Text(pattern.pattern ?? "")
           .font(.caption.monospaced())
           .foregroundColor(.secondary)
-          .lineLimit(1)
       }
     }
     .accessibilityLabel(
