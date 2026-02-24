@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.1] - 2026-02-24
+
+### Added
+- **French List Metadata**: New `FrenchListMetadata` struct and `getFrenchListMetadata()` method in `PatternService` for extracting metadata from API patterns
+- **Background Service**: Converted `BackgroundService` from `ObservableObject` to singleton pattern with shared instance
+- **App Delegate**: Added `AppDelegate` for proper background task registration in iOS app lifecycle
+
+### Changed
+- **BackgroundService**: Refactored from instance-based to singleton pattern, moved background task registration to AppDelegate
+- **PatternService**: Added `returnsObjectsAsFaults = false` to all CoreData fetch requests for better performance
+- **ListsViewModel**: Updated `updateFrenchListMetadata()` to use async/await pattern and leverage new metadata service
+- **App Architecture**: Moved from `@StateObject` background service to `UIApplicationDelegateAdaptor` for proper background task handling
+- Updated app version to 4.2.1
+
+### Optimized
+- **App Constants**: Reduced `patternReprocessInterval` from 20 days to 7 days for more frequent pattern reprocessing
+- **Number Processing**: Decreased `numberChunkSize` from 10,000 to 5,000 for better memory management
+- **Extension Performance**: Reduced `extensionReloadDelay` from 25ms to 20ms for faster extension updates
+
 ## [4.2.0] - 2026-02-23
 
 ### Added
