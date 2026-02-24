@@ -41,7 +41,7 @@ class ListsViewModel: ObservableObject {
   func loadData() async {
     await loadAPIPatterns()
     await loadUserPatterns()
-    updateFrenchListMetadata()
+    await updateFrenchListMetadata()
   }
 
   private func loadAPIPatterns() async {
@@ -54,16 +54,11 @@ class ListsViewModel: ObservableObject {
       .sorted { ($0.addedDate ?? Date()) > ($1.addedDate ?? Date()) }
   }
 
-  private func updateFrenchListMetadata() {
-    // Extract metadata from the first API pattern
-    if let firstPattern = apiPatterns.first {
-      frenchListName = firstPattern.sourceListName ?? "Liste Française"
-      frenchListVersion = firstPattern.sourceVersion ?? "1.0"
-      // Calculate total blocked numbers
-      frenchListBlockedCount = apiPatterns.reduce(0) { total, pattern in
-        guard let patternString = pattern.pattern else { return total }
-        return total + Int(PhoneNumberHelpers.countPhoneNumbers(for: patternString))
-      }
+  private func updateFrenchListMetadata() async {
+    if let metadata = await patternService.getFrenchListMetadata() {
+      frenchListName = metadata.name
+      frenchListVersion = metadata.version
+      frenchListBlockedCount = metadata.blockedCount
     }
   }
 

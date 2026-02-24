@@ -3,7 +3,10 @@ import Foundation
 import UIKit
 
 /// Background service for periodic updates
-final class BackgroundService: ObservableObject {
+final class BackgroundService {
+
+  // MARK: - Singleton
+  static let shared = BackgroundService()
 
   // MARK: - Constants
   private let backgroundServiceIdentifier = AppConstants.backgroundServiceIdentifier
@@ -13,27 +16,8 @@ final class BackgroundService: ObservableObject {
   private let userDefaults: UserDefaultsService
 
   // MARK: - Initialization
-  init() {
+  private init() {
     self.userDefaults = UserDefaultsService()
-    registerBackgroundTasks()
-  }
-
-  // MARK: - Setup
-
-  /// Register background tasks
-  private func registerBackgroundTasks() {
-    Logger.info("Register background tasks", category: .backgroundService)
-    BGTaskScheduler.shared.register(
-      forTaskWithIdentifier: backgroundServiceIdentifier,
-      using: nil
-    ) { [weak self] task in
-      guard let processingTask = task as? BGProcessingTask else {
-        Logger.error("Unexpected background task type", category: .backgroundService, error: nil)
-        task.setTaskCompleted(success: false)
-        return
-      }
-      self?.handleBackgroundUpdate(task: processingTask)
-    }
   }
 
   /// Schedule background task
@@ -55,7 +39,7 @@ final class BackgroundService: ObservableObject {
   }
 
   /// Handle background update
-  private func handleBackgroundUpdate(task: BGProcessingTask) {
+  func handleBackgroundUpdate(task: BGProcessingTask) {
     Logger.info("Handling background app refresh", category: .backgroundService)
 
     scheduleBackgroundTask()

@@ -1,6 +1,13 @@
 import CoreData
 import Foundation
 
+/// Metadata about the French blocking list, extracted as plain Swift types
+struct FrenchListMetadata {
+  let name: String
+  let version: String
+  let blockedCount: Int
+}
+
 /// Service for managing Pattern entities in CoreData
 class PatternService {
   private let dataStack = CoreDataStack.shared
@@ -75,6 +82,7 @@ class PatternService {
     return await withCheckedContinuation { continuation in
       context.perform {
         let fetchRequest = NSFetchRequest<Pattern>(entityName: "Pattern")
+        fetchRequest.returnsObjectsAsFaults = false
 
         do {
           let patterns = try context.fetch(fetchRequest)
@@ -101,6 +109,7 @@ class PatternService {
       context.perform {
         let fetchRequest = NSFetchRequest<Pattern>(entityName: "Pattern")
         fetchRequest.predicate = NSPredicate(format: "pattern == %@", pattern)
+        fetchRequest.returnsObjectsAsFaults = false
 
         do {
           let results = try context.fetch(fetchRequest)
@@ -126,6 +135,7 @@ class PatternService {
       context.perform {
         let fetchRequest = NSFetchRequest<Pattern>(entityName: "Pattern")
         fetchRequest.predicate = NSPredicate(format: "completedDate == nil")
+        fetchRequest.returnsObjectsAsFaults = false
 
         do {
           let patterns = try context.fetch(fetchRequest)
@@ -152,6 +162,7 @@ class PatternService {
       context.perform {
         let fetchRequest = NSFetchRequest<Pattern>(entityName: "Pattern")
         fetchRequest.predicate = NSPredicate(format: "source == %@", source)
+        fetchRequest.returnsObjectsAsFaults = false
 
         do {
           let patterns = try context.fetch(fetchRequest)
@@ -163,6 +174,46 @@ class PatternService {
             error: error
           )
           continuation.resume(returning: [])
+        }
+      }
+    }
+  }
+
+  /// Fetches metadata about the French blocking list entirely within the CoreData context
+  /// - Returns: FrenchListMetadata with plain Swift types, or nil if no API patterns exist
+  func getFrenchListMetadata() async -> FrenchListMetadata? {
+    let context = dataStack.persistentContainer.viewContext
+
+    return await withCheckedContinuation { continuation in
+      context.perform {
+        let fetchRequest = NSFetchRequest<Pattern>(entityName: "Pattern")
+        fetchRequest.predicate = NSPredicate(format: "source == %@", "api")
+        fetchRequest.returnsObjectsAsFaults = false
+
+        do {
+          let patterns = try context.fetch(fetchRequest)
+          guard let firstPattern = patterns.first else {
+            continuation.resume(returning: nil)
+            return
+          }
+
+          let name = firstPattern.sourceListName ?? "Liste Française"
+          let version = firstPattern.sourceVersion ?? "1.0"
+          let blockedCount = patterns.reduce(0) { total, pattern in
+            guard let patternString = pattern.pattern else { return total }
+            return total + Int(PhoneNumberHelpers.countPhoneNumbers(for: patternString))
+          }
+
+          continuation.resume(
+            returning: FrenchListMetadata(
+              name: name, version: version, blockedCount: blockedCount))
+        } catch {
+          Logger.error(
+            "Failed to fetch French list metadata: %{public}@",
+            category: .patternService,
+            error: error
+          )
+          continuation.resume(returning: nil)
         }
       }
     }
@@ -210,6 +261,7 @@ class PatternService {
       context.perform {
         let fetchRequest = NSFetchRequest<Pattern>(entityName: "Pattern")
         fetchRequest.predicate = NSPredicate(format: "completedDate != nil")
+        fetchRequest.returnsObjectsAsFaults = false
 
         do {
           let patterns = try context.fetch(fetchRequest)

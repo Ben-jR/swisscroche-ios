@@ -1,8 +1,29 @@
+import BackgroundTasks
 import SwiftUI
+import UIKit
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
+    BGTaskScheduler.shared.register(
+      forTaskWithIdentifier: AppConstants.backgroundServiceIdentifier,
+      using: nil
+    ) { task in
+      guard let processingTask = task as? BGProcessingTask else {
+        task.setTaskCompleted(success: false)
+        return
+      }
+      BackgroundService.shared.handleBackgroundUpdate(task: processingTask)
+    }
+    return true
+  }
+}
 
 @main
 struct SaracrocheApp: App {
-  @StateObject private var backgroundService = BackgroundService()
+  @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
   @Environment(\.scenePhase) private var scenePhase
 
   init() {
@@ -41,7 +62,7 @@ struct SaracrocheApp: App {
     }
     .onChange(of: scenePhase) { newPhase in
       if newPhase == .background {
-        backgroundService.applicationDidEnterBackground()
+        BackgroundService.shared.applicationDidEnterBackground()
       }
     }
   }
