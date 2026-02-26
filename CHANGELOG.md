@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.0] - 2026-02-26
+
+### Added
+- **Apple Shortcuts Integration**: Complete Siri shortcuts support for automatic blocker list updates
+  - New `AppShortcuts` provider with "Mettre à jour" shortcut
+  - `UpdateBlockerIntent` for background updates with 25-second timeout handling
+  - `ShortcutSetupSheet` with step-by-step instructions for creating daily automation
+  - User preferences tracking for shortcut setup dismissal
+  - Feature card in home view promoting shortcut setup
+- **Shortcut Setup UI**: New setup sheet with animated instructions and direct link to Shortcuts app
+
+### Changed
+- **Performance Optimization**:
+  - Increased `numberChunkSize` from 5,000 to 10,000 for better processing efficiency
+  - Adjusted extension timing constants:
+    - `extensionResetDelay`: Increased from 5 seconds to 10 seconds
+    - `extensionReloadDelay`: Decreased from 20ms to 5ms
+    - `extensionReloadRetryDelay`: Maintained at 2 seconds
+  - Reduced `maxRetryCount` from 10 to 5 for more efficient error handling
+  - Added `intentTimeoutDelay` constant (25 seconds) for shortcut timeout management
+- **App Identity**: Updated display name from "Saracroche" to "Saracroche" (consistency update)
+
+### Fixed
+- **Info.plist Organization**: Reordered keys for better readability (moved `UIAppFonts` before `UIBackgroundModes`)
+
 ## [4.2.1] - 2026-02-24
 
 ### Added
