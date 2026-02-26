@@ -11,6 +11,7 @@ struct HomeSheetModifier: ViewModifier {
   @Binding var showUpdateInProgressSheet: Bool
   @Binding var showSmsFilterSetupSheet: Bool
   @Binding var showCallReportingSetupSheet: Bool
+  @Binding var showShortcutSetupSheet: Bool
 
   func body(content: Content) -> some View {
     content
@@ -43,6 +44,11 @@ struct HomeSheetModifier: ViewModifier {
           blockerStatus: blockerStatus,
           userPreferences: userPreferences
         )
+      }
+      .sheet(isPresented: $showShortcutSetupSheet) {
+        if #available(iOS 16.0, *) {
+          ShortcutSetupSheet(userPreferences: userPreferences)
+        }
       }
       .sheet(isPresented: $blockerUpdate.showErrorSheet) {
         UpdateErrorSheet()

@@ -4,6 +4,7 @@ struct HomeFeatureCards: View {
   @ObservedObject var userPreferences: UserPreferencesViewModel
   @Binding var showSmsFilterSetupSheet: Bool
   @Binding var showCallReportingSetupSheet: Bool
+  @Binding var showShortcutSetupSheet: Bool
   @Binding var showDonationSheet: Bool
 
   var body: some View {
@@ -20,6 +21,12 @@ struct HomeFeatureCards: View {
 
       if !userPreferences.isNotificationReminderEnabled {
         notificationReminderView
+      }
+
+      if #available(iOS 16.0, *) {
+        if !userPreferences.isShortcutSetupDismissed {
+          shortcutSetupView
+        }
       }
 
       donationView
@@ -113,6 +120,38 @@ struct HomeFeatureCards: View {
         .fullWidth(background: .blue, foreground: .white)
       )
       .accessibilityLabel("Activez le rappel de mise à jour")
+    }
+    .padding()
+    .frame(maxWidth: .infinity)
+    .background(
+      RoundedRectangle(cornerRadius: 16)
+        .fill(Color.gray.opacity(0.1))
+    )
+  }
+
+  @available(iOS 16.0, *)
+  private var shortcutSetupView: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      Text("Raccourci automatique")
+        .appFont(.headlineSemiBold)
+
+      Text(
+        "Créez un raccourci pour mettre à jour automatiquement la liste de blocage tous les jours."
+      )
+      .appFont(.body)
+
+      Button {
+        showShortcutSetupSheet = true
+      } label: {
+        HStack {
+          Image(systemName: "arrow.clockwise.circle.fill")
+          Text("Configurer")
+        }
+      }
+      .buttonStyle(
+        .fullWidth(background: .blue, foreground: .white)
+      )
+      .accessibilityLabel("Configurer le raccourci automatique")
     }
     .padding()
     .frame(maxWidth: .infinity)

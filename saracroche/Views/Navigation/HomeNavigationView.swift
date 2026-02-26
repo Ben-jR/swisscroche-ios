@@ -15,6 +15,7 @@ struct HomeNavigationView: View {
   @State private var showUpdateInProgressSheet = false
   @State private var showSmsFilterSetupSheet = false
   @State private var showCallReportingSetupSheet = false
+  @State private var showShortcutSetupSheet = false
 
   var body: some View {
     NavigationView {
@@ -36,6 +37,7 @@ struct HomeNavigationView: View {
                 userPreferences: userPreferences,
                 showSmsFilterSetupSheet: $showSmsFilterSetupSheet,
                 showCallReportingSetupSheet: $showCallReportingSetupSheet,
+                showShortcutSetupSheet: $showShortcutSetupSheet,
                 showDonationSheet: $showDonationSheet
               )
             }
@@ -67,7 +69,8 @@ struct HomeNavigationView: View {
           showInfoSheet: $showInfoSheet,
           showUpdateInProgressSheet: $showUpdateInProgressSheet,
           showSmsFilterSetupSheet: $showSmsFilterSetupSheet,
-          showCallReportingSetupSheet: $showCallReportingSetupSheet
+          showCallReportingSetupSheet: $showCallReportingSetupSheet,
+          showShortcutSetupSheet: $showShortcutSetupSheet
         )
       )
     }

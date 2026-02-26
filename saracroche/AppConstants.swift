@@ -14,9 +14,10 @@ struct AppConstants {
   static let listDownloadInterval: TimeInterval = 24 * 60 * 60
   static let patternReprocessInterval: TimeInterval = 7 * 24 * 60 * 60
   static let notificationReminderInterval: TimeInterval = 15 * 24 * 60 * 60
-  static let numberChunkSize = 5_000
-  static let extensionResetDelay: UInt64 = 5 * 1_000_000_000
-  static let extensionReloadDelay: UInt64 = 20_000_000
-  static let extensionReloadRetryDelay: UInt64 = 2 * 1_000_000_000
-  static let maxRetryCount = 10
+  static let numberChunkSize = 10_000
+  static let extensionResetDelay: UInt64 = 10_000_000_000
+  static let extensionReloadDelay: UInt64 = 5_000_000
+  static let extensionReloadRetryDelay: UInt64 = 2_000_000_000
+  static let maxRetryCount = 5
+  static let intentTimeoutDelay: UInt64 = 25_000_000_000
 }

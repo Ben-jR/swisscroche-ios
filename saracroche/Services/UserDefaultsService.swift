@@ -13,6 +13,7 @@ class UserDefaultsService {
     static let notificationReminderEnabled = "notificationReminderEnabled"
     static let smsFilterSetupDismissed = "smsFilterSetupDismissed"
     static let callReportingSetupDismissed = "callReportingSetupDismissed"
+    static let shortcutSetupDismissed = "shortcutSetupDismissed"
   }
 
   init() {
@@ -111,6 +112,18 @@ class UserDefaultsService {
     userDefaults.removeObject(forKey: Keys.callReportingSetupDismissed)
   }
 
+  func setShortcutSetupDismissed(_ dismissed: Bool) {
+    userDefaults.set(dismissed, forKey: Keys.shortcutSetupDismissed)
+  }
+
+  func getShortcutSetupDismissed() -> Bool {
+    return userDefaults.bool(forKey: Keys.shortcutSetupDismissed)
+  }
+
+  func clearShortcutSetupDismissed() {
+    userDefaults.removeObject(forKey: Keys.shortcutSetupDismissed)
+  }
+
   func resetAllData() {
     clearLastListDownloadAt()
     clearLastBackgroundLaunchAt()
@@ -119,5 +132,6 @@ class UserDefaultsService {
     clearNotificationReminderEnabled()
     clearSmsFilterSetupDismissed()
     clearCallReportingSetupDismissed()
+    clearShortcutSetupDismissed()
   }
 }

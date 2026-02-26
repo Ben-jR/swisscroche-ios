@@ -9,6 +9,7 @@ class UserPreferencesViewModel: ObservableObject {
   @Published var isNotificationReminderEnabled: Bool = false
   @Published var isSmsFilterSetupDismissed: Bool = false
   @Published var isCallReportingSetupDismissed: Bool = false
+  @Published var isShortcutSetupDismissed: Bool = false
 
   // MARK: - Dependencies
 
@@ -35,6 +36,7 @@ class UserPreferencesViewModel: ObservableObject {
 
     isSmsFilterSetupDismissed = userDefaults.getSmsFilterSetupDismissed()
     isCallReportingSetupDismissed = userDefaults.getCallReportingSetupDismissed()
+    isShortcutSetupDismissed = userDefaults.getShortcutSetupDismissed()
   }
 
   // MARK: - Notifications
@@ -68,5 +70,11 @@ class UserPreferencesViewModel: ObservableObject {
   func dismissCallReportingSetup() {
     userDefaults.setCallReportingSetupDismissed(true)
     isCallReportingSetupDismissed = true
+  }
+
+  /// Dismisses the shortcut setup card
+  func dismissShortcutSetup() {
+    userDefaults.setShortcutSetupDismissed(true)
+    isShortcutSetupDismissed = true
   }
 }

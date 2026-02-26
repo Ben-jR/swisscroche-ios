@@ -6,14 +6,14 @@
 	<array>
 		<string>com.cbouvat.saracroche.background-update</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>AtkinsonHyperlegibleNextVF-Variable.ttf</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>processing</string>
 		<string>fetch</string>
-	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>AtkinsonHyperlegibleNextVF-Variable.ttf</string>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict>
