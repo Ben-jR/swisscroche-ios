@@ -57,7 +57,6 @@ final class BlockerService {
         category: .blockerService, error: error)
     }
     await patternService.clearAllCompletedDates()
-    try? await Task.sleep(nanoseconds: AppConstants.extensionResetDelay)
   }
 
   // MARK: - Download
@@ -144,17 +143,22 @@ final class BlockerService {
         let patternString = pattern.pattern
       else { break }
 
+      await onPatternStarted?(patternString, pattern.action ?? "block")
+
       do {
-        await onPatternStarted?(patternString, pattern.action ?? "block")
         try await processPendingPattern(pattern)
-        completedCount += 1
-        userDefaultsService.setLastSuccessfulUpdateAt(Date())
-        await onPatternCompleted?(completedCount, totalCount)
       } catch is CancellationError {
         throw CancellationError()
       } catch {
-        throw BlockerServiceError.patternProcessingFailed(error)
+        Logger.error(
+          "Pattern '\(patternString)' failed, skipping",
+          category: .blockerService, error: error)
+        continue
       }
+
+      completedCount += 1
+      userDefaultsService.setLastSuccessfulUpdateAt(Date())
+      await onPatternCompleted?(completedCount, totalCount)
     }
   }
 
@@ -164,43 +168,6 @@ final class BlockerService {
     if !hasPatterns {
       Logger.debug("No patterns found, launching update", category: .blockerService)
       try await downloadList()
-    }
-  }
-
-  /// Performs `performForegroundUpdate()` with retry and extension reset between attempts
-  func performForegroundUpdateWithRetry(
-    onPatternStarted: PatternStartCallback? = nil,
-    onPatternCompleted: PatternProgressCallback? = nil
-  ) async throws {
-    var retryCount = 0
-
-    while retryCount < AppConstants.maxRetryCount {
-      do {
-        try Task.checkCancellation()
-        try await performForegroundUpdate(
-          onPatternStarted: onPatternStarted,
-          onPatternCompleted: onPatternCompleted
-        )
-        return
-      } catch is CancellationError {
-        throw CancellationError()
-      } catch {
-        retryCount += 1
-
-        Logger.error(
-          "Update failed (attempt \(retryCount)/\(AppConstants.maxRetryCount)), resetting extension",
-          category: .blockerService, error: error)
-
-        if retryCount >= AppConstants.maxRetryCount {
-          throw BlockerServiceError.maxRetriesExceeded
-        }
-
-        // Wait before retrying
-        try? await Task.sleep(nanoseconds: AppConstants.extensionReloadRetryDelay)
-
-        // Reset extension state to recover from potential corruption
-        await resetExtensionState()
-      }
     }
   }
 

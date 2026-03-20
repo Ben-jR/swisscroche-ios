@@ -12,12 +12,9 @@ struct AppConstants {
   static let apiFrenchListURL = "\(apiBaseURL)/lists/french-list-arcep-operators"
   static let backgroundUpdateInterval: TimeInterval = 6 * 60 * 60
   static let listDownloadInterval: TimeInterval = 24 * 60 * 60
-  static let patternReprocessInterval: TimeInterval = 7 * 24 * 60 * 60
+  static let patternReprocessInterval: TimeInterval = 15 * 24 * 60 * 60
+  static let patternResetPercentage: Double = 0.05
   static let notificationReminderInterval: TimeInterval = 15 * 24 * 60 * 60
-  static let numberChunkSize = 10_000
-  static let extensionResetDelay: UInt64 = 10_000_000_000
-  static let extensionReloadDelay: UInt64 = 5_000_000
-  static let extensionReloadRetryDelay: UInt64 = 2_000_000_000
-  static let maxRetryCount = 5
-  static let intentTimeoutDelay: UInt64 = 25_000_000_000
+  static let numberChunkSize = 20_000
+  static let intentTimeoutDelay: UInt64 = 20_000_000_000
 }

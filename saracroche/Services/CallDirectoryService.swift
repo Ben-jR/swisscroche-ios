@@ -63,6 +63,5 @@ class CallDirectoryService {
         }
       }
     }
-    try await Task.sleep(nanoseconds: AppConstants.extensionReloadDelay)
   }
 }

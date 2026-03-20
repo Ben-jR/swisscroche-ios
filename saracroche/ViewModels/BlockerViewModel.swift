@@ -19,7 +19,6 @@ class BlockerUpdateViewModel: ObservableObject {
 
   @Published var shouldUpdateList: Bool = false
   @Published var isCancellationRequested: Bool = false
-  @Published var showErrorSheet: Bool = false
 
   // Current pattern being processed
   @Published var currentPatternString: String? = nil
@@ -91,7 +90,7 @@ class BlockerUpdateViewModel: ObservableObject {
     totalPatternsCount = completedPatternsCount + pendingPatternsCount
 
     do {
-      try await blockerService.performForegroundUpdateWithRetry(
+      try await blockerService.performForegroundUpdate(
         onPatternStarted: { [weak self] patternString, action in
           guard let self = self else { return }
           await MainActor.run {
@@ -117,14 +116,6 @@ class BlockerUpdateViewModel: ObservableObject {
       return
     } catch {
       Logger.error("Update failed", category: .blockerViewModel, error: error)
-      if let blockerError = error as? BlockerServiceError {
-        switch blockerError {
-        case .extensionReloadFailed, .maxRetriesExceeded:
-          showErrorSheet = true
-        default:
-          break
-        }
-      }
       currentPatternString = nil
       currentPatternAction = nil
       updateState = .ok

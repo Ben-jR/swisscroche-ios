@@ -447,8 +447,9 @@ class PatternService {
     }
   }
 
-  /// Resets completedDate to nil for patterns completed more than the reprocess interval ago
+  /// Resets completedDate to nil for a percentage of patterns completed more than the reprocess interval ago
   /// Only affects "block" and "identify" actions (not removal actions)
+  /// The percentage is defined by AppConstants.patternResetPercentage (default 5%), with a minimum of 1 pattern
   /// - Returns: The number of patterns that were reset
   func resetExpiredCompletedPatterns() async -> Int {
     let context = dataStack.persistentContainer.viewContext
@@ -468,11 +469,17 @@ class PatternService {
 
         do {
           let patterns = try context.fetch(fetchRequest)
-          for pattern in patterns {
+          guard !patterns.isEmpty else {
+            continuation.resume(returning: 0)
+            return
+          }
+          let resetCount = max(1, Int(Double(patterns.count) * AppConstants.patternResetPercentage))
+          let patternsToReset = patterns.shuffled().prefix(resetCount)
+          for pattern in patternsToReset {
             pattern.completedDate = nil
           }
           Self.save(context: context)
-          continuation.resume(returning: patterns.count)
+          continuation.resume(returning: patternsToReset.count)
         } catch {
           Logger.error(
             "Failed to reset expired completed patterns: %{public}@",

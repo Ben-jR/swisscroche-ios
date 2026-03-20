@@ -134,6 +134,15 @@ struct DonationSheet: View {
             .buttonStyle(
               .fullWidth(background: .pink, foreground: .white)
             )
+
+            Button {
+              dismiss()
+            } label: {
+              Label("Plus tard, non merci", systemImage: "xmark")
+            }
+            .buttonStyle(
+              .fullWidth(background: .black, foreground: .white)
+            )
           }
         }
         .padding()

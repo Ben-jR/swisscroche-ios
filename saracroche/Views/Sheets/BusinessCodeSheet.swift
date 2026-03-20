@@ -75,7 +75,7 @@ struct BusinessCodeSheet: View {
               icon: "server.rack",
               title: "Déploiement MDM",
               description:
-                "Configuration centralisée via Intune, déploiement sans intervention utilisateur"
+                "Configuration centralisée, déploiement sans intervention utilisateur"
             )
 
             IconInfoRow(

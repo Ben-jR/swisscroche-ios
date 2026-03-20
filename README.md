@@ -29,7 +29,7 @@ Saracroche offers an **Enterprise edition** for business users with centralized 
 - 📋 **Custom allow lists** for trusted business numbers
 - 📊 **Centralized reporting** of unwanted calls across the organization
 - 📱 **Multi-channel blocking** for calls and SMS with phishing protection
-- 🔧 **MDM deployment** via Intune with zero-touch configuration
+- 🔧 **MDM deployment** with zero-touch configuration
 - 🔄 **Automatic updates** to keep protection current
 
 💼 [Learn more about Saracroche for Business](https://saracroche.org/fr/business)

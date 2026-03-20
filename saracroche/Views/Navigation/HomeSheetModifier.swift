@@ -50,8 +50,5 @@ struct HomeSheetModifier: ViewModifier {
           ShortcutSetupSheet(userPreferences: userPreferences)
         }
       }
-      .sheet(isPresented: $blockerUpdate.showErrorSheet) {
-        UpdateErrorSheet()
-      }
   }
 }

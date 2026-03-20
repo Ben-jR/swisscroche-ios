@@ -72,7 +72,7 @@ struct AddPatternSheet: View {
                   .accessibilityLabel("Erreur: \(error)")
               } else {
                 Text(
-                  "Format international avec '#' comme joker en fin de numéro. Ex: +33612345####"
+                  "Format international requis avec '#' comme joker en fin de numéro. Exemple : +33612345####"
                 )
                 .appFont(.caption)
                 .foregroundColor(.secondary)
@@ -157,7 +157,8 @@ struct AddPatternSheet: View {
             }
             .buttonStyle(.fullWidth(background: Color("AppColor"), foreground: .black))
             .disabled(
-              viewModel.isLoading || patternString.isEmpty || name.isEmpty || formatError != nil)
+              viewModel.isLoading || patternString.isEmpty || name.isEmpty || formatError != nil
+                || !patternString.contains("#"))
           }
           .padding(.vertical, 6)
         }

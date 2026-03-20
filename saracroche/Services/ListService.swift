@@ -75,12 +75,13 @@ final class ListService {
 
     // Create a dictionary of existing patterns for efficient lookup
     // This avoids calling getPattern(by:) during enumeration which can cause conflicts
-    let existingPatternsDict = [String: Pattern](
-      uniqueKeysWithValues:
-        existingPatterns.compactMap { pattern in
-          guard let patternString = pattern.pattern else { return nil }
-          return (patternString, pattern)
-        }
+    // Using uniquingKeysWith to handle potential duplicate pattern strings safely
+    let existingPatternsDict = Dictionary(
+      existingPatterns.compactMap { pattern -> (String, Pattern)? in
+        guard let patternString = pattern.pattern else { return nil }
+        return (patternString, pattern)
+      },
+      uniquingKeysWith: { first, _ in first }
     )
 
     // Find patterns to remove (those no longer in the new list)

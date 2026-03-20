@@ -75,9 +75,13 @@ class ListsViewModel: ObservableObject {
       return
     }
 
-    // Check for duplicates
-    if await patternService.getPattern(byPatternString: patternString) != nil {
-      patternError = "Ce préfixe existe déjà dans votre liste."
+    // Check for duplicates across all sources (API and user)
+    if let existingPattern = await patternService.getPattern(byPatternString: patternString) {
+      if existingPattern.source == "api" {
+        patternError = "Ce préfixe est déjà présent dans la liste de blocage."
+      } else {
+        patternError = "Ce préfixe existe déjà dans vos préfixes personnalisés."
+      }
       return
     }
 
@@ -132,6 +136,11 @@ class ListsViewModel: ObservableObject {
     }
 
     let hashCount = trimmed.filter { $0 == "#" }.count
+
+    if hashCount == 0 {
+      return "Le préfixe doit contenir au moins un joker '#'."
+    }
+
     if hashCount > 0, let firstHash = trimmed.firstIndex(of: "#") {
       let afterFirstHash = trimmed[firstHash...]
       if afterFirstHash.contains(where: { $0 != "#" }) {
