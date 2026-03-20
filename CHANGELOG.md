@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.4.0] - 2026-03-20
+
+### Added
+- **Donation Sheet Enhancement**: Added "Plus tard, non merci" dismiss button to `DonationSheet` for better user experience
+- **Pattern Reset Configuration**: Added `patternResetPercentage` constant (5% by default, minimum 1 pattern) to control how many expired patterns get reprocessed
+
+### Changed
+- **Performance Optimization**:
+  - Increased `numberChunkSize` from 10,000 to 20,000 for better memory efficiency
+  - Updated `patternReprocessInterval` from 7 to 15 days for less frequent reprocessing
+  - Reduced `intentTimeoutDelay` from 25s to 20s for faster timeout handling
+- **Documentation**: Updated MDM deployment description in README.md
+- **Pattern Processing**:
+  - Improved duplicate pattern detection with source-specific error messages
+  - Enhanced pattern dictionary creation with safe handling of duplicates using `uniquingKeysWith`
+  - Pattern validation now requires at least one wildcard character
+  - Pattern processing errors now skip failed patterns instead of throwing errors
+- **Pattern Format**: Updated pattern format instructions and validation messages
+
+### Removed
+- **Retry Logic**: Removed retry logic and related error handling (`maxRetryCount`, `extensionResetDelay`, `extensionReloadDelay`, `extensionReloadRetryDelay`)
+- **Error Handling**: Removed `UpdateErrorSheet` view as errors are now handled inline
+- **Documentation**: Removed CLAUDE.md file
+- **Error Enums**: Removed `CallDirectoryError` and `ListServiceError` enums
+
+### Fixed
+- **Pattern Validation**: Fixed pattern validation to require at least one wildcard character
+- **Error Handling**: Improved pattern processing error handling to skip failed patterns instead of throwing errors
+- **Pattern Format**: Updated pattern format instructions and validation messages
+
 ## [4.3.0] - 2026-02-26
 
 ### Added
