@@ -14,6 +14,7 @@ class UserDefaultsService {
     static let smsFilterSetupDismissed = "smsFilterSetupDismissed"
     static let callReportingSetupDismissed = "callReportingSetupDismissed"
     static let shortcutSetupDismissed = "shortcutSetupDismissed"
+    static let deviceIdentifier = "deviceIdentifier"
   }
 
   init() {
@@ -122,6 +123,15 @@ class UserDefaultsService {
 
   func clearShortcutSetupDismissed() {
     userDefaults.removeObject(forKey: Keys.shortcutSetupDismissed)
+  }
+
+  func getOrCreateDeviceIdentifier() -> String {
+    if let existingID = userDefaults.string(forKey: Keys.deviceIdentifier) {
+      return existingID
+    }
+    let newID = UUID().uuidString
+    userDefaults.set(newID, forKey: Keys.deviceIdentifier)
+    return newID
   }
 
   func resetAllData() {

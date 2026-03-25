@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 /// Base API service
 class APIService {
@@ -13,7 +12,7 @@ class APIService {
   }
 
   var deviceIdentifier: String {
-    return UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+    return UserDefaultsService().getOrCreateDeviceIdentifier()
   }
 
   init(configuration: URLSessionConfiguration = .default) {

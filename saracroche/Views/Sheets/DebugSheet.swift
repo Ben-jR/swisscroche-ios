@@ -10,7 +10,7 @@ struct DebugSheet: View {
 
   // MARK: - Computed Properties
   private var deviceIdentifier: String {
-    return UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+    return UserDefaultsService().getOrCreateDeviceIdentifier()
   }
 
   var body: some View {
