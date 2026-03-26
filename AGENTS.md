@@ -20,7 +20,7 @@ The project consists of four targets:
 - App Groups: All targets share data via `group.com.cbouvat.saracroche` (defined in `AppConstants.swift`).
 - CoreData: Main app stores blocking patterns in `DataModel.xcdatamodeld` with the `Pattern` entity.
 - Shared UserDefaults: Extensions communicate with the main app through shared UserDefaults to exchange phone numbers and actions.
-- Pattern System: Phone numbers use wildcard patterns (e.g., `0899######` where `#` matches any digit) stored in CoreData and processed in batches.
+- Pattern System: Phone numbers use wildcard patterns (e.g., `33899######` where `#` matches any digit) stored in CoreData and processed in batches.
 
 ## Guidelines
 
