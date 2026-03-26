@@ -2,6 +2,11 @@ import CallKit
 import Foundation
 import OSLog
 
+/// Errors specific to the Call Directory extension
+enum CallDirectoryHandlerError: Error {
+  case sharedUserDefaultsUnavailable
+}
+
 /// Call Directory extension handler
 class CallDirectoryHandler: CXCallDirectoryProvider {
   private let logger = Logger(subsystem: "com.saracroche.blocker", category: "CallDirectoryHandler")
@@ -17,22 +22,26 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
 
     context.delegate = self
 
-    if context.isIncremental {
-      incrementalUpdate(to: context)
-    } else {
-      fullUpdate(to: context)
+    do {
+      if context.isIncremental {
+        try incrementalUpdate(to: context)
+      } else {
+        try fullUpdate(to: context)
+      }
+      context.completeRequest()
+    } catch {
+      logger.error("Request failed: \(error.localizedDescription)")
+      context.cancelRequest(withError: error)
     }
-
-    context.completeRequest()
   }
 
   /// Process incremental update
   private func incrementalUpdate(
     to context: CXCallDirectoryExtensionContext
-  ) {
+  ) throws {
     guard let sharedDefaults = sharedUserDefaults() else {
       logger.error("Could not access shared UserDefaults")
-      return
+      throw CallDirectoryHandlerError.sharedUserDefaultsUnavailable
     }
 
     let action = sharedDefaults.string(forKey: "action") ?? ""
@@ -171,7 +180,12 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
   }
 
   /// Process full update (non-incremental)
-  private func fullUpdate(to context: CXCallDirectoryExtensionContext) {
+  private func fullUpdate(to context: CXCallDirectoryExtensionContext) throws {
+    // Clear any stale data from previous operations
+    if let sharedDefaults = sharedUserDefaults() {
+      sharedDefaults.set("", forKey: "action")
+      sharedDefaults.set([], forKey: "numbers")
+    }
     addFakeNumbers(to: context)
   }
 }

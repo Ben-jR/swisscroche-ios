@@ -13,8 +13,8 @@ struct AppConstants {
   static let backgroundUpdateInterval: TimeInterval = 6 * 60 * 60
   static let listDownloadInterval: TimeInterval = 24 * 60 * 60
   static let patternReprocessInterval: TimeInterval = 15 * 24 * 60 * 60
-  static let patternResetPercentage: Double = 0.05
-  static let notificationReminderInterval: TimeInterval = 15 * 24 * 60 * 60
+  static let patternResetPercentage: Double = 0.04
+  static let notificationReminderInterval: TimeInterval = 7 * 24 * 60 * 60
   static let numberChunkSize = 20_000
   static let intentTimeoutDelay: UInt64 = 20_000_000_000
 }
