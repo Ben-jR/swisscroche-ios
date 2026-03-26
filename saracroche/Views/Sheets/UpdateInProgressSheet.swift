@@ -34,9 +34,12 @@ struct UpdateInProgressSheet: View {
               .foregroundColor(.blue)
           }
 
-          Text(blockerUpdate.lastSuccessfulUpdateAt == nil ? "Installation en cours" : "Mise à jour en cours")
-            .appFont(.titleBold)
-            .multilineTextAlignment(.center)
+          Text(
+            blockerUpdate.lastSuccessfulUpdateAt == nil
+              ? "Installation en cours" : "Mise à jour en cours"
+          )
+          .appFont(.titleBold)
+          .multilineTextAlignment(.center)
 
           VStack(spacing: 16) {
             if case .inProgress(let progress) = blockerUpdate.updateState {
