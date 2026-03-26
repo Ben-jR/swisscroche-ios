@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.5.0] - 2026-03-26
+
+### Added
+- Added `HomeLoadingCard` with animated spinner for better user feedback during initialization
+- Added `UpdateErrorSheet` with troubleshooting steps for failed updates
+- Added iOS version detection and pattern reset on version changes
+- Added `CallDirectoryHandlerError` enum for better error management
+
+### Changed
+- Updated `patternResetPercentage` from 0.05 to 0.04
+- Updated `notificationReminderInterval` from 15 to 7 days
+- Moved `setLastSuccessfulUpdateAt()` calls to complete operations in update methods
+- Added `clearLastSuccessfulUpdateAt()` in error handling
+- Improved Call Directory Handler error handling with do-try-catch pattern
+- Replaced `isFirstInstall` with dynamic check using `lastSuccessfulUpdateAt`
+- Added sequential loading steps in Home Navigation
+
+### Fixed
+- Added `showUpdateError` property in `BlockerViewModel` for failed updates
+- Removed UIKit dependency in API Service
+- Replaced device identifier source with persistent storage
+
+### Removed
+- Removed `unknownStatusView` from HomeDisabledCard
+
 ## [4.4.0] - 2026-03-20
 
 ### Added
