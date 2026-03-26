@@ -33,109 +33,86 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [4.4.0] - 2026-03-20
 
 ### Added
-- **Donation Sheet Enhancement**: Added "Plus tard, non merci" dismiss button to `DonationSheet` for better user experience
-- **Pattern Reset Configuration**: Added `patternResetPercentage` constant (5% by default, minimum 1 pattern) to control how many expired patterns get reprocessed
+- Added dismiss button to `DonationSheet` for better user experience
+- Added `patternResetPercentage` constant to control pattern reprocessing
 
 ### Changed
-- **Performance Optimization**:
-  - Increased `numberChunkSize` from 10,000 to 20,000 for better memory efficiency
-  - Updated `patternReprocessInterval` from 7 to 15 days for less frequent reprocessing
-  - Reduced `intentTimeoutDelay` from 25s to 20s for faster timeout handling
-- **Documentation**: Updated MDM deployment description in README.md
-- **Pattern Processing**:
-  - Improved duplicate pattern detection with source-specific error messages
-  - Enhanced pattern dictionary creation with safe handling of duplicates using `uniquingKeysWith`
-  - Pattern validation now requires at least one wildcard character
-  - Pattern processing errors now skip failed patterns instead of throwing errors
-- **Pattern Format**: Updated pattern format instructions and validation messages
+- Increased `numberChunkSize` from 10,000 to 20,000 for better memory efficiency
+- Updated `patternReprocessInterval` from 7 to 15 days
+- Reduced `intentTimeoutDelay` from 25s to 20s
+- Updated MDM deployment description in README.md
+- Improved duplicate pattern detection and validation
+- Enhanced pattern dictionary creation with `uniquingKeysWith`
+- Pattern validation now requires at least one wildcard character
 
 ### Removed
-- **Retry Logic**: Removed retry logic and related error handling (`maxRetryCount`, `extensionResetDelay`, `extensionReloadDelay`, `extensionReloadRetryDelay`)
-- **Error Handling**: Removed `UpdateErrorSheet` view as errors are now handled inline
-- **Documentation**: Removed CLAUDE.md file
-- **Error Enums**: Removed `CallDirectoryError` and `ListServiceError` enums
+- Removed retry logic and related error handling
+- Removed `UpdateErrorSheet` view
+- Removed CLAUDE.md file
+- Removed `CallDirectoryError` and `ListServiceError` enums
 
 ### Fixed
-- **Pattern Validation**: Fixed pattern validation to require at least one wildcard character
-- **Error Handling**: Improved pattern processing error handling to skip failed patterns instead of throwing errors
-- **Pattern Format**: Updated pattern format instructions and validation messages
+- Fixed pattern validation to require at least one wildcard character
+- Improved pattern processing error handling to skip failed patterns
 
 ## [4.3.0] - 2026-02-26
 
 ### Added
-- **Apple Shortcuts Integration**: Complete Siri shortcuts support for automatic blocker list updates
-  - New `AppShortcuts` provider with "Mettre à jour" shortcut
-  - `UpdateBlockerIntent` for background updates with 25-second timeout handling
-  - `ShortcutSetupSheet` with step-by-step instructions for creating daily automation
-  - User preferences tracking for shortcut setup dismissal
-  - Feature card in home view promoting shortcut setup
-- **Shortcut Setup UI**: New setup sheet with animated instructions and direct link to Shortcuts app
+- Added Apple Shortcuts integration for automatic blocker list updates
+- Added `AppShortcuts` provider with update shortcut
+- Added `UpdateBlockerIntent` for background updates
+- Added `ShortcutSetupSheet` with step-by-step instructions
+- Added feature card promoting shortcut setup
 
 ### Changed
-- **Performance Optimization**:
-  - Increased `numberChunkSize` from 5,000 to 10,000 for better processing efficiency
-  - Adjusted extension timing constants:
-    - `extensionResetDelay`: Increased from 5 seconds to 10 seconds
-    - `extensionReloadDelay`: Decreased from 20ms to 5ms
-    - `extensionReloadRetryDelay`: Maintained at 2 seconds
-  - Reduced `maxRetryCount` from 10 to 5 for more efficient error handling
-  - Added `intentTimeoutDelay` constant (25 seconds) for shortcut timeout management
-- **App Identity**: Updated display name from "Saracroche" to "Saracroche" (consistency update)
+- Increased `numberChunkSize` from 5,000 to 10,000
+- Adjusted extension timing constants
+- Reduced `maxRetryCount` from 10 to 5
+- Added `intentTimeoutDelay` constant for timeout management
 
 ### Fixed
-- **Info.plist Organization**: Reordered keys for better readability (moved `UIAppFonts` before `UIBackgroundModes`)
+- Reordered Info.plist keys for better readability
 
 ## [4.2.1] - 2026-02-24
 
 ### Added
-- **French List Metadata**: New `FrenchListMetadata` struct and `getFrenchListMetadata()` method in `PatternService` for extracting metadata from API patterns
-- **Background Service**: Converted `BackgroundService` from `ObservableObject` to singleton pattern with shared instance
-- **App Delegate**: Added `AppDelegate` for proper background task registration in iOS app lifecycle
+- Added `FrenchListMetadata` struct for API pattern metadata extraction
+- Converted `BackgroundService` to singleton pattern
+- Added `AppDelegate` for background task registration
 
 ### Changed
-- **BackgroundService**: Refactored from instance-based to singleton pattern, moved background task registration to AppDelegate
-- **PatternService**: Added `returnsObjectsAsFaults = false` to all CoreData fetch requests for better performance
-- **ListsViewModel**: Updated `updateFrenchListMetadata()` to use async/await pattern and leverage new metadata service
-- **App Architecture**: Moved from `@StateObject` background service to `UIApplicationDelegateAdaptor` for proper background task handling
-- Updated app version to 4.2.1
+- Refactored BackgroundService to singleton pattern
+- Added `returnsObjectsAsFaults = false` to CoreData fetch requests
+- Updated ListsViewModel to use async/await pattern
+- Moved to `UIApplicationDelegateAdaptor` for background tasks
 
 ### Optimized
-- **App Constants**: Reduced `patternReprocessInterval` from 20 days to 7 days for more frequent pattern reprocessing
-- **Number Processing**: Decreased `numberChunkSize` from 10,000 to 5,000 for better memory management
-- **Extension Performance**: Reduced `extensionReloadDelay` from 25ms to 20ms for faster extension updates
+- Reduced `patternReprocessInterval` from 20 to 7 days
+- Decreased `numberChunkSize` from 10,000 to 5,000
+- Reduced `extensionReloadDelay` from 25ms to 20ms
 
 ## [4.2.0] - 2026-02-23
 
 ### Added
-- **Retry Logic**: Comprehensive retry mechanism for extension updates with configurable retry counts (`maxRetryCount = 10`) and delays
-- **Error Handling**: New error enums (`BlockerServiceError`, `CallDirectoryError`, `ListServiceError`) for better error management
-- **UI Components**: New card-based home screen components:
-  - `HomeActiveCard`: Shows active blocker status with phone number count
-  - `HomeDisabledCard`: Shows disabled extension state
-  - `HomeInstallCard`: Installation progress card
-  - `HomeUpdateCard`: Update available card
-  - `HomeFeatureCards`: Feature cards for SMS filter and call reporting
-- **Setup Sheets**: New setup sheets for additional features:
-  - `SmsFilterSetupSheet`: Guide for SMS filtering setup
-  - `CallReportingSetupSheet`: Guide for call reporting setup
-  - `UpdateErrorSheet`: Error handling for failed updates
-  - `UpdateInProgressSheet`: Progress indicator for updates
-- **View Models**: New `BlockerStatusViewModel` and `UserPreferencesViewModel` for better state management
-- **Constants**: New timing constants for extension management (`extensionResetDelay`, `extensionReloadDelay`, `extensionReloadRetryDelay`)
+- Added comprehensive retry mechanism for extension updates
+- Added new error enums for better error management
+- Added card-based home screen components (HomeActiveCard, HomeDisabledCard, etc.)
+- Added setup sheets for SMS filter and call reporting
+- Added new view models for better state management
+- Added timing constants for extension management
 
 ### Changed
-- **BlockerService**: Complete refactoring with separate methods for background/foreground updates, progress callbacks, and improved retry logic
-- **BackgroundService**: Enhanced background task handling with better cancellation support and error handling
-- **HomeNavigationView**: Complete UI restructuring from list-based to card-based layout with improved navigation
-- **CallDirectoryHandler**: Improved extension handling with better action processing and error logging
-- **Pattern Processing**: Refactored from batch processing to individual pattern processing with progress tracking
-- **Error Handling**: Moved error enums to separate files and improved error descriptions
-- Updated app version to 4.2.0
+- Refactored BlockerService with separate methods for updates
+- Enhanced BackgroundService with better cancellation support
+- Restructured HomeNavigationView to card-based layout
+- Improved CallDirectoryHandler with better action processing
+- Refactored pattern processing to individual pattern handling
+- Improved error handling and descriptions
 
 ### Removed
-- **ExtensionsSetupSheet**: Replaced with separate SMS filter and call reporting setup sheets
-- **Batch Processing**: Removed `maxNumbersPerBatch` limit in favor of individual pattern processing
-- **Legacy UI Components**: Removed old home screen components in favor of new card-based design
+- Removed ExtensionsSetupSheet in favor of separate setup sheets
+- Removed batch processing limit
+- Removed legacy UI components
 
 ## [4.1.1] - 2026-02-19
 
