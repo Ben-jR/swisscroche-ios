@@ -57,6 +57,7 @@ final class BlockerService {
         category: .blockerService, error: error)
     }
     await patternService.clearAllCompletedDates()
+    userDefaultsService.clearLastSuccessfulUpdateAt()
   }
 
   // MARK: - Download
@@ -66,7 +67,6 @@ final class BlockerService {
     Logger.debug("Downloading list", category: .blockerService)
     do {
       try await listService.update()
-      userDefaultsService.setLastSuccessfulUpdateAt(Date())
     } catch {
       throw BlockerServiceError.listUpdateFailed(error)
     }
@@ -86,10 +86,12 @@ final class BlockerService {
   func performBackgroundUpdate() async throws {
     Logger.debug("performBackgroundUpdate called", category: .blockerService)
     try await handleFirstLaunch()
+    await resetPatternsIfIOSVersionChanged()
     await resetExpiredPatterns()
     try await downloadListIfStale()
     try await processPendingPatterns()
     await deleteCompletedRemovalPatterns()
+    userDefaultsService.setLastSuccessfulUpdateAt(Date())
   }
 
   /// Performs a foreground update: processes pending patterns only, with progress callback
@@ -99,12 +101,29 @@ final class BlockerService {
   ) async throws {
     Logger.debug("performForegroundUpdate called", category: .blockerService)
     try await handleFirstLaunch()
+    await resetPatternsIfIOSVersionChanged()
     await resetExpiredPatterns()
     try await processPendingPatterns(
       onPatternStarted: onPatternStarted,
       onPatternCompleted: onPatternCompleted
     )
     await deleteCompletedRemovalPatterns()
+    userDefaultsService.setLastSuccessfulUpdateAt(Date())
+  }
+
+  /// Resets all patterns if the iOS version has changed since the last run
+  private func resetPatternsIfIOSVersionChanged() async {
+    let currentVersion = ProcessInfo.processInfo.operatingSystemVersionString
+    let storedVersion = userDefaultsService.getLastKnownIOSVersion()
+
+    if let storedVersion, storedVersion != currentVersion {
+      await patternService.clearAllCompletedDates()
+      Logger.debug(
+        "iOS version changed (\(storedVersion) → \(currentVersion)), reset all patterns",
+        category: .blockerService)
+    }
+
+    userDefaultsService.setLastKnownIOSVersion(currentVersion)
   }
 
   /// Resets expired completed patterns
@@ -157,7 +176,6 @@ final class BlockerService {
       }
 
       completedCount += 1
-      userDefaultsService.setLastSuccessfulUpdateAt(Date())
       await onPatternCompleted?(completedCount, totalCount)
     }
   }

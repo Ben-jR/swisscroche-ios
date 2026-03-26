@@ -19,6 +19,7 @@ class BlockerUpdateViewModel: ObservableObject {
 
   @Published var shouldUpdateList: Bool = false
   @Published var isCancellationRequested: Bool = false
+  @Published var showUpdateError: Bool = false
 
   // Current pattern being processed
   @Published var currentPatternString: String? = nil
@@ -119,6 +120,7 @@ class BlockerUpdateViewModel: ObservableObject {
       currentPatternString = nil
       currentPatternAction = nil
       updateState = .ok
+      showUpdateError = true
       return
     }
 

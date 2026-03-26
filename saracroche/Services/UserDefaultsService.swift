@@ -15,6 +15,7 @@ class UserDefaultsService {
     static let callReportingSetupDismissed = "callReportingSetupDismissed"
     static let shortcutSetupDismissed = "shortcutSetupDismissed"
     static let deviceIdentifier = "deviceIdentifier"
+    static let lastKnownIOSVersion = "lastKnownIOSVersion"
   }
 
   init() {
@@ -125,11 +126,23 @@ class UserDefaultsService {
     userDefaults.removeObject(forKey: Keys.shortcutSetupDismissed)
   }
 
+  func setLastKnownIOSVersion(_ version: String) {
+    userDefaults.set(version, forKey: Keys.lastKnownIOSVersion)
+  }
+
+  func getLastKnownIOSVersion() -> String? {
+    return userDefaults.string(forKey: Keys.lastKnownIOSVersion)
+  }
+
+  func clearLastKnownIOSVersion() {
+    userDefaults.removeObject(forKey: Keys.lastKnownIOSVersion)
+  }
+
   func getOrCreateDeviceIdentifier() -> String {
     if let existingID = userDefaults.string(forKey: Keys.deviceIdentifier) {
       return existingID
     }
-    let newID = UUID().uuidString
+    let newID = UUID().uuidString.uppercased()
     userDefaults.set(newID, forKey: Keys.deviceIdentifier)
     return newID
   }
@@ -143,5 +156,6 @@ class UserDefaultsService {
     clearSmsFilterSetupDismissed()
     clearCallReportingSetupDismissed()
     clearShortcutSetupDismissed()
+    clearLastKnownIOSVersion()
   }
 }

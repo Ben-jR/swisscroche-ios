@@ -16,36 +16,45 @@ struct HomeNavigationView: View {
   @State private var showSmsFilterSetupSheet = false
   @State private var showCallReportingSetupSheet = false
   @State private var showShortcutSetupSheet = false
+  @State private var isLoading = true
+  @State private var loadingStep = ""
 
   var body: some View {
     NavigationView {
       ScrollView {
-        VStack(spacing: 16) {
-          if blockerStatus.blockerExtensionStatus == .enabled {
-            if blockerUpdate.completedPatternsCount == 0 {
-              HomeInstallCard(
-                showUpdateInProgressSheet: $showUpdateInProgressSheet
-              )
-            } else if hasAvailableUpdate {
-              HomeUpdateCard(showUpdateInProgressSheet: $showUpdateInProgressSheet)
+        if isLoading {
+          HomeLoadingCard(loadingStep: loadingStep)
+            .padding()
+        } else {
+          VStack(spacing: 16) {
+            if blockerStatus.blockerExtensionStatus == .enabled {
+              if blockerUpdate.lastSuccessfulUpdateAt == nil {
+                HomeInstallCard(
+                  showUpdateInProgressSheet: $showUpdateInProgressSheet
+                )
+              } else if blockerUpdate.shouldUpdateList
+                || blockerUpdate.pendingPatternsCount > 0
+              {
+                HomeUpdateCard(showUpdateInProgressSheet: $showUpdateInProgressSheet)
+              } else {
+                HomeActiveCard(
+                  totalPhoneNumbersCount: blockerUpdate.totalPhoneNumbersCount,
+                  showInfoSheet: $showInfoSheet
+                )
+                HomeFeatureCards(
+                  userPreferences: userPreferences,
+                  showSmsFilterSetupSheet: $showSmsFilterSetupSheet,
+                  showCallReportingSetupSheet: $showCallReportingSetupSheet,
+                  showShortcutSetupSheet: $showShortcutSetupSheet,
+                  showDonationSheet: $showDonationSheet
+                )
+              }
             } else {
-              HomeActiveCard(
-                totalPhoneNumbersCount: blockerUpdate.totalPhoneNumbersCount,
-                showInfoSheet: $showInfoSheet
-              )
-              HomeFeatureCards(
-                userPreferences: userPreferences,
-                showSmsFilterSetupSheet: $showSmsFilterSetupSheet,
-                showCallReportingSetupSheet: $showCallReportingSetupSheet,
-                showShortcutSetupSheet: $showShortcutSetupSheet,
-                showDonationSheet: $showDonationSheet
-              )
+              HomeDisabledCard(blockerStatus: blockerStatus)
             }
-          } else {
-            HomeDisabledCard(blockerStatus: blockerStatus)
           }
+          .padding()
         }
-        .padding()
       }
       .navigationTitle("Saracroche")
       .onAppear {
@@ -79,14 +88,16 @@ struct HomeNavigationView: View {
   // MARK: - Lifecycle
 
   private func handleActivation() async {
+    loadingStep = "Vérification de l'extension…"
     await blockerStatus.checkBlockerExtensionStatus()
+    loadingStep = "Vérification des autorisations…"
     await blockerStatus.checkBackgroundStatus()
+    loadingStep = "Chargement des données…"
     await blockerUpdate.loadData()
+    loadingStep = "Chargement des préférences…"
     await userPreferences.loadPreferences()
+    loadingStep = "Mise à jour de la liste…"
     await blockerUpdate.downloadListOnLaunch()
-  }
-
-  private var hasAvailableUpdate: Bool {
-    blockerUpdate.shouldUpdateList || blockerUpdate.pendingPatternsCount > 0
+    isLoading = false
   }
 }

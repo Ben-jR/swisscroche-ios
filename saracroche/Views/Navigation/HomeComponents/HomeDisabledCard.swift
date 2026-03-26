@@ -7,8 +7,6 @@ struct HomeDisabledCard: View {
     VStack(alignment: .center, spacing: 16) {
       if blockerStatus.blockerExtensionStatus == .disabled {
         disabledStatusView
-      } else if blockerStatus.blockerExtensionStatus == .unknown {
-        unknownStatusView
       } else if blockerStatus.blockerExtensionStatus == .error {
         errorStatusView
       } else if blockerStatus.blockerExtensionStatus == .unexpected {
@@ -121,31 +119,6 @@ struct HomeDisabledCard: View {
 
         Spacer()
       }
-    }
-  }
-
-  private var unknownStatusView: some View {
-    VStack(alignment: .center, spacing: 16) {
-      if #available(iOS 18.0, *) {
-        Image(systemName: "questionmark.circle.fill")
-          .font(.system(size: 60))
-          .symbolEffect(.wiggle.clockwise.byLayer, options: .repeat(.periodic(delay: 1.0)))
-          .foregroundColor(.orange)
-      } else {
-        Image(systemName: "questionmark.circle.fill")
-          .font(.system(size: 60))
-          .foregroundColor(.orange)
-      }
-
-      Text("Vérification du bloqueur en cours")
-        .appFont(.title3Bold)
-        .multilineTextAlignment(.center)
-
-      Text(
-        "Patientez pendant la vérification de l'app de blocage d'appels."
-      )
-      .appFont(.body)
-      .frame(maxWidth: .infinity, alignment: .leading)
     }
   }
 

@@ -7,9 +7,6 @@ struct UpdateInProgressSheet: View {
   // MARK: - Dependencies
   @ObservedObject var blockerUpdate: BlockerUpdateViewModel
 
-  // MARK: - State
-  @State private var isFirstInstall: Bool = true
-
   /// Returns a human-readable label for the current pattern action
   private var currentPatternActionLabel: String {
     switch blockerUpdate.currentPatternAction {
@@ -37,13 +34,13 @@ struct UpdateInProgressSheet: View {
               .foregroundColor(.blue)
           }
 
-          Text(isFirstInstall ? "Installation en cours" : "Mise à jour en cours")
+          Text(blockerUpdate.lastSuccessfulUpdateAt == nil ? "Installation en cours" : "Mise à jour en cours")
             .appFont(.titleBold)
             .multilineTextAlignment(.center)
 
           VStack(spacing: 16) {
             if case .inProgress(let progress) = blockerUpdate.updateState {
-              Text(String(format: "%.2f%%", progress))
+              Text(progress / 100, format: .percent.precision(.fractionLength(2)))
                 .appFont(.headlineSemiBold)
                 .foregroundColor(.blue)
 
@@ -54,7 +51,7 @@ struct UpdateInProgressSheet: View {
               .tint(.blue)
 
               if let patternString = blockerUpdate.currentPatternString {
-                Text("\(currentPatternActionLabel) \(patternString)")
+                Text("\(currentPatternActionLabel) +\(patternString)")
                   .appFont(.caption)
                   .foregroundColor(.secondary)
                   .frame(maxWidth: .infinity, alignment: .leading)
@@ -133,7 +130,6 @@ struct UpdateInProgressSheet: View {
       }
     }
     .task {
-      isFirstInstall = blockerUpdate.completedPatternsCount == 0
       UIApplication.shared.isIdleTimerDisabled = true
       await blockerUpdate.performUpdateWithStateManagement()
       UIApplication.shared.isIdleTimerDisabled = false

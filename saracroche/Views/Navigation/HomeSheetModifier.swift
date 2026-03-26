@@ -31,6 +31,9 @@ struct HomeSheetModifier: ViewModifier {
       ) {
         UpdateInProgressSheet(blockerUpdate: blockerUpdate)
       }
+      .sheet(isPresented: $blockerUpdate.showUpdateError) {
+        UpdateErrorSheet(blockerUpdate: blockerUpdate)
+      }
       .sheet(isPresented: $showSmsFilterSetupSheet) {
         if #available(iOS 16.0, *) {
           SmsFilterSetupSheet(

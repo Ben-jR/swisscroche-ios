@@ -41,12 +41,12 @@ final class ListService {
   /// Download and update the French block list
   func update() async throws {
     Logger.debug("Starting list update", category: .listService)
-    userDefaultsService.setLastListDownloadAt(Date())
 
     do {
       let jsonResponse = try await listAPIService.downloadFrenchList()
       let apiResponse = try decodeListResponse(jsonResponse)
       await updateCoreData(apiResponse)
+      userDefaultsService.setLastListDownloadAt(Date())
       Logger.info("List update completed successfully", category: .listService)
     } catch {
       Logger.error("Failed to download blocklist", category: .listService, error: error)
