@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [4.6.0] - 2026-04-02
+
+### Added
+- Add PatternDetailView to show detailed information about blocking patterns (first/last number, count, action, date)
+- Add dedicated MyListView for managing personal block list with navigation
+- Add overlap detection when adding custom patterns to prevent conflicts
+- Display personal pattern count in the Lists navigation view
+
+### Changed
+- Refactor lists UI to show patterns in a dedicated screen for better organization
+- Improve error handling with rollback mechanism when CallKit extension reload fails
+- Optimize pattern processing by combining iOS version change and expiration checks into single pass
+- Reduce chunk size from 20,000 to 10,000 for better memory efficiency
+- Format version dates in human-readable format instead of ISO format
+
+### Fixed
+- Cleanup duplicate API patterns and overlapping user patterns on app update
+
 ## [4.5.0] - 2026-03-26
 
 ### Added
