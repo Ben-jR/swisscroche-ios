@@ -23,13 +23,13 @@ struct PatternRow: View {
         }
 
         // Pattern string
-        Text(pattern.pattern ?? "")
+        Text(ListsViewModel.displayPattern(pattern.pattern))
           .font(.caption.monospaced())
           .foregroundColor(.secondary)
       }
     }
     .accessibilityLabel(
-      "Préfixe \(pattern.pattern ?? ""), action: \(actionLabel), \(calculateBlockedCount(pattern)) numéros bloqués"
+      "Préfixe \(ListsViewModel.displayPattern(pattern.pattern)), action: \(actionLabel), \(calculateBlockedCount(pattern)) numéros bloqués"
     )
     .accessibilityHint("Balayez vers la gauche pour supprimer")
   }

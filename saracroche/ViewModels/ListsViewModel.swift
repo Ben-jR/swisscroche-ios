@@ -92,8 +92,11 @@ class ListsViewModel: ObservableObject {
       return
     }
 
+    // Strip leading '+' for storage (validation already confirmed it starts with '+')
+    let storedPattern = String(patternString.dropFirst())
+
     // Check for duplicates across all sources (API and user)
-    if let existingPattern = await patternService.getPattern(byPatternString: patternString) {
+    if let existingPattern = await patternService.getPattern(byPatternString: storedPattern) {
       if existingPattern.source == "api" {
         patternError = "Ce préfixe est déjà présent dans la liste de blocage."
       } else {
@@ -102,16 +105,27 @@ class ListsViewModel: ObservableObject {
       return
     }
 
+    // Check for overlapping ranges
+    if let (overlapping, newIsSubset) = findOverlappingPattern(storedPattern) {
+      let overlappingName = overlapping.pattern ?? ""
+      if newIsSubset {
+        patternError = "Ce préfixe est déjà couvert par le préfixe existant \(overlappingName)."
+      } else {
+        patternError = "Ce préfixe englobe le préfixe existant \(overlappingName)."
+      }
+      return
+    }
+
     isLoading = true
 
-    // Create pattern
+    // Create pattern (stored without '+')
     if await patternService.createPattern(
-      patternString: patternString,
+      patternString: storedPattern,
       action: action,
       name: name?.isEmpty == true ? nil : name,
       source: "user"
     ) != nil {
-      Logger.info("Prefix created: \(patternString)", category: .listsViewModel)
+      Logger.info("Prefix created: \(storedPattern)", category: .listsViewModel)
       // Reload data
       await loadData()
       didModifyPatterns = true
@@ -127,6 +141,41 @@ class ListsViewModel: ObservableObject {
     Logger.info("Prefix marked for removal: \(pattern.pattern ?? "")", category: .listsViewModel)
     await loadData()
     didModifyPatterns = true
+  }
+
+  // MARK: - Overlap Detection
+
+  /// Checks if a new pattern overlaps with any existing pattern (API or user).
+  /// Two patterns overlap when they have the same total length and one's fixed prefix
+  /// is a prefix of the other's (since wildcards are always trailing).
+  private func findOverlappingPattern(_ patternString: String) -> (pattern: Pattern, newIsSubset: Bool)? {
+    let newPrefix = patternString.replacingOccurrences(of: "#", with: "")
+    let newLength = patternString.count
+
+    let allPatterns = apiPatterns + userPatterns
+    for existing in allPatterns {
+      guard let existingString = existing.pattern else { continue }
+      let existingPrefix = existingString.replacingOccurrences(of: "#", with: "")
+      let existingLength = existingString.count
+
+      guard newLength == existingLength else { continue }
+
+      if newPrefix.hasPrefix(existingPrefix) {
+        return (existing, newIsSubset: true)
+      }
+      if existingPrefix.hasPrefix(newPrefix) {
+        return (existing, newIsSubset: false)
+      }
+    }
+    return nil
+  }
+
+  // MARK: - Display
+
+  /// Returns the pattern string prefixed with '+' for display.
+  static func displayPattern(_ pattern: String?) -> String {
+    guard let pattern else { return "" }
+    return "+\(pattern)"
   }
 
   // MARK: - Validation

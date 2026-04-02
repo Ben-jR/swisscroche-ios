@@ -12,7 +12,7 @@ struct PatternDetailView: View {
           Text("Préfixe")
             .appFont(.body)
           Spacer()
-          Text(pattern.pattern ?? "")
+          Text(ListsViewModel.displayPattern(pattern.pattern))
             .font(.body.monospaced())
             .foregroundColor(.secondary)
         }
@@ -73,7 +73,7 @@ struct PatternDetailView: View {
       }
 
     }
-    .navigationTitle(pattern.name ?? pattern.pattern ?? "Détail")
+    .navigationTitle(pattern.name ?? ListsViewModel.displayPattern(pattern.pattern))
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
       ToolbarItem(placement: .navigationBarTrailing) {
@@ -119,11 +119,11 @@ struct PatternDetailView: View {
 
   private var firstNumber: String {
     guard let patternString = pattern.pattern else { return "" }
-    return patternString.replacingOccurrences(of: "#", with: "0")
+    return "+\(patternString.replacingOccurrences(of: "#", with: "0"))"
   }
 
   private var lastNumber: String {
     guard let patternString = pattern.pattern else { return "" }
-    return patternString.replacingOccurrences(of: "#", with: "9")
+    return "+\(patternString.replacingOccurrences(of: "#", with: "9"))"
   }
 }
