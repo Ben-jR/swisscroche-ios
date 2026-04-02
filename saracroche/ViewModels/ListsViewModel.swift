@@ -148,7 +148,9 @@ class ListsViewModel: ObservableObject {
   /// Checks if a new pattern overlaps with any existing pattern (API or user).
   /// Two patterns overlap when they have the same total length and one's fixed prefix
   /// is a prefix of the other's (since wildcards are always trailing).
-  private func findOverlappingPattern(_ patternString: String) -> (pattern: Pattern, newIsSubset: Bool)? {
+  private func findOverlappingPattern(_ patternString: String) -> (
+    pattern: Pattern, newIsSubset: Bool
+  )? {
     let newPrefix = patternString.replacingOccurrences(of: "#", with: "")
     let newLength = patternString.count
 
