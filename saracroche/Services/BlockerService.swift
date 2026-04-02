@@ -86,8 +86,8 @@ final class BlockerService {
   func performBackgroundUpdate() async throws {
     Logger.debug("performBackgroundUpdate called", category: .blockerService)
     try await handleFirstLaunch()
-    await resetPatternsIfIOSVersionChanged()
-    await resetExpiredPatterns()
+    await resetPatternsIfNeeded()
+    await cleanupDuplicatePatterns()
     try await downloadListIfStale()
     try await processPendingPatterns()
     await deleteCompletedRemovalPatterns()
@@ -101,8 +101,8 @@ final class BlockerService {
   ) async throws {
     Logger.debug("performForegroundUpdate called", category: .blockerService)
     try await handleFirstLaunch()
-    await resetPatternsIfIOSVersionChanged()
-    await resetExpiredPatterns()
+    await resetPatternsIfNeeded()
+    await cleanupDuplicatePatterns()
     try await processPendingPatterns(
       onPatternStarted: onPatternStarted,
       onPatternCompleted: onPatternCompleted
@@ -111,8 +111,8 @@ final class BlockerService {
     userDefaultsService.setLastSuccessfulUpdateAt(Date())
   }
 
-  /// Resets all patterns if the iOS version has changed since the last run
-  private func resetPatternsIfIOSVersionChanged() async {
+  /// Resets patterns if the iOS version changed (full reset) or if some are expired (partial reset)
+  private func resetPatternsIfNeeded() async {
     let currentVersion = ProcessInfo.processInfo.operatingSystemVersionString
     let storedVersion = userDefaultsService.getLastKnownIOSVersion()
 
@@ -121,17 +121,24 @@ final class BlockerService {
       Logger.debug(
         "iOS version changed (\(storedVersion) → \(currentVersion)), reset all patterns",
         category: .blockerService)
+    } else {
+      let resetCount = await patternService.resetExpiredCompletedPatterns()
+      if resetCount > 0 {
+        Logger.debug(
+          "Reset \(resetCount) expired completed patterns", category: .blockerService)
+      }
     }
 
     userDefaultsService.setLastKnownIOSVersion(currentVersion)
   }
 
-  /// Resets expired completed patterns
-  private func resetExpiredPatterns() async {
-    let resetCount = await patternService.resetExpiredCompletedPatterns()
-    if resetCount > 0 {
+  /// Removes duplicate API patterns and user patterns that overlap with API patterns
+  private func cleanupDuplicatePatterns() async {
+    let result = await patternService.removeDuplicatePatterns()
+    if result.duplicatesRemoved > 0 || result.overlapsRemoved > 0 {
       Logger.debug(
-        "Reset \(resetCount) expired completed patterns", category: .blockerService)
+        "Cleanup: \(result.duplicatesRemoved) duplicates, \(result.overlapsRemoved) overlaps removed",
+        category: .blockerService)
     }
   }
 
@@ -253,7 +260,34 @@ final class BlockerService {
           category: .blockerService,
           error: error
         )
+        await rollbackChunks(chunks, for: pattern)
         throw BlockerServiceError.extensionReloadFailed(error)
+      }
+    }
+  }
+
+  /// Sends all chunks as removal to clean up CallKit after a failed pattern processing
+  private func rollbackChunks(
+    _ chunks: [[String]],
+    for pattern: Pattern
+  ) async {
+    let currentAction = pattern.action ?? "block"
+    let removalAction = currentAction == "identify" ? "remove_identify" : "remove_block"
+
+    for chunk in chunks {
+      let numbersData = chunk.map { ["number": $0, "name": pattern.name ?? ""] }
+
+      sharedUserDefaultsService.setAction(removalAction)
+      sharedUserDefaultsService.setNumbers(numbersData)
+
+      do {
+        try await callDirectoryService.reloadExtension()
+      } catch {
+        Logger.error(
+          "Failed to rollback chunk during cleanup",
+          category: .blockerService,
+          error: error
+        )
       }
     }
   }

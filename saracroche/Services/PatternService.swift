@@ -527,6 +527,86 @@ class PatternService {
     }
   }
 
+  /// Removes duplicate API patterns and user patterns that overlap with API patterns
+  /// - Returns: A tuple (duplicatesRemoved, overlapsRemoved)
+  func removeDuplicatePatterns() async -> (duplicatesRemoved: Int, overlapsRemoved: Int) {
+    let context = dataStack.persistentContainer.viewContext
+
+    return await withCheckedContinuation { continuation in
+      context.perform {
+        do {
+          // Fetch all API patterns
+          let apiFetch = NSFetchRequest<Pattern>(entityName: "Pattern")
+          apiFetch.predicate = NSPredicate(format: "source == %@", "api")
+          apiFetch.returnsObjectsAsFaults = false
+          let apiPatterns = try context.fetch(apiFetch)
+
+          // 1. Remove exact duplicates among API patterns (same pattern string)
+          var duplicatesRemoved = 0
+          var grouped: [String: [Pattern]] = [:]
+          for pattern in apiPatterns {
+            guard let patternString = pattern.pattern else { continue }
+            grouped[patternString, default: []].append(pattern)
+          }
+
+          var keptApiPatterns: [Pattern] = []
+          for (_, patterns) in grouped {
+            // Keep the one with the most recent completedDate, or the first one
+            let sorted = patterns.sorted { a, b in
+              (a.completedDate ?? .distantPast) > (b.completedDate ?? .distantPast)
+            }
+            keptApiPatterns.append(sorted[0])
+            for duplicate in sorted.dropFirst() {
+              context.delete(duplicate)
+              duplicatesRemoved += 1
+            }
+          }
+
+          // 2. Remove user patterns that overlap with API patterns
+          var overlapsRemoved = 0
+          let userFetch = NSFetchRequest<Pattern>(entityName: "Pattern")
+          userFetch.predicate = NSPredicate(
+            format:
+              "source == %@ AND action != %@ AND action != %@",
+            "user", "remove_block", "remove_identify"
+          )
+          userFetch.returnsObjectsAsFaults = false
+          let userPatterns = try context.fetch(userFetch)
+
+          for userPattern in userPatterns {
+            guard let userString = userPattern.pattern else { continue }
+            let userPrefix = userString.replacingOccurrences(of: "#", with: "")
+            let userLength = userString.count
+
+            for apiPattern in keptApiPatterns {
+              guard let apiString = apiPattern.pattern else { continue }
+              let apiPrefix = apiString.replacingOccurrences(of: "#", with: "")
+              let apiLength = apiString.count
+
+              guard apiLength == userLength else { continue }
+
+              if apiPrefix.hasPrefix(userPrefix) || userPrefix.hasPrefix(apiPrefix) {
+                context.delete(userPattern)
+                overlapsRemoved += 1
+                break
+              }
+            }
+          }
+
+          Self.save(context: context)
+          continuation.resume(returning: (duplicatesRemoved, overlapsRemoved))
+        } catch {
+          Logger.error(
+            "Failed to remove duplicate patterns",
+            category: .patternService,
+            error: error
+          )
+          continuation.resume(returning: (0, 0))
+        }
+      }
+    }
+  }
+
   /// Clears the completedDate on all patterns, making them pending again for reinstallation
   func clearAllCompletedDates() async {
     let context = dataStack.persistentContainer.viewContext
