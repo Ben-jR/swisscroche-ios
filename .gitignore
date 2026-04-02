@@ -2,6 +2,5 @@
 xcuserdata/
 build/
 .vscode/
-.claude/
-.vibe/
+.agents/
 /docs/
