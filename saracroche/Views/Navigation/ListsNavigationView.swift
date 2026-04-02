@@ -34,7 +34,7 @@ struct ListsNavigationView: View {
                   Image(systemName: "tag.circle.fill")
                     .appFont(.body)
                     .foregroundColor(.primary)
-                  Text("Version " + viewModel.frenchListVersion)
+                  Text("Version du " + viewModel.frenchListVersion)
                     .appFont(.caption)
                     .foregroundColor(.secondary)
                 }

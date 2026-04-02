@@ -57,9 +57,20 @@ class ListsViewModel: ObservableObject {
   private func updateFrenchListMetadata() async {
     if let metadata = await patternService.getFrenchListMetadata() {
       frenchListName = metadata.name
-      frenchListVersion = metadata.version
+      frenchListVersion = Self.formatVersionDate(metadata.version)
       frenchListBlockedCount = metadata.blockedCount
     }
+  }
+
+  private static func formatVersionDate(_ isoString: String) -> String {
+    let isoFormatter = ISO8601DateFormatter()
+    isoFormatter.formatOptions = [.withFullDate]
+    guard let date = isoFormatter.date(from: isoString) else { return isoString }
+    let displayFormatter = DateFormatter()
+    displayFormatter.dateStyle = .long
+    displayFormatter.timeStyle = .none
+    displayFormatter.locale = Locale.current
+    return displayFormatter.string(from: date)
   }
 
   // MARK: - Prefix CRUD Operations
