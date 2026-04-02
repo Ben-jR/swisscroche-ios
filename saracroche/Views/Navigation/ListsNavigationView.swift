@@ -5,10 +5,6 @@ struct ListsNavigationView: View {
   @ObservedObject var blockerUpdate: BlockerUpdateViewModel
   @StateObject private var viewModel = ListsViewModel()
 
-  // MARK: - State
-  @State private var showAddPatternSheet = false
-  @State private var showUpdateInProgressSheet = false
-
   var body: some View {
     NavigationView {
       Form {
@@ -61,44 +57,27 @@ struct ListsNavigationView: View {
           .appFont(.caption)
         }
 
-        // SECTION 2: My prefixes
+        // SECTION 2: My list
         Section {
-          if viewModel.userPatterns.isEmpty {
-            VStack {
-              Text("Aucun préfixe personnalisé n'a été ajouté encore.")
-                .appFont(.caption)
-                .foregroundColor(.secondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-          } else {
-            ForEach(viewModel.userPatterns) { pattern in
-              PatternRow(pattern: pattern)
-                .foregroundColor(.primary)
-                .swipeActions(edge: .trailing) {
-                  Button(role: .destructive) {
-                    Task {
-                      await viewModel.deletePattern(pattern)
-                    }
-                  } label: {
-                    Label("Supprimer", systemImage: "trash.fill")
-                  }
-                  .tint(.red)
-                }
-            }
-          }
-
-          // Add new prefix button
-          Button {
-            showAddPatternSheet = true
+          NavigationLink {
+            MyListView(viewModel: viewModel, blockerUpdate: blockerUpdate)
           } label: {
-            HStack {
-              Image(systemName: "plus.circle.fill")
-              Text("Ajouter un préfixe")
+            VStack(alignment: .leading, spacing: 8) {
+              Text("Ma liste")
+                .appFont(.headline)
+
+              HStack(spacing: 4) {
+                Image(systemName: "number.circle.fill")
+                  .appFont(.body)
+                  .foregroundColor(.primary)
+                Text("\(viewModel.userPatternsNumberCount) numéros")
+                  .appFont(.caption)
+                  .foregroundColor(.secondary)
+              }
             }
           }
-          .buttonStyle(.fullWidth(background: Color("AppColor"), foreground: .black))
         } header: {
-          Text("Mes préfixes")
+          Text("Ma liste")
             .appFont(.subheadlineSemiBold)
         } footer: {
           Text(
@@ -108,25 +87,6 @@ struct ListsNavigationView: View {
         }
       }
       .navigationTitle("Listes")
-      .sheet(isPresented: $showAddPatternSheet) {
-        AddPatternSheet(viewModel: viewModel, isPresented: $showAddPatternSheet)
-      }
-      .sheet(
-        isPresented: $showUpdateInProgressSheet,
-        onDismiss: {
-          Task {
-            await blockerUpdate.loadData()
-          }
-        }
-      ) {
-        UpdateInProgressSheet(blockerUpdate: blockerUpdate)
-      }
-      .onChange(of: viewModel.didModifyPatterns) { didModify in
-        if didModify {
-          viewModel.didModifyPatterns = false
-          showUpdateInProgressSheet = true
-        }
-      }
       .onAppear {
         Task {
           await viewModel.loadData()

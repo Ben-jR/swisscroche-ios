@@ -18,6 +18,12 @@ class ListsViewModel: ObservableObject {
   @Published var isLoading: Bool = false
   @Published var didModifyPatterns = false
 
+  var userPatternsNumberCount: Int64 {
+    userPatterns.reduce(0) { total, pattern in
+      total + PhoneNumberHelpers.countPhoneNumbers(for: pattern.pattern ?? "")
+    }
+  }
+
   // MARK: - Dependencies
 
   private let patternService: PatternService
