@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.7.0] - 2026-04-03
+
+### Added
+- Add donation dismissal feature with 20-day cooldown period to temporarily hide donation prompts
+
+### Changed
+- Extend notification reminder interval from 7 to 15 days
+- Update notification message to emphasize keeping the app active
+- Replace business code input interface with link to business features landing page
+- Update business features section label from "Code entreprise" to "Fonctionnalités pour entreprises"
+
+### Removed
+- Remove business code input field and validation logic in favor of external business landing page
+
 ## [4.6.0] - 2026-04-02
 
 ### Added
