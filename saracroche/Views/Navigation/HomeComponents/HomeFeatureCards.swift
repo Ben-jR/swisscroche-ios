@@ -29,7 +29,9 @@ struct HomeFeatureCards: View {
         }
       }
 
-      donationView
+      if !userPreferences.isDonationDismissed {
+        donationView
+      }
     }
   }
 

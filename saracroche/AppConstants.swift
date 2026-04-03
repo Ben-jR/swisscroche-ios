@@ -15,6 +15,7 @@ struct AppConstants {
   static let patternReprocessInterval: TimeInterval = 15 * 24 * 60 * 60
   static let patternResetPercentage: Double = 0.04
   static let notificationReminderInterval: TimeInterval = 7 * 24 * 60 * 60
+  static let donationDismissInterval: TimeInterval = 20 * 24 * 60 * 60
   static let numberChunkSize = 10_000
   static let intentTimeoutDelay: UInt64 = 20_000_000_000
 }

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DonationSheet: View {
+  @ObservedObject var userPreferences: UserPreferencesViewModel
   @Environment(\.dismiss) private var dismiss
 
   var body: some View {
@@ -136,6 +137,7 @@ struct DonationSheet: View {
             )
 
             Button {
+              userPreferences.dismissDonation()
               dismiss()
             } label: {
               Label("Plus tard, non merci", systemImage: "xmark")
@@ -159,5 +161,5 @@ struct DonationSheet: View {
 }
 
 #Preview {
-  DonationSheet()
+  DonationSheet(userPreferences: UserPreferencesViewModel())
 }

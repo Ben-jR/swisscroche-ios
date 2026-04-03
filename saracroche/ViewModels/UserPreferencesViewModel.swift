@@ -10,6 +10,7 @@ class UserPreferencesViewModel: ObservableObject {
   @Published var isSmsFilterSetupDismissed: Bool = false
   @Published var isCallReportingSetupDismissed: Bool = false
   @Published var isShortcutSetupDismissed: Bool = false
+  @Published var isDonationDismissed: Bool = false
 
   // MARK: - Dependencies
 
@@ -37,6 +38,7 @@ class UserPreferencesViewModel: ObservableObject {
     isSmsFilterSetupDismissed = userDefaults.getSmsFilterSetupDismissed()
     isCallReportingSetupDismissed = userDefaults.getCallReportingSetupDismissed()
     isShortcutSetupDismissed = userDefaults.getShortcutSetupDismissed()
+    isDonationDismissed = userDefaults.isDonationDismissed()
   }
 
   // MARK: - Notifications
@@ -76,5 +78,11 @@ class UserPreferencesViewModel: ObservableObject {
   func dismissShortcutSetup() {
     userDefaults.setShortcutSetupDismissed(true)
     isShortcutSetupDismissed = true
+  }
+
+  /// Dismisses the donation card for 20 days
+  func dismissDonation() {
+    userDefaults.setDonationDismissedAt(Date())
+    isDonationDismissed = true
   }
 }

@@ -14,6 +14,7 @@ class UserDefaultsService {
     static let smsFilterSetupDismissed = "smsFilterSetupDismissed"
     static let callReportingSetupDismissed = "callReportingSetupDismissed"
     static let shortcutSetupDismissed = "shortcutSetupDismissed"
+    static let donationDismissedAt = "donationDismissedAt"
     static let deviceIdentifier = "deviceIdentifier"
     static let lastKnownIOSVersion = "lastKnownIOSVersion"
   }
@@ -138,6 +139,25 @@ class UserDefaultsService {
     userDefaults.removeObject(forKey: Keys.lastKnownIOSVersion)
   }
 
+  func setDonationDismissedAt(_ date: Date) {
+    userDefaults.set(date, forKey: Keys.donationDismissedAt)
+  }
+
+  func getDonationDismissedAt() -> Date? {
+    return userDefaults.object(forKey: Keys.donationDismissedAt) as? Date
+  }
+
+  func clearDonationDismissedAt() {
+    userDefaults.removeObject(forKey: Keys.donationDismissedAt)
+  }
+
+  func isDonationDismissed() -> Bool {
+    guard let dismissedAt = getDonationDismissedAt() else {
+      return false
+    }
+    return Date().timeIntervalSince(dismissedAt) < AppConstants.donationDismissInterval
+  }
+
   func getOrCreateDeviceIdentifier() -> String {
     if let existingID = userDefaults.string(forKey: Keys.deviceIdentifier) {
       return existingID
@@ -157,5 +177,6 @@ class UserDefaultsService {
     clearCallReportingSetupDismissed()
     clearShortcutSetupDismissed()
     clearLastKnownIOSVersion()
+    clearDonationDismissedAt()
   }
 }

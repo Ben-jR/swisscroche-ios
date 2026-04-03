@@ -16,7 +16,7 @@ struct HomeSheetModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .sheet(isPresented: $showDonationSheet) {
-        DonationSheet()
+        DonationSheet(userPreferences: userPreferences)
       }
       .sheet(isPresented: $showInfoSheet) {
         InfoSheet(blockerUpdate: blockerUpdate, blockerStatus: blockerStatus)
