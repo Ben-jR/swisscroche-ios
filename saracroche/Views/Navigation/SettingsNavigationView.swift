@@ -49,7 +49,7 @@ struct SettingsNavigationView: View {
           Button {
             showingBusinessCodeSheet = true
           } label: {
-            Label("Code entreprise", systemImage: "building.2.fill")
+            Label("Fonctionnalités pour entreprises", systemImage: "building.2.fill")
           }
 
           Button {

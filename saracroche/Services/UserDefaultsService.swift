@@ -9,7 +9,6 @@ class UserDefaultsService {
     static let lastListDownloadAt = "lastListDownloadAt"
     static let lastBackgroundLaunchAt = "lastBackgroundLaunchAt"
     static let lastSuccessfulUpdateAt = "lastSuccessfulUpdateAt"
-    static let businessCode = "businessCode"
     static let notificationReminderEnabled = "notificationReminderEnabled"
     static let smsFilterSetupDismissed = "smsFilterSetupDismissed"
     static let callReportingSetupDismissed = "callReportingSetupDismissed"
@@ -65,18 +64,6 @@ class UserDefaultsService {
 
   func clearLastBackgroundLaunchAt() {
     userDefaults.removeObject(forKey: Keys.lastBackgroundLaunchAt)
-  }
-
-  func setBusinessCode(_ code: String) {
-    userDefaults.set(code, forKey: Keys.businessCode)
-  }
-
-  func getBusinessCode() -> String? {
-    return userDefaults.string(forKey: Keys.businessCode)
-  }
-
-  func clearBusinessCode() {
-    userDefaults.removeObject(forKey: Keys.businessCode)
   }
 
   func setNotificationReminderEnabled(_ enabled: Bool) {
@@ -171,7 +158,6 @@ class UserDefaultsService {
     clearLastListDownloadAt()
     clearLastBackgroundLaunchAt()
     clearLastSuccessfulUpdateAt()
-    clearBusinessCode()
     clearNotificationReminderEnabled()
     clearSmsFilterSetupDismissed()
     clearCallReportingSetupDismissed()
