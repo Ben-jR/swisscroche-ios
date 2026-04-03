@@ -104,7 +104,7 @@ struct HomeFeatureCards: View {
 
       Text(
         "Recevez une notification tous les 15 jours pour vous rappeler "
-          + "d'ouvrir l'application et mettre à jour la liste de blocage."
+          + "d'ouvrir l'application, la garder active et mettre à jour la liste de blocage."
       )
       .appFont(.body)
 
