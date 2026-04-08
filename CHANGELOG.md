@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.8.0] - 2026-04-08
+
+### Added
+- Add pattern retry mechanism with 1-hour delay when processing fails
+- Add HomeDonationCard as separate component with 20-day dismissal cooldown
+
+### Changed
+- Refactor feature cards into unified list UI with inline notification toggle
+- Reduce pattern reprocess interval from 15 to 7 days
+- Adjust pattern reset percentage from 0.04 to 0.05
+- Update setup sheet button colors from blue to green
+- Add "Soutien & dons" button in settings
+
+### Fixed
+- Add missing unknown blocker status case in HomeDisabledCard
+- Process pattern chunks by removing then adding numbers for proper cleanup
+
+### Removed
+- Remove rollback mechanism that caused issues on chunk processing failure
+- Remove notification reminder toggle from settings (moved to feature cards)
+
 ## [4.7.0] - 2026-04-03
 
 ### Added
