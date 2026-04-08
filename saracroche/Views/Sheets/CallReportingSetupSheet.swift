@@ -16,12 +16,12 @@ struct CallReportingSetupSheet: View {
             if #available(iOS 18.0, *) {
               Image(systemName: "phone.fill")
                 .font(.system(size: 60))
-                .foregroundColor(.blue)
+                .foregroundColor(.green)
                 .symbolEffect(.wiggle.byLayer, options: .repeat(.periodic(delay: 2)))
             } else {
               Image(systemName: "phone.fill")
                 .font(.system(size: 60))
-                .foregroundColor(.blue)
+                .foregroundColor(.green)
             }
 
             Text("Signalement d'appels")
@@ -42,7 +42,7 @@ struct CallReportingSetupSheet: View {
                 title: "Comment activer",
                 description:
                   "Réglages > Apps > Téléphone > Signalements des SMS/appels > Saracroche",
-                iconColor: .blue
+                iconColor: .green
               )
             }
           }
@@ -69,7 +69,7 @@ struct CallReportingSetupSheet: View {
             Label("J'ai activé le signalement", systemImage: "checkmark.circle.fill")
           }
           .buttonStyle(
-            .fullWidth(background: .blue, foreground: .white)
+            .fullWidth(background: .green, foreground: .white)
           )
         }
         .padding()

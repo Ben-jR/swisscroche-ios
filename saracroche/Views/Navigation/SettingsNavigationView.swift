@@ -4,7 +4,6 @@ struct SettingsNavigationView: View {
   // MARK: - Dependencies
   @ObservedObject var blockerStatus: BlockerStatusViewModel
   @ObservedObject var blockerUpdate: BlockerUpdateViewModel
-  @ObservedObject var userPreferences: UserPreferencesViewModel
 
   // MARK: - State
   @State private var showingBusinessCodeSheet = false
@@ -27,24 +26,6 @@ struct SettingsNavigationView: View {
               systemImage: "gearshape.fill"
             )
           }
-
-          Toggle(
-            isOn: Binding(
-              get: { userPreferences.isNotificationReminderEnabled },
-              set: { newValue in
-                Task {
-                  if newValue {
-                    await userPreferences.enableNotificationReminder()
-                  } else {
-                    userPreferences.disableNotificationReminder()
-                  }
-                }
-              }
-            )
-          ) {
-            Label("Rappel de mise à jour", systemImage: "bell.badge.fill")
-          }
-          .tint(Color("AppColor"))
 
           Button {
             showingBusinessCodeSheet = true
@@ -98,6 +79,14 @@ struct SettingsNavigationView: View {
             }
           } label: {
             Label("Site officiel", systemImage: "safari.fill")
+          }
+
+          Button {
+            if let url = URL(string: "https://saracroche.org/fr/support") {
+              UIApplication.shared.open(url)
+            }
+          } label: {
+            Label("Soutien & dons", systemImage: "heart.fill")
           }
 
           Button {
@@ -182,7 +171,6 @@ struct SettingsNavigationView: View {
 #Preview {
   SettingsNavigationView(
     blockerStatus: BlockerStatusViewModel(),
-    blockerUpdate: BlockerUpdateViewModel(),
-    userPreferences: UserPreferencesViewModel()
+    blockerUpdate: BlockerUpdateViewModel()
   )
 }

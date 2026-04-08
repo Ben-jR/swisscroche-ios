@@ -17,12 +17,13 @@ struct HomeNavigationView: View {
   @State private var showCallReportingSetupSheet = false
   @State private var showShortcutSetupSheet = false
   @State private var isLoading = true
+  @State private var hasInitiallyLoaded = false
   @State private var loadingStep = ""
 
   var body: some View {
     NavigationView {
       ScrollView {
-        if isLoading {
+        if isLoading && !hasInitiallyLoaded {
           HomeLoadingCard(loadingStep: loadingStep)
             .padding()
         } else {
@@ -45,7 +46,10 @@ struct HomeNavigationView: View {
                   userPreferences: userPreferences,
                   showSmsFilterSetupSheet: $showSmsFilterSetupSheet,
                   showCallReportingSetupSheet: $showCallReportingSetupSheet,
-                  showShortcutSetupSheet: $showShortcutSetupSheet,
+                  showShortcutSetupSheet: $showShortcutSetupSheet
+                )
+                HomeDonationCard(
+                  userPreferences: userPreferences,
                   showDonationSheet: $showDonationSheet
                 )
               }
@@ -88,6 +92,7 @@ struct HomeNavigationView: View {
   // MARK: - Lifecycle
 
   private func handleActivation() async {
+    isLoading = true
     loadingStep = "Vérification de l'extension…"
     await blockerStatus.checkBlockerExtensionStatus()
     loadingStep = "Vérification des autorisations…"
@@ -99,5 +104,6 @@ struct HomeNavigationView: View {
     loadingStep = "Mise à jour de la liste…"
     await blockerUpdate.downloadListOnLaunch()
     isLoading = false
+    hasInitiallyLoaded = true
   }
 }

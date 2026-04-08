@@ -177,8 +177,9 @@ final class BlockerService {
         throw CancellationError()
       } catch {
         Logger.error(
-          "Pattern '\(patternString)' failed, skipping",
+          "Pattern '\(patternString)' failed, retrying later",
           category: .blockerService, error: error)
+        await patternService.markPatternForRetry(pattern)
         continue
       }
 
@@ -235,17 +236,41 @@ final class BlockerService {
     await patternService.markPatternAsCompleted(pattern)
   }
 
-  /// Process chunks iteratively
+  /// Process chunks iteratively: removes then adds numbers for each chunk
   private func processChunks(
     _ chunks: [[String]],
     for pattern: Pattern
   ) async throws {
+    let currentAction = pattern.action ?? "block"
+    let isRemovalAction = currentAction.hasPrefix("remove_")
+    let removalAction = currentAction == "identify" ? "remove_identify" : "remove_block"
+
     for chunk in chunks {
       try Task.checkCancellation()
 
       let numbersData = chunk.map { ["number": $0, "name": pattern.name ?? ""] }
 
-      sharedUserDefaultsService.setAction(pattern.action ?? "block")
+      if !isRemovalAction {
+        sharedUserDefaultsService.setAction(removalAction)
+        sharedUserDefaultsService.setNumbers(numbersData)
+
+        do {
+          try await callDirectoryService.reloadExtension()
+        } catch is CancellationError {
+          throw CancellationError()
+        } catch  where Task.isCancelled {
+          throw CancellationError()
+        } catch {
+          Logger.debug(
+            "Removal before add failed for chunk (numbers likely absent), continuing",
+            category: .blockerService
+          )
+        }
+
+        try Task.checkCancellation()
+      }
+
+      sharedUserDefaultsService.setAction(currentAction)
       sharedUserDefaultsService.setNumbers(numbersData)
 
       do {
@@ -260,34 +285,7 @@ final class BlockerService {
           category: .blockerService,
           error: error
         )
-        await rollbackChunks(chunks, for: pattern)
         throw BlockerServiceError.extensionReloadFailed(error)
-      }
-    }
-  }
-
-  /// Sends all chunks as removal to clean up CallKit after a failed pattern processing
-  private func rollbackChunks(
-    _ chunks: [[String]],
-    for pattern: Pattern
-  ) async {
-    let currentAction = pattern.action ?? "block"
-    let removalAction = currentAction == "identify" ? "remove_identify" : "remove_block"
-
-    for chunk in chunks {
-      let numbersData = chunk.map { ["number": $0, "name": pattern.name ?? ""] }
-
-      sharedUserDefaultsService.setAction(removalAction)
-      sharedUserDefaultsService.setNumbers(numbersData)
-
-      do {
-        try await callDirectoryService.reloadExtension()
-      } catch {
-        Logger.error(
-          "Failed to rollback chunk during cleanup",
-          category: .blockerService,
-          error: error
-        )
       }
     }
   }

@@ -17,12 +17,12 @@ struct SmsFilterSetupSheet: View {
             if #available(iOS 18.0, *) {
               Image(systemName: "message.fill")
                 .font(.system(size: 60))
-                .foregroundColor(.blue)
+                .foregroundColor(.green)
                 .symbolEffect(.wiggle.byLayer, options: .repeat(.periodic(delay: 2)))
             } else {
               Image(systemName: "message.fill")
                 .font(.system(size: 60))
-                .foregroundColor(.blue)
+                .foregroundColor(.green)
             }
 
             Text("Filtre SMS")
@@ -43,7 +43,7 @@ struct SmsFilterSetupSheet: View {
                 title: "Comment activer",
                 description:
                   "Réglages > Apps > Messages > Filtrer les messages texte > Saracroche",
-                iconColor: .blue
+                iconColor: .green
               )
             }
           }
@@ -70,7 +70,7 @@ struct SmsFilterSetupSheet: View {
             Label("J'ai activé le filtre SMS", systemImage: "checkmark.circle.fill")
           }
           .buttonStyle(
-            .fullWidth(background: .blue, foreground: .white)
+            .fullWidth(background: .green, foreground: .white)
           )
         }
         .padding()

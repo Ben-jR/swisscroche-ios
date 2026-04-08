@@ -16,12 +16,12 @@ struct ShortcutSetupSheet: View {
             if #available(iOS 18.0, *) {
               Image(systemName: "arrow.clockwise.circle.fill")
                 .font(.system(size: 60))
-                .foregroundColor(.blue)
+                .foregroundColor(.green)
                 .symbolEffect(.wiggle.byLayer, options: .repeat(.periodic(delay: 2)))
             } else {
               Image(systemName: "arrow.clockwise.circle.fill")
                 .font(.system(size: 60))
-                .foregroundColor(.blue)
+                .foregroundColor(.green)
             }
 
             Text("Raccourci automatique")
@@ -41,7 +41,7 @@ struct ShortcutSetupSheet: View {
                 icon: "square.grid.2x2.fill",
                 title: "Ouvrir l'app Raccourcis",
                 description: "Lancez l'app Raccourcis d'Apple sur votre iPhone.",
-                iconColor: .blue
+                iconColor: .green
               )
 
               IconInfoRow(
@@ -49,7 +49,7 @@ struct ShortcutSetupSheet: View {
                 title: "Créer une automatisation quotidienne",
                 description:
                   "Onglet Automatisation > Nouvelle automatisation > Heure de la journée et choisissez une heure.",
-                iconColor: .blue
+                iconColor: .green
               )
 
               IconInfoRow(
@@ -57,7 +57,7 @@ struct ShortcutSetupSheet: View {
                 title: "Ajouter l'action Saracroche",
                 description:
                   "Recherchez Saracroche > \"Mettre à jour\" et ajoutez cette action.",
-                iconColor: .blue
+                iconColor: .green
               )
             }
           }
@@ -86,7 +86,7 @@ struct ShortcutSetupSheet: View {
             Label("J'ai configuré le raccourci", systemImage: "checkmark.circle.fill")
           }
           .buttonStyle(
-            .fullWidth(background: .blue, foreground: .white)
+            .fullWidth(background: .green, foreground: .white)
           )
         }
         .padding()

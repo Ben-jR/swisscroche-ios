@@ -5,192 +5,154 @@ struct HomeFeatureCards: View {
   @Binding var showSmsFilterSetupSheet: Bool
   @Binding var showCallReportingSetupSheet: Bool
   @Binding var showShortcutSetupSheet: Bool
-  @Binding var showDonationSheet: Bool
 
   var body: some View {
-    Group {
-      if #available(iOS 16.0, *) {
-        if !userPreferences.isSmsFilterSetupDismissed {
-          smsFilterSetupView
-        }
-      }
-
-      if !userPreferences.isCallReportingSetupDismissed {
-        callReportingSetupView
-      }
-
-      if !userPreferences.isNotificationReminderEnabled {
-        notificationReminderView
-      }
-
-      if #available(iOS 16.0, *) {
-        if !userPreferences.isShortcutSetupDismissed {
-          shortcutSetupView
-        }
-      }
-
-      if !userPreferences.isDonationDismissed {
-        donationView
-      }
-    }
-  }
-
-  private var smsFilterSetupView: some View {
-    VStack(alignment: .leading, spacing: 16) {
-      Text("Filtre SMS")
+    VStack(alignment: .leading, spacing: 0) {
+      Text("Protection")
         .appFont(.headlineSemiBold)
+        .padding(.horizontal, 16)
+        .padding(.top, 16)
+        .padding(.bottom, 4)
 
-      Text(
-        "Activez le filtre SMS pour que Saracroche filtre automatiquement les messages indésirables."
-      )
-      .appFont(.body)
+      Text("Activez toutes les protections pour profiter pleinement de Saracroche.")
+        .appFont(.caption)
+        .foregroundColor(.secondary)
+        .padding(.horizontal, 16)
+        .padding(.bottom, 8)
 
-      Button {
-        showSmsFilterSetupSheet = true
-      } label: {
-        HStack {
-          Image(systemName: "message.fill")
-          Text("Configurer")
+      notificationRow
+
+      Divider().padding(.horizontal, 16)
+
+      if #available(iOS 16.0, *) {
+        featureRow(
+          icon: "message.fill",
+          title: "Filtre SMS",
+          subtitle: "Filtrez les SMS indésirables",
+          isConfigured: userPreferences.isSmsFilterSetupDismissed
+        ) {
+          showSmsFilterSetupSheet = true
         }
+
+        Divider().padding(.horizontal, 16)
       }
-      .buttonStyle(
-        .fullWidth(background: .blue, foreground: .white)
-      )
-      .accessibilityLabel("Configurer le filtre SMS")
-    }
-    .padding()
-    .frame(maxWidth: .infinity)
-    .background(
-      RoundedRectangle(cornerRadius: 16)
-        .fill(Color.gray.opacity(0.1))
-    )
-  }
 
-  private var callReportingSetupView: some View {
-    VStack(alignment: .leading, spacing: 16) {
-      Text("Signalement d'appels")
-        .appFont(.headlineSemiBold)
-
-      Text(
-        "Activez le signalement pour pouvoir signaler les appels indésirables directement depuis l'historique d'appels."
-      )
-      .appFont(.body)
-
-      Button {
+      featureRow(
+        icon: "phone.fill",
+        title: "Signalement d'appels",
+        subtitle: "Signalez les appels indésirables",
+        isConfigured: userPreferences.isCallReportingSetupDismissed
+      ) {
         showCallReportingSetupSheet = true
-      } label: {
-        HStack {
-          Image(systemName: "phone.fill")
-          Text("Configurer")
+      }
+
+      if #available(iOS 16.0, *) {
+        Divider().padding(.horizontal, 16)
+
+        featureRow(
+          icon: "arrow.clockwise.circle.fill",
+          title: "Raccourci automatique",
+          subtitle: "Mise à jour automatique quotidienne",
+          isConfigured: userPreferences.isShortcutSetupDismissed
+        ) {
+          showShortcutSetupSheet = true
         }
       }
-      .buttonStyle(
-        .fullWidth(background: .blue, foreground: .white)
-      )
-      .accessibilityLabel("Configurer le signalement d'appels")
     }
-    .padding()
-    .frame(maxWidth: .infinity)
     .background(
       RoundedRectangle(cornerRadius: 16)
         .fill(Color.gray.opacity(0.1))
     )
   }
 
-  private var notificationReminderView: some View {
-    VStack(alignment: .leading, spacing: 16) {
-      Text("Rappel de mise à jour")
-        .appFont(.headlineSemiBold)
+  private func featureRow(
+    icon: String,
+    title: String,
+    subtitle: String,
+    isConfigured: Bool,
+    action: @escaping () -> Void
+  ) -> some View {
+    Button(action: action) {
+      HStack(spacing: 12) {
+        Image(systemName: isConfigured ? "checkmark.circle.fill" : "circle")
+          .font(.system(size: 22))
+          .foregroundColor(isConfigured ? .green : .gray)
+          .frame(width: 28)
 
-      Text(
-        "Recevez une notification tous les 15 jours pour vous rappeler "
-          + "d'ouvrir l'application, la garder active et mettre à jour la liste de blocage."
-      )
-      .appFont(.body)
+        Image(systemName: icon)
+          .font(.system(size: 16))
+          .foregroundColor(.secondary)
+          .frame(width: 20)
 
-      Button {
-        Task {
-          await userPreferences.enableNotificationReminder()
+        VStack(alignment: .leading, spacing: 2) {
+          Text(title)
+            .appFont(.subheadlineMedium)
+            .foregroundColor(.primary)
+          Text(subtitle)
+            .appFont(.caption)
+            .foregroundColor(.secondary)
         }
-      } label: {
-        HStack {
-          Image(systemName: "bell.badge.fill")
-          Text("Activez le rappel")
-        }
+
+        Spacer()
+
+        Image(systemName: "chevron.right")
+          .font(.system(size: 14, weight: .semibold))
+          .foregroundColor(.secondary)
       }
-      .buttonStyle(
-        .fullWidth(background: .blue, foreground: .white)
-      )
-      .accessibilityLabel("Activez le rappel de mise à jour")
+      .padding(.horizontal, 16)
+      .padding(.vertical, 12)
+      .contentShape(Rectangle())
     }
-    .padding()
-    .frame(maxWidth: .infinity)
-    .background(
-      RoundedRectangle(cornerRadius: 16)
-        .fill(Color.gray.opacity(0.1))
-    )
+    .buttonStyle(.plain)
   }
 
-  @available(iOS 16.0, *)
-  private var shortcutSetupView: some View {
-    VStack(alignment: .leading, spacing: 16) {
-      Text("Raccourci automatique")
-        .appFont(.headlineSemiBold)
-
-      Text(
-        "Créez un raccourci pour mettre à jour automatiquement la liste de blocage tous les jours."
+  private var notificationRow: some View {
+    HStack(spacing: 12) {
+      Image(
+        systemName: userPreferences.isNotificationReminderEnabled
+          ? "checkmark.circle.fill" : "circle"
       )
-      .appFont(.body)
+      .font(.system(size: 22))
+      .foregroundColor(
+        userPreferences.isNotificationReminderEnabled ? .green : .gray
+      )
+      .frame(width: 28)
 
-      Button {
-        showShortcutSetupSheet = true
-      } label: {
-        HStack {
-          Image(systemName: "arrow.clockwise.circle.fill")
-          Text("Configurer")
-        }
+      Image(systemName: "bell.badge.fill")
+        .font(.system(size: 16))
+        .foregroundColor(.secondary)
+        .frame(width: 20)
+
+      VStack(alignment: .leading, spacing: 2) {
+        Text("Rappel de mise à jour")
+          .appFont(.subheadlineMedium)
+          .foregroundColor(.primary)
+        Text("Notification tous les 15 jours")
+          .appFont(.caption)
+          .foregroundColor(.secondary)
       }
-      .buttonStyle(
-        .fullWidth(background: .blue, foreground: .white)
+
+      Spacer()
+
+      Toggle(
+        "",
+        isOn: Binding(
+          get: { userPreferences.isNotificationReminderEnabled },
+          set: { newValue in
+            Task {
+              if newValue {
+                await userPreferences.enableNotificationReminder()
+              } else {
+                userPreferences.disableNotificationReminder()
+              }
+            }
+          }
+        )
       )
-      .accessibilityLabel("Configurer le raccourci automatique")
+      .labelsHidden()
+      .tint(Color("AppColor"))
     }
-    .padding()
-    .frame(maxWidth: .infinity)
-    .background(
-      RoundedRectangle(cornerRadius: 16)
-        .fill(Color.gray.opacity(0.1))
-    )
-  }
-
-  private var donationView: some View {
-    VStack(alignment: .leading, spacing: 16) {
-      Text("Soutenez Saracroche")
-        .appFont(.headlineSemiBold)
-
-      Text(
-        "Saracroche est une application entièrement gratuite, open source et sans publicité. "
-          + "Elle vit grâce aux dons de ses utilisateurs pour continuer à évoluer."
-      )
-      .appFont(.body)
-
-      Button {
-        showDonationSheet = true
-      } label: {
-        HStack {
-          Image(systemName: "heart.fill")
-          Text("Soutenez")
-        }
-      }
-      .buttonStyle(
-        .fullWidth(background: Color.red, foreground: .white)
-      )
-    }
-    .padding()
-    .frame(maxWidth: .infinity)
-    .background(
-      RoundedRectangle(cornerRadius: 16)
-        .fill(Color.gray.opacity(0.1))
-    )
+    .padding(.horizontal, 16)
+    .padding(.vertical, 12)
   }
 }

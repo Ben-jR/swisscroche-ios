@@ -386,6 +386,33 @@ class PatternService {
     }
   }
 
+  /// Marks a pattern for retry by setting completedDate slightly before the reprocess cutoff,
+  /// so it becomes eligible for reprocessing after patternRetryDelay.
+  /// - Parameter pattern: The Pattern entity to mark for retry
+  func markPatternForRetry(_ pattern: Pattern) async {
+    let context = dataStack.persistentContainer.viewContext
+    let objectID = pattern.objectID
+
+    await withCheckedContinuation { continuation in
+      context.perform {
+        guard let patternInContext = context.object(with: objectID) as? Pattern else {
+          Logger.error(
+            "Failed to cast object to Pattern for retry", category: .patternService,
+            error: NSError(
+              domain: "PatternService", code: 6,
+              userInfo: [NSLocalizedDescriptionKey: "Failed to cast object to Pattern"]))
+          continuation.resume()
+          return
+        }
+        patternInContext.completedDate = Date(
+          timeIntervalSinceNow:
+            -(AppConstants.patternReprocessInterval - AppConstants.patternRetryDelay))
+        Self.save(context: context)
+        continuation.resume()
+      }
+    }
+  }
+
   /// Marks a pattern for deletion by changing its action and resetting completedDate
   /// - Parameter pattern: The Pattern entity to mark for deletion
   func markPatternForDeletion(_ pattern: Pattern) async {

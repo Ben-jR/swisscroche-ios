@@ -5,12 +5,17 @@ struct HomeDisabledCard: View {
 
   var body: some View {
     VStack(alignment: .center, spacing: 16) {
-      if blockerStatus.blockerExtensionStatus == .disabled {
+      switch blockerStatus.blockerExtensionStatus {
+      case .disabled:
         disabledStatusView
-      } else if blockerStatus.blockerExtensionStatus == .error {
+      case .error:
         errorStatusView
-      } else if blockerStatus.blockerExtensionStatus == .unexpected {
+      case .unexpected:
         unexpectedStatusView
+      case .unknown:
+        unknownStatusView
+      case .enabled:
+        EmptyView()
       }
     }
     .padding()
@@ -143,6 +148,22 @@ struct HomeDisabledCard: View {
       )
       .appFont(.body)
       .frame(maxWidth: .infinity, alignment: .leading)
+    }
+  }
+
+  private var unknownStatusView: some View {
+    VStack(alignment: .center, spacing: 16) {
+      ProgressView()
+        .scaleEffect(1.5)
+
+      Text("Vérification en cours…")
+        .appFont(.title3Bold)
+        .multilineTextAlignment(.center)
+
+      Text("Détermination du statut de l'extension.")
+        .appFont(.body)
+        .foregroundColor(.secondary)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
   }
 

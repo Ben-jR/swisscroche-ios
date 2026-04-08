@@ -25,8 +25,7 @@ struct SaracrocheView: View {
         }
       SettingsNavigationView(
         blockerStatus: blockerStatus,
-        blockerUpdate: blockerUpdate,
-        userPreferences: userPreferences
+        blockerUpdate: blockerUpdate
       )
       .tabItem {
         Label("Réglages", systemImage: "gearshape.fill")
