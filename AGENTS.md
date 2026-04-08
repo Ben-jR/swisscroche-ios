@@ -2,56 +2,55 @@
 
 ## Project Overview
 
-Saracroche is an iOS call blocking app built with CallKit. It provides comprehensive spam call blocking, unwanted communication reporting, SMS filtering, background block list updates, and call reporting capabilities.
+Saracroche is a privacy-focused iOS call blocking app using CallKit. Swift-only, no external dependencies (no SPM/CocoaPods/Carthage). Target: iOS 15.0+, Swift 5.9+, Xcode 15.0+.
 
-## Architecture
+## Four-Target Architecture
 
-### Target Structure
+The project has four targets that share data via App Groups (`group.com.cbouvat.saracroche`):
 
-The project consists of four targets:
+- **saracroche** (main app): SwiftUI + MVVM. Stores patterns in CoreData, orchestrates updates.
+- **blocker** (Call Directory extension): Reads action/numbers from shared UserDefaults when the main app reloads it, then applies block/identify/remove operations to the CallKit directory.
+- **unwanted** (Unwanted Communication Reporting extension): Reports spam calls/SMS.
+- **filter** (Message Filter extension): Checks incoming SMS senders against CoreData patterns (read-only).
 
-- saracroche (main app): SwiftUI-based user interface with MVVM architecture.
-- blocker (Call Directory extension): Manages call blocking/identification using CallKit's incremental updates.
-- unwanted (Unwanted Communication Reporting extension): Handles reporting of spam calls to the server.
-- filter (Message Filter extension): SMS filtering capabilities.
+**Inter-process data flow (critical):**
+1. Main app writes `action` + `numbers` to shared UserDefaults via `SharedUserDefaultsService`
+2. Main app calls `CXCallDirectoryManager.reloadExtension()` to wake the blocker extension
+3. Blocker extension reads and clears shared UserDefaults, then applies the action incrementally
+4. For SMS filtering, the filter extension reads CoreData directly (read-only) from the app group container
 
-### Data Flow
+## Key Technical Details
 
-- App Groups: All targets share data via `group.com.cbouvat.saracroche` (defined in `AppConstants.swift`).
-- CoreData: Main app stores blocking patterns in `DataModel.xcdatamodeld` with the `Pattern` entity.
-- Shared UserDefaults: Extensions communicate with the main app through shared UserDefaults to exchange phone numbers and actions.
-- Pattern System: Phone numbers use wildcard patterns (e.g., `33899######` where `#` matches any digit) stored in CoreData and processed in batches.
+- **Pattern system**: Phone numbers use wildcard patterns (e.g., `33899######` where `#` matches any digit). `PhoneNumberHelpers.expandBlockingPattern()` expands patterns into individual numbers, processed in chunks (`AppConstants.numberChunkSize`).
+- **Pattern lifecycle**: `pending` (completedDate=nil) → `completed` (completedDate set) → `removed` (action prefixed with `remove_`) → deleted. Expired completed patterns get randomly reset for reprocessing (see `AppConstants.patternResetPercentage`).
+- **CoreData model name gotcha**: `NSPersistentContainer(name: "DataModel")` matches the `DataModel.xcdatamodeld` folder name. `AppConstants.coreDataModelName = "Database"` is defined but **not used** in container creation — do not use it for `NSPersistentContainer`.
+- **CoreData store location**: SQLite file is in the App Group container directory (not the default sandbox), so extensions can access it.
+- **Background updates**: `BGProcessingTask` every 6 hours (`AppConstants.backgroundUpdateInterval`), requires network and external power. Registered in `AppDelegate`.
+- **Custom font**: Uses AtkinsonHyperlegibleNextVF (configured in `App.swift` and `Info.plist` UIAppFonts).
 
-## Guidelines
+## Code Style
 
-- Code Formatting: Run `swift-format --in-place --recursive .` after making changes to Swift code.
-- Design Principles: Keep it simple (KISS principle), follow Single Responsibility Principle.
-- Target Platform: Write for iOS 15.
-- Architecture: Follow MVVM (Model-View-ViewModel) architecture pattern.
-- Concurrency: Use async/await for all asynchronous operations.
-- Naming Conventions: Use explicit, descriptive names for variables and functions.
-- Accessibility: Ensure A11Y compliance with VoiceOver support.
-- Configuration: Store app configuration in `AppConstants.swift`.
-- Data Sharing: Use App Groups for inter-process communication between app and extensions.
-- Documentation: Write comprehensive documentation in `docs/` folder and add SwiftDoc comments for all public APIs and complex functions.
-- Testing: Write unit tests for critical components and business logic.
-- Error Handling: Implement proper error handling and logging.
-- Legacy Code: Don't write Objective-C code (Swift-only project).
-- Hardcoding: Don't hardcode configuration values or strings.
-- Don't commit: Don't commit code.
+- Swift uses **2-space indentation** (see `.editorconfig`). Other formats (`*.yml`, `*.json`, `*.vue`) also use 2-space.
+- Format after changes: `swift-format --in-place --recursive .` (or `make lint`).
+- No Objective-C — Swift-only project.
+- No test targets exist yet.
 
-## Development Commands
+## Conventions
 
-### Building
+- **Don't commit code** unless explicitly asked.
+- All app configuration lives in `AppConstants.swift` — do not hardcode values elsewhere.
+- App Groups identifier is `group.com.cbouvat.saracroche`. Blocker extension bundle ID is `com.cbouvat.saracroche.blocker`.
+- Some extension files hardcode the App Group string instead of referencing `AppConstants` (e.g., `CallDirectoryHandler.swift:16`, `MessageFilterService.swift:11`) — be aware of this gap when making changes.
+- CoreData entity `Pattern` uses Xcode code generation (`codeGenerationType="class"`, `representedClassName=".Pattern"`) — do not manually create a `Pattern.swift` file.
 
-```bash
-# Build all project
-xcodebuild -project saracroche.xcodeproj build
-```
-
-### Code Formatting
+## Commands
 
 ```bash
-# Format all Swift code (REQUIRED after changes)
+# Format Swift code (REQUIRED after changes)
 swift-format --in-place --recursive .
+# or:
+make lint
+
+# Build (requires Xcode)
+xcodebuild -project saracroche.xcodeproj build
 ```
