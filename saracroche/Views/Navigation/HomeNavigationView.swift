@@ -35,6 +35,7 @@ struct HomeNavigationView: View {
                 )
               } else if blockerUpdate.shouldUpdateList
                 || blockerUpdate.pendingPatternsCount > 0
+                || blockerUpdate.iosVersionChanged
               {
                 HomeUpdateCard(showUpdateInProgressSheet: $showUpdateInProgressSheet)
               } else {

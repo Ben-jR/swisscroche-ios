@@ -18,6 +18,7 @@ class BlockerUpdateViewModel: ObservableObject {
   @Published var lastBackgroundLaunchAt: Date? = nil
 
   @Published var shouldUpdateList: Bool = false
+  @Published var iosVersionChanged: Bool = false
   @Published var isCancellationRequested: Bool = false
   @Published var showUpdateError: Bool = false
 
@@ -60,6 +61,7 @@ class BlockerUpdateViewModel: ObservableObject {
     totalPatternsCount = await patternService.getTotalPatternsCount()
 
     shouldUpdateList = userDefaults.shouldUpdateList()
+    iosVersionChanged = blockerService.hasIOSVersionChanged()
   }
 
   // MARK: - List Download

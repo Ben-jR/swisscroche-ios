@@ -33,6 +33,15 @@ final class BlockerService {
     self.sharedUserDefaultsService = sharedUserDefaultsService
   }
 
+  // MARK: - iOS Version
+
+  /// Checks if the iOS version has changed since the last known version was stored
+  func hasIOSVersionChanged() -> Bool {
+    let currentVersion = ProcessInfo.processInfo.operatingSystemVersionString
+    let storedVersion = userDefaultsService.getLastKnownIOSVersion()
+    return storedVersion != nil && storedVersion != currentVersion
+  }
+
   // MARK: - Extension Management
 
   /// Checks the current status of the Call Directory extension
@@ -86,7 +95,7 @@ final class BlockerService {
   func performBackgroundUpdate() async throws {
     Logger.debug("performBackgroundUpdate called", category: .blockerService)
     try await handleFirstLaunch()
-    await resetPatternsIfNeeded()
+    await resetExpiredPatterns()
     await cleanupDuplicatePatterns()
     try await downloadListIfStale()
     try await processPendingPatterns()
@@ -94,14 +103,14 @@ final class BlockerService {
     userDefaultsService.setLastSuccessfulUpdateAt(Date())
   }
 
-  /// Performs a foreground update: processes pending patterns only, with progress callback
+  /// Performs a foreground update: checks iOS version, then processes pending patterns with progress callback
   func performForegroundUpdate(
     onPatternStarted: PatternStartCallback? = nil,
     onPatternCompleted: PatternProgressCallback? = nil
   ) async throws {
     Logger.debug("performForegroundUpdate called", category: .blockerService)
     try await handleFirstLaunch()
-    await resetPatternsIfNeeded()
+    await checkIOSVersionAndReset()
     await cleanupDuplicatePatterns()
     try await processPendingPatterns(
       onPatternStarted: onPatternStarted,
@@ -111,25 +120,27 @@ final class BlockerService {
     userDefaultsService.setLastSuccessfulUpdateAt(Date())
   }
 
-  /// Resets patterns if the iOS version changed (full reset) or if some are expired (partial reset)
-  private func resetPatternsIfNeeded() async {
+  /// Checks if iOS version changed (foreground only): resets extension state if so, then stores new version
+  private func checkIOSVersionAndReset() async {
     let currentVersion = ProcessInfo.processInfo.operatingSystemVersionString
-    let storedVersion = userDefaultsService.getLastKnownIOSVersion()
 
-    if let storedVersion, storedVersion != currentVersion {
-      await patternService.clearAllCompletedDates()
+    if hasIOSVersionChanged() {
+      await resetExtensionState()
       Logger.debug(
-        "iOS version changed (\(storedVersion) → \(currentVersion)), reset all patterns",
+        "iOS version changed, reset extension state",
         category: .blockerService)
-    } else {
-      let resetCount = await patternService.resetExpiredCompletedPatterns()
-      if resetCount > 0 {
-        Logger.debug(
-          "Reset \(resetCount) expired completed patterns", category: .blockerService)
-      }
     }
 
     userDefaultsService.setLastKnownIOSVersion(currentVersion)
+  }
+
+  /// Resets expired completed patterns only (used in background updates)
+  private func resetExpiredPatterns() async {
+    let resetCount = await patternService.resetExpiredCompletedPatterns()
+    if resetCount > 0 {
+      Logger.debug(
+        "Reset \(resetCount) expired completed patterns", category: .blockerService)
+    }
   }
 
   /// Removes duplicate API patterns and user patterns that overlap with API patterns
