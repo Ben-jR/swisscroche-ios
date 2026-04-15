@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.9.0] - 2026-04-15
+
+### Changed
+- Refactor iOS version check logic to separate foreground and background update behaviors
+- Foreground updates now check for iOS version changes and reset extension state if needed
+- Background updates now only reset expired completed patterns (not full reset on iOS version change)
+
 ## [4.8.0] - 2026-04-08
 
 ### Added
