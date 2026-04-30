@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.10.0] - 2026-04-30
+
+### Changed
+- Improve setup sheets with numbered step-by-step instructions and more detailed descriptions for SMS filter, call reporting, and shortcut configuration
+- Update feature cards UI: remove checkmark/circle indicators, increase icon sizes, and add more descriptive subtitles
+- Change phone icon in HomeActiveCard from `phone.circle.fill` to `phone.fill`
+- Update notification reminder subtitle to clarify its purpose
+
+### Removed
+- Remove setup dismissal tracking for SMS filter, call reporting, and shortcut setup features
+
 ## [4.9.0] - 2026-04-15
 
 ### Changed
