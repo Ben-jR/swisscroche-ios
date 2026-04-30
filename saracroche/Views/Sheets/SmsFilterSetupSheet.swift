@@ -32,17 +32,30 @@ struct SmsFilterSetupSheet: View {
 
           VStack(alignment: .leading, spacing: 16) {
             Text(
-              "Activez le filtre SMS pour que Saracroche filtre automatiquement les messages indésirables."
+              "Activez ou désactivez le filtre SMS dans les réglages pour que Saracroche filtre automatiquement les messages indésirables."
             )
             .appFont(.body)
             .multilineTextAlignment(.leading)
 
             VStack(alignment: .leading, spacing: 16) {
               IconInfoRow(
+                icon: "gear",
+                title: "Étape 1",
+                description: "Ouvrir Réglages > Apps > Messages",
+                iconColor: .green
+              )
+
+              IconInfoRow(
+                icon: "person.crop.circle.badge.exclamationmark",
+                title: "Étape 2",
+                description: "Activer \"Filtrer les expéditeurs inconnus\"",
+                iconColor: .green
+              )
+
+              IconInfoRow(
                 icon: "message.fill",
-                title: "Comment activer",
-                description:
-                  "Réglages > Apps > Messages > Filtrer les messages texte > Saracroche",
+                title: "Étape 3",
+                description: "Sélectionner \"Filtrer les messages texte\" > Saracroche",
                 iconColor: .green
               )
             }
@@ -61,16 +74,6 @@ struct SmsFilterSetupSheet: View {
           }
           .buttonStyle(
             .fullWidth(background: .gray, foreground: .white)
-          )
-
-          Button {
-            userPreferences.dismissSmsFilterSetup()
-            dismiss()
-          } label: {
-            Label("J'ai activé le filtre SMS", systemImage: "checkmark.circle.fill")
-          }
-          .buttonStyle(
-            .fullWidth(background: .green, foreground: .white)
           )
         }
         .padding()

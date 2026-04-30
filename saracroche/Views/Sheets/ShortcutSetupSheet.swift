@@ -39,14 +39,14 @@ struct ShortcutSetupSheet: View {
             VStack(alignment: .leading, spacing: 16) {
               IconInfoRow(
                 icon: "square.grid.2x2.fill",
-                title: "Ouvrir l'app Raccourcis",
+                title: "Étape 1",
                 description: "Lancez l'app Raccourcis d'Apple sur votre iPhone.",
                 iconColor: .green
               )
 
               IconInfoRow(
                 icon: "clock.fill",
-                title: "Créer une automatisation quotidienne",
+                title: "Étape 2",
                 description:
                   "Onglet Automatisation > Nouvelle automatisation > Heure de la journée et choisissez une heure.",
                 iconColor: .green
@@ -54,7 +54,7 @@ struct ShortcutSetupSheet: View {
 
               IconInfoRow(
                 icon: "arrow.clockwise",
-                title: "Ajouter l'action Saracroche",
+                title: "Étape 3",
                 description:
                   "Recherchez Saracroche > \"Mettre à jour\" et ajoutez cette action.",
                 iconColor: .green
@@ -77,16 +77,6 @@ struct ShortcutSetupSheet: View {
           }
           .buttonStyle(
             .fullWidth(background: .gray, foreground: .white)
-          )
-
-          Button {
-            userPreferences.dismissShortcutSetup()
-            dismiss()
-          } label: {
-            Label("J'ai configuré le raccourci", systemImage: "checkmark.circle.fill")
-          }
-          .buttonStyle(
-            .fullWidth(background: .green, foreground: .white)
           )
         }
         .padding()

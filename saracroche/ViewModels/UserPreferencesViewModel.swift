@@ -7,9 +7,6 @@ class UserPreferencesViewModel: ObservableObject {
   // MARK: - Published Properties
 
   @Published var isNotificationReminderEnabled: Bool = false
-  @Published var isSmsFilterSetupDismissed: Bool = false
-  @Published var isCallReportingSetupDismissed: Bool = false
-  @Published var isShortcutSetupDismissed: Bool = false
   @Published var isDonationDismissed: Bool = false
 
   // MARK: - Dependencies
@@ -35,9 +32,6 @@ class UserPreferencesViewModel: ObservableObject {
     await notificationService.syncReminderStateOnLaunch()
     isNotificationReminderEnabled = userDefaults.getNotificationReminderEnabled()
 
-    isSmsFilterSetupDismissed = userDefaults.getSmsFilterSetupDismissed()
-    isCallReportingSetupDismissed = userDefaults.getCallReportingSetupDismissed()
-    isShortcutSetupDismissed = userDefaults.getShortcutSetupDismissed()
     isDonationDismissed = userDefaults.isDonationDismissed()
   }
 
@@ -61,24 +55,6 @@ class UserPreferencesViewModel: ObservableObject {
   }
 
   // MARK: - Card Dismissals
-
-  /// Dismisses the SMS filter setup card
-  func dismissSmsFilterSetup() {
-    userDefaults.setSmsFilterSetupDismissed(true)
-    isSmsFilterSetupDismissed = true
-  }
-
-  /// Dismisses the call reporting setup card
-  func dismissCallReportingSetup() {
-    userDefaults.setCallReportingSetupDismissed(true)
-    isCallReportingSetupDismissed = true
-  }
-
-  /// Dismisses the shortcut setup card
-  func dismissShortcutSetup() {
-    userDefaults.setShortcutSetupDismissed(true)
-    isShortcutSetupDismissed = true
-  }
 
   /// Dismisses the donation card for 20 days
   func dismissDonation() {

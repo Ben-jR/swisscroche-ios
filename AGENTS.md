@@ -30,10 +30,8 @@ The project has four targets that share data via App Groups (`group.com.cbouvat.
 
 ## Code Style
 
-- Swift uses **2-space indentation** (see `.editorconfig`). Other formats (`*.yml`, `*.json`, `*.vue`) also use 2-space.
 - Format after changes: `swift-format --in-place --recursive .` (or `make lint`).
 - No Objective-C — Swift-only project.
-- No test targets exist yet.
 
 ## Conventions
 
@@ -51,6 +49,6 @@ swift-format --in-place --recursive .
 # or:
 make lint
 
-# Build (requires Xcode)
+# Build
 xcodebuild -project saracroche.xcodeproj build
 ```

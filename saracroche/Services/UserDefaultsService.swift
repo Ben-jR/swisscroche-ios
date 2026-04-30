@@ -10,9 +10,6 @@ class UserDefaultsService {
     static let lastBackgroundLaunchAt = "lastBackgroundLaunchAt"
     static let lastSuccessfulUpdateAt = "lastSuccessfulUpdateAt"
     static let notificationReminderEnabled = "notificationReminderEnabled"
-    static let smsFilterSetupDismissed = "smsFilterSetupDismissed"
-    static let callReportingSetupDismissed = "callReportingSetupDismissed"
-    static let shortcutSetupDismissed = "shortcutSetupDismissed"
     static let donationDismissedAt = "donationDismissedAt"
     static let deviceIdentifier = "deviceIdentifier"
     static let lastKnownIOSVersion = "lastKnownIOSVersion"
@@ -78,42 +75,6 @@ class UserDefaultsService {
     userDefaults.removeObject(forKey: Keys.notificationReminderEnabled)
   }
 
-  func setSmsFilterSetupDismissed(_ dismissed: Bool) {
-    userDefaults.set(dismissed, forKey: Keys.smsFilterSetupDismissed)
-  }
-
-  func getSmsFilterSetupDismissed() -> Bool {
-    return userDefaults.bool(forKey: Keys.smsFilterSetupDismissed)
-  }
-
-  func clearSmsFilterSetupDismissed() {
-    userDefaults.removeObject(forKey: Keys.smsFilterSetupDismissed)
-  }
-
-  func setCallReportingSetupDismissed(_ dismissed: Bool) {
-    userDefaults.set(dismissed, forKey: Keys.callReportingSetupDismissed)
-  }
-
-  func getCallReportingSetupDismissed() -> Bool {
-    return userDefaults.bool(forKey: Keys.callReportingSetupDismissed)
-  }
-
-  func clearCallReportingSetupDismissed() {
-    userDefaults.removeObject(forKey: Keys.callReportingSetupDismissed)
-  }
-
-  func setShortcutSetupDismissed(_ dismissed: Bool) {
-    userDefaults.set(dismissed, forKey: Keys.shortcutSetupDismissed)
-  }
-
-  func getShortcutSetupDismissed() -> Bool {
-    return userDefaults.bool(forKey: Keys.shortcutSetupDismissed)
-  }
-
-  func clearShortcutSetupDismissed() {
-    userDefaults.removeObject(forKey: Keys.shortcutSetupDismissed)
-  }
-
   func setLastKnownIOSVersion(_ version: String) {
     userDefaults.set(version, forKey: Keys.lastKnownIOSVersion)
   }
@@ -159,9 +120,6 @@ class UserDefaultsService {
     clearLastBackgroundLaunchAt()
     clearLastSuccessfulUpdateAt()
     clearNotificationReminderEnabled()
-    clearSmsFilterSetupDismissed()
-    clearCallReportingSetupDismissed()
-    clearShortcutSetupDismissed()
     clearLastKnownIOSVersion()
     clearDonationDismissedAt()
   }

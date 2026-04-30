@@ -22,7 +22,7 @@ struct HomeActiveCard: View {
         .multilineTextAlignment(.center)
 
       HStack(spacing: 12) {
-        Image(systemName: "phone.circle.fill")
+        Image(systemName: "phone.fill")
           .font(.system(size: 20))
           .frame(width: 24)
           .foregroundColor(.green)

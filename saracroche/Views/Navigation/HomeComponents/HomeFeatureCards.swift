@@ -28,8 +28,7 @@ struct HomeFeatureCards: View {
         featureRow(
           icon: "message.fill",
           title: "Filtre SMS",
-          subtitle: "Filtrez les SMS indésirables",
-          isConfigured: userPreferences.isSmsFilterSetupDismissed
+          subtitle: "Filtrez les SMS indésirables"
         ) {
           showSmsFilterSetupSheet = true
         }
@@ -40,8 +39,7 @@ struct HomeFeatureCards: View {
       featureRow(
         icon: "phone.fill",
         title: "Signalement d'appels",
-        subtitle: "Signalez les appels indésirables",
-        isConfigured: userPreferences.isCallReportingSetupDismissed
+        subtitle: "Signalez les appels indésirables depuis le journal d'appels"
       ) {
         showCallReportingSetupSheet = true
       }
@@ -52,8 +50,7 @@ struct HomeFeatureCards: View {
         featureRow(
           icon: "arrow.clockwise.circle.fill",
           title: "Raccourci automatique",
-          subtitle: "Mise à jour automatique quotidienne",
-          isConfigured: userPreferences.isShortcutSetupDismissed
+          subtitle: "Mise à jour automatique quotidienne sans intervention"
         ) {
           showShortcutSetupSheet = true
         }
@@ -69,20 +66,14 @@ struct HomeFeatureCards: View {
     icon: String,
     title: String,
     subtitle: String,
-    isConfigured: Bool,
     action: @escaping () -> Void
   ) -> some View {
     Button(action: action) {
       HStack(spacing: 12) {
-        Image(systemName: isConfigured ? "checkmark.circle.fill" : "circle")
-          .font(.system(size: 22))
-          .foregroundColor(isConfigured ? .green : .gray)
-          .frame(width: 28)
-
         Image(systemName: icon)
-          .font(.system(size: 16))
+          .font(.system(size: 20))
           .foregroundColor(.secondary)
-          .frame(width: 20)
+          .frame(width: 24)
 
         VStack(alignment: .leading, spacing: 2) {
           Text(title)
@@ -108,26 +99,16 @@ struct HomeFeatureCards: View {
 
   private var notificationRow: some View {
     HStack(spacing: 12) {
-      Image(
-        systemName: userPreferences.isNotificationReminderEnabled
-          ? "checkmark.circle.fill" : "circle"
-      )
-      .font(.system(size: 22))
-      .foregroundColor(
-        userPreferences.isNotificationReminderEnabled ? .green : .gray
-      )
-      .frame(width: 28)
-
       Image(systemName: "bell.badge.fill")
-        .font(.system(size: 16))
+        .font(.system(size: 20))
         .foregroundColor(.secondary)
-        .frame(width: 20)
+        .frame(width: 24)
 
       VStack(alignment: .leading, spacing: 2) {
         Text("Rappel de mise à jour")
           .appFont(.subheadlineMedium)
           .foregroundColor(.primary)
-        Text("Notification tous les 15 jours")
+        Text("Notification tous les 15 jours pour garder l'application active")
           .appFont(.caption)
           .foregroundColor(.secondary)
       }

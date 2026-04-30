@@ -31,7 +31,7 @@ struct CallReportingSetupSheet: View {
 
           VStack(alignment: .leading, spacing: 16) {
             Text(
-              "Activez le signalement pour pouvoir signaler les appels indésirables directement depuis l'historique d'appels."
+              "Activez ou désactivez le signalement dans les réglages pour pouvoir signaler les appels indésirables directement depuis le journal d'appel. Pour signaler un appel, glissez vers la droite sur un appel dans le journal d'appel et cliquez sur l'icône \"main\"."
             )
             .appFont(.body)
             .multilineTextAlignment(.leading)
@@ -39,9 +39,15 @@ struct CallReportingSetupSheet: View {
             VStack(alignment: .leading, spacing: 16) {
               IconInfoRow(
                 icon: "phone.fill",
-                title: "Comment activer",
-                description:
-                  "Réglages > Apps > Téléphone > Signalements des SMS/appels > Saracroche",
+                title: "Étape 1",
+                description: "Ouvrir Réglages > Apps > Téléphone",
+                iconColor: .green
+              )
+
+              IconInfoRow(
+                icon: "bell.badge.fill",
+                title: "Étape 2",
+                description: "Sélectionner \"Signalements des SMS/appels\" > Saracroche",
                 iconColor: .green
               )
             }
@@ -60,16 +66,6 @@ struct CallReportingSetupSheet: View {
           }
           .buttonStyle(
             .fullWidth(background: .gray, foreground: .white)
-          )
-
-          Button {
-            userPreferences.dismissCallReportingSetup()
-            dismiss()
-          } label: {
-            Label("J'ai activé le signalement", systemImage: "checkmark.circle.fill")
-          }
-          .buttonStyle(
-            .fullWidth(background: .green, foreground: .white)
           )
         }
         .padding()
