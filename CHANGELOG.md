@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.11.0] - 2026-05-13
+
+### Changed
+- Polish French text throughout the app: add missing periods, replace single quotes with proper French typography, and improve consistency across all UI strings
+- Update donation sheet with new PayPal button ID, restyled layout with background, and revised donation text
+- Rename "Ma liste" to "Liste personnelle" for consistency in navigation and UI
+- Update button labels to imperative form ("Installez", "Mettez à jour") for better user guidance
+
 ## [4.10.0] - 2026-04-30
 
 ### Changed
