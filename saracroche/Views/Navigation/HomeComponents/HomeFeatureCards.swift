@@ -28,7 +28,7 @@ struct HomeFeatureCards: View {
         featureRow(
           icon: "message.fill",
           title: "Filtre SMS",
-          subtitle: "Filtrez les SMS indésirables"
+          subtitle: "Filtrez les SMS indésirables."
         ) {
           showSmsFilterSetupSheet = true
         }
@@ -39,7 +39,7 @@ struct HomeFeatureCards: View {
       featureRow(
         icon: "phone.fill",
         title: "Signalement d'appels",
-        subtitle: "Signalez les appels indésirables depuis le journal d'appels"
+        subtitle: "Signalez les appels indésirables depuis le journal d'appels."
       ) {
         showCallReportingSetupSheet = true
       }
@@ -50,7 +50,7 @@ struct HomeFeatureCards: View {
         featureRow(
           icon: "arrow.clockwise.circle.fill",
           title: "Raccourci automatique",
-          subtitle: "Mise à jour automatique quotidienne sans intervention"
+          subtitle: "Mise à jour automatique quotidienne sans intervention."
         ) {
           showShortcutSetupSheet = true
         }
@@ -108,7 +108,7 @@ struct HomeFeatureCards: View {
         Text("Rappel de mise à jour")
           .appFont(.subheadlineMedium)
           .foregroundColor(.primary)
-        Text("Notification tous les 15 jours pour garder l'application active")
+        Text("Notification tous les 15 jours pour garder l'application active.")
           .appFont(.caption)
           .foregroundColor(.secondary)
       }
