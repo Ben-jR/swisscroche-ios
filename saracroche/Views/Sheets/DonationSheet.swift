@@ -27,54 +27,53 @@ struct DonationSheet: View {
 
           VStack(alignment: .leading, spacing: 16) {
             Text(
-              "Saracroche est développée bénévolement par Camille sur son temps libre. Vos dons lui permettent d'améliorer l'application et de maintenir les listes de blocage à jour. "
-                + "Une note sur le store, ça fait toujours plaisir et aide beaucoup !"
+              "Saracroche est développée par Camille sur son temps libre. Vos dons permettent d'améliorer l'application et de maintenir les listes de blocage à jour. "
+                + "Une note sur le store est toujours appréciée et aide beaucoup !"
             )
             .appFont(.body)
             .multilineTextAlignment(.leading)
-            .padding(.bottom, 8)
-
-            Text("Pourquoi donner ?")
-              .appFont(.headlineSemiBold)
 
             VStack(alignment: .leading, spacing: 16) {
               IconInfoRow(
                 icon: "curlybraces.square.fill",
                 title: "Projet open source",
-                description: "Code source ouvert et transparent"
+                description: "Code source ouvert et transparent."
               )
 
               IconInfoRow(
                 icon: "gift.fill",
                 title: "Entièrement gratuit",
                 description:
-                  "Pas de pub, pas d'abonnement, pas de version premium"
+                  "Pas de pub, pas d'abonnement, pas de version premium."
               )
 
               IconInfoRow(
                 icon: "person.fill",
-                title: "Développeur indépendant",
-                description:
-                  "Camille développe bénévolement sur son temps libre"
+                title: "Développement indépendant",
+                description: "Création par Camille."
               )
 
               IconInfoRow(
                 icon: "arrow.clockwise.circle.fill",
                 title: "Mises à jour régulières",
                 description:
-                  "Nouvelles listes de blocage et améliorations continues"
+                  "Nouvelles listes de blocage et améliorations continues."
               )
 
               IconInfoRow(
                 icon: "lock.shield.fill",
                 title: "Confidentialité respectée",
                 description:
-                  "Aucune donnée collectée, tout reste sur votre appareil"
+                  "Aucune donnée collectée, tout reste sur votre appareil."
               )
             }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+              RoundedRectangle(cornerRadius: 16)
+                .fill(Color.gray.opacity(0.1))
+            )
           }
-
-          Spacer()
 
           VStack(spacing: 16) {
             Button {
@@ -94,7 +93,7 @@ struct DonationSheet: View {
             Button {
               if let url = URL(
                 string:
-                  "https://www.paypal.com/donate/?hosted_button_id=WJYS344L5MMYJ&locale.x=fr_FR")
+                  "https://www.paypal.com/donate/?hosted_button_id=PPMLFH859R58N&locale.x=fr_FR")
               {
                 UIApplication.shared.open(url)
               }

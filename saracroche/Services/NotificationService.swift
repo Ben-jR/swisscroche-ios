@@ -46,7 +46,7 @@ class NotificationService {
     let content = UNMutableNotificationContent()
     content.title = "Saracroche"
     content.body =
-      "Ouvrez l'application pour la garder active et mettre à jour votre liste de blocage."
+      "Ouvrez l'application pour la garder active et mettre à jour votre liste de blocage"
 
     let trigger = UNTimeIntervalNotificationTrigger(
       timeInterval: AppConstants.notificationReminderInterval,

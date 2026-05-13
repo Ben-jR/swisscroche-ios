@@ -102,7 +102,7 @@ struct UpdateInProgressSheet: View {
             .foregroundColor(.blue)
             .frame(width: 24, height: 24)
 
-          Text("Il est préférable de faire cette mise à jour en branchant l'appareil.")
+          Text("Il est préférable de faire cette mise à jour en branchant votre appareil.")
             .appFont(.caption)
             .foregroundColor(.secondary)
 
@@ -115,7 +115,7 @@ struct UpdateInProgressSheet: View {
             .foregroundColor(.blue)
             .frame(width: 24, height: 24)
 
-          Text("Les mises à jour se font aussi en arrière-plan quand l'appareil est en charge.")
+          Text("Les mises à jour se font aussi en arrière-plan quand votre appareil est en charge.")
             .appFont(.caption)
             .foregroundColor(.secondary)
 

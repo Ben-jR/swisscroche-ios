@@ -68,8 +68,8 @@ class ReportViewModel: ObservableObject {
     alertType = .success
     let message =
       isGood
-      ? "Numéro de téléphone signalé comme légitime ! Merci pour votre contribution 😊"
-      : "Numéro de téléphone signalé comme spam ! Merci pour votre contribution 😊"
+      ? "Numéro de téléphone signalé comme légitime. Merci pour votre contribution 😊 !"
+      : "Numéro de téléphone signalé comme spam. Merci pour votre contribution 😊 !"
     alertMessage = message
     showAlert = true
   }

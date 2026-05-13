@@ -40,7 +40,7 @@ struct MyListView: View {
       }
 
     }
-    .navigationTitle("Ma liste")
+    .navigationTitle("Liste personnelle")
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
       ToolbarItem(placement: .navigationBarTrailing) {

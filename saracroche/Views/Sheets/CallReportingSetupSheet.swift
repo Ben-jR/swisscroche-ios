@@ -40,14 +40,14 @@ struct CallReportingSetupSheet: View {
               IconInfoRow(
                 icon: "phone.fill",
                 title: "Étape 1",
-                description: "Ouvrir Réglages > Apps > Téléphone",
+                description: "Ouvrir Réglages > Apps > Téléphone.",
                 iconColor: .green
               )
 
               IconInfoRow(
                 icon: "bell.badge.fill",
                 title: "Étape 2",
-                description: "Sélectionner \"Signalements des SMS/appels\" > Saracroche",
+                description: "Sélectionner \"Signalements des SMS/appels\" > Saracroche.",
                 iconColor: .green
               )
             }

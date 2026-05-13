@@ -18,7 +18,7 @@ struct ResetCompleteSheet: View {
               .foregroundColor(.green)
           }
 
-          Text("Réinitialisation terminée")
+          Text("Réinitialisation terminée.")
             .appFont(.titleBold)
             .multilineTextAlignment(.center)
         }

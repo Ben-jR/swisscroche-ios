@@ -84,7 +84,7 @@ struct ReportNavigationView: View {
           .padding(.vertical, 6)
         } footer: {
           Text(
-            "Signaler un numéro, contribue à améliorer la liste de "
+            "En signalant un numéro, vous contribuez à améliorer la liste de "
               + "blocage et à rendre l'application plus efficace."
           )
           .appFont(.caption)

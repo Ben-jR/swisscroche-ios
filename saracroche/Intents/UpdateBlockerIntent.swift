@@ -29,7 +29,7 @@ struct UpdateBlockerIntent: AppIntent {
     if completed {
       return .result(value: "Mise à jour effectuée.")
     } else {
-      return .result(value: "Mise à jour partielle, relancer si nécessaire.")
+      return .result(value: "Mise à jour partielle, veuillez relancer si nécessaire.")
     }
   }
 }

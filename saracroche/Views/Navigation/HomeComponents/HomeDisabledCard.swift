@@ -113,11 +113,11 @@ struct HomeDisabledCard: View {
           .frame(width: 24)
 
         VStack(alignment: .leading, spacing: 2) {
-          Text("Étape 3 : Installer la liste")
+          Text("Étape 3 : Installez la liste")
             .appFont(.subheadlineMedium)
             .foregroundColor(.primary)
 
-          Text("Revenez dans l'app pour installer la liste de blocage")
+          Text("Revenez dans l'app pour installer la liste.")
             .appFont(.caption)
             .foregroundColor(.secondary)
         }

@@ -26,7 +26,7 @@ struct ReinstallSheet: View {
                 .foregroundColor(.blue)
             }
 
-            Text("Réinitialiser la liste de blocage")
+            Text("Réinitialiser la liste de blocage.")
               .appFont(.titleBold)
               .multilineTextAlignment(.center)
           }
@@ -43,7 +43,7 @@ struct ReinstallSheet: View {
                 icon: "phone.fill.badge.checkmark",
                 title: "Extension réinitialisée",
                 description:
-                  "Les numéros bloqués seront supprimés",
+                  "Les numéros bloqués seront supprimés.",
                 iconColor: .blue
               )
 

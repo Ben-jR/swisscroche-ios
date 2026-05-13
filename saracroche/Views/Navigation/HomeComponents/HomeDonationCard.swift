@@ -15,7 +15,7 @@ struct HomeDonationCard: View {
 
         Text(
           "Saracroche est une application entièrement gratuite, open source et sans publicité. "
-            + "Elle vit grâce aux dons de ses utilisateurs pour continuer à évoluer."
+            + "Elle vit grâce aux dons de toutes les personnes qui l'utilisent pour continuer à évoluer."
         )
         .appFont(.caption)
         .foregroundColor(.secondary)

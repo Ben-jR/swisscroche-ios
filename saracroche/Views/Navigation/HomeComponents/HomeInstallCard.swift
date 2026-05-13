@@ -32,7 +32,7 @@ struct HomeInstallCard: View {
       } label: {
         HStack {
           Image(systemName: "arrow.down.circle.fill")
-          Text("Installer la liste de blocage")
+          Text("Installez la liste de blocage")
         }
       }
       .buttonStyle(

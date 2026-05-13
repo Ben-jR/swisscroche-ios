@@ -38,7 +38,7 @@ struct BusinessCodeSheet: View {
               icon: "chart.bar.doc.horizontal.fill",
               title: "Dashboard de gestion",
               description:
-                "Gérez les signalements et les données de blocage depuis une interface centralisée"
+                "Gérez les signalements et les données de blocage depuis une interface centralisée."
             )
 
             IconInfoRow(
@@ -52,28 +52,28 @@ struct BusinessCodeSheet: View {
               icon: "exclamationmark.bubble.fill",
               title: "Signalement centralisé",
               description:
-                "Remontée centralisée des appels indésirables pour toute l'entreprise"
+                "Remontée centralisée des appels indésirables pour toute l'entreprise."
             )
 
             IconInfoRow(
               icon: "phone.fill.badge.checkmark",
               title: "Blocage multi-canaux",
               description:
-                "Blocage des appels et SMS indésirables, protection contre le phishing"
+                "Blocage des appels et SMS indésirables, protection contre le phishing."
             )
 
             IconInfoRow(
               icon: "server.rack",
               title: "Déploiement MDM",
               description:
-                "Configuration centralisée, déploiement sans intervention utilisateur"
+                "Configuration centralisée, déploiement sans action manuelle requise."
             )
 
             IconInfoRow(
               icon: "arrow.clockwise.circle.fill",
               title: "Mises à jour automatiques",
               description:
-                "Protection toujours à jour grâce aux mises à jour en arrière-plan"
+                "Protection toujours à jour grâce aux mises à jour en arrière-plan."
             )
           }
           .padding()

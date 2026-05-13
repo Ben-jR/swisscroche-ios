@@ -23,7 +23,7 @@ struct HomeUpdateCard: View {
         .appFont(.title3Bold)
         .multilineTextAlignment(.center)
 
-      Text("Une mise à jour de la liste de blocage est disponible.")
+      Text("Une mise à jour de la liste est disponible.")
         .appFont(.body)
         .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -32,7 +32,7 @@ struct HomeUpdateCard: View {
       } label: {
         HStack {
           Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
-          Text("Mettre à jour la liste")
+          Text("Mettez à jour la liste")
         }
       }
       .buttonStyle(

@@ -62,7 +62,7 @@ struct SettingsNavigationView: View {
               UIApplication.shared.open(url)
             }
           } label: {
-            Label("Aide & FAQ", systemImage: "questionmark.circle.fill")
+            Label("Aide et FAQ", systemImage: "questionmark.circle.fill")
           }
 
           Button {
@@ -86,7 +86,7 @@ struct SettingsNavigationView: View {
               UIApplication.shared.open(url)
             }
           } label: {
-            Label("Soutien & dons", systemImage: "heart.fill")
+            Label("Soutien et dons", systemImage: "heart.fill")
           }
 
           Button {

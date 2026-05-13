@@ -40,7 +40,7 @@ struct ListsNavigationView: View {
                   Image(systemName: "number.circle.fill")
                     .appFont(.body)
                     .foregroundColor(.primary)
-                  Text("\(viewModel.frenchListBlockedCount) numéros bloqués")
+                  Text("\(viewModel.frenchListBlockedCount) numéros")
                     .appFont(.caption)
                     .foregroundColor(.secondary)
                 }
@@ -63,7 +63,7 @@ struct ListsNavigationView: View {
             MyListView(viewModel: viewModel, blockerUpdate: blockerUpdate)
           } label: {
             VStack(alignment: .leading, spacing: 8) {
-              Text("Ma liste")
+              Text("Liste personnelle")
                 .appFont(.headline)
 
               HStack(spacing: 4) {
@@ -77,7 +77,7 @@ struct ListsNavigationView: View {
             }
           }
         } header: {
-          Text("Ma liste")
+          Text("Liste personnelle")
             .appFont(.subheadlineSemiBold)
         } footer: {
           Text(

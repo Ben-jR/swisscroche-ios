@@ -196,23 +196,23 @@ class ListsViewModel: ObservableObject {
 
     let allowedCharacters = CharacterSet(charactersIn: "0123456789#+")
     if trimmed.rangeOfCharacter(from: allowedCharacters.inverted) != nil {
-      return "Le préfixe ne peut contenir que des chiffres, '+' et '#'."
+      return "Le préfixe ne peut contenir que des chiffres, \"+\" et \"#\"."
     }
 
     if !trimmed.hasPrefix("+") {
-      return "Le préfixe doit commencer par '+' (format international)."
+      return "Le préfixe doit commencer par \"+\" (format international)."
     }
 
     let hashCount = trimmed.filter { $0 == "#" }.count
 
     if hashCount == 0 {
-      return "Le préfixe doit contenir au moins un joker '#'."
+      return "Le préfixe doit contenir au moins un joker \"#\"."
     }
 
     if hashCount > 0, let firstHash = trimmed.firstIndex(of: "#") {
       let afterFirstHash = trimmed[firstHash...]
       if afterFirstHash.contains(where: { $0 != "#" }) {
-        return "Les jokers '#' doivent être uniquement en fin de numéro."
+        return "Les jokers \"#\" doivent être uniquement en fin de numéro."
       }
     }
 
@@ -221,7 +221,7 @@ class ListsViewModel: ObservableObject {
     }
 
     if hashCount > 6 {
-      return "Trop de jokers '#'. Maximum 6 jokers dans un préfixe."
+      return "Trop de jokers \"#\". Maximum 6 jokers dans un préfixe."
     }
 
     return nil

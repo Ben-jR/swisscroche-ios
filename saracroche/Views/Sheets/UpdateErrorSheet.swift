@@ -42,7 +42,7 @@ struct UpdateErrorSheet: View {
               .frame(width: 32)
 
             VStack(alignment: .leading, spacing: 2) {
-              Text("Vérifiez votre connexion")
+              Text("Vérifiez votre connexion.")
                 .appFont(.subheadlineMedium)
                 .foregroundColor(.primary)
 
@@ -61,7 +61,7 @@ struct UpdateErrorSheet: View {
               .frame(width: 32)
 
             VStack(alignment: .leading, spacing: 2) {
-              Text("Relancez la mise à jour")
+              Text("Relancez la mise à jour.")
                 .appFont(.subheadlineMedium)
                 .foregroundColor(.primary)
 
@@ -80,7 +80,7 @@ struct UpdateErrorSheet: View {
               .frame(width: 32)
 
             VStack(alignment: .leading, spacing: 2) {
-              Text("Patientez quelques minutes")
+              Text("Patientez quelques minutes.")
                 .appFont(.subheadlineMedium)
                 .foregroundColor(.primary)
 
@@ -101,7 +101,7 @@ struct UpdateErrorSheet: View {
         Button {
           dismiss()
         } label: {
-          Text("Réessayer plus tard")
+          Text("Réessayer plus tard.")
         }
         .buttonStyle(
           .fullWidth(background: Color.orange, foreground: .white)

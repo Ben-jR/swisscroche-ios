@@ -43,14 +43,14 @@ struct ResetSheet: View {
               IconInfoRow(
                 icon: "phone.fill.badge.checkmark",
                 title: "Numéros bloqués supprimés",
-                description: "Tous les numéros et préfixes installés seront effacés",
+                description: "Tous les numéros et préfixes installés seront effacés.",
                 iconColor: .red
               )
 
               IconInfoRow(
                 icon: "gearshape.fill",
                 title: "Réglages réinitialisés",
-                description: "Vos préférences reviendront aux valeurs par défaut",
+                description: "Vos préférences reviendront aux valeurs par défaut.",
                 iconColor: .red
               )
 
@@ -58,7 +58,7 @@ struct ResetSheet: View {
                 icon: "xmark.app.fill",
                 title: "Fermeture de l'application",
                 description:
-                  "Vous devrez fermer l'application manuellement après la réinitialisation",
+                  "Vous devrez fermer l'application manuellement après la réinitialisation.",
                 iconColor: .red
               )
             }

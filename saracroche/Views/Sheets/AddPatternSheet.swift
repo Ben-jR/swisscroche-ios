@@ -59,7 +59,7 @@ struct AddPatternSheet: View {
                 )
                 .accessibilityLabel("Champ de saisie du préfixe de blocage")
                 .accessibilityHint(
-                  "Entrez un numéro avec des jokers '#' en fin de numéro. Exemple: +33612345####"
+                  "Entrez un numéro avec des jokers \"#\" en fin de numéro. Exemple: +33612345####."
                 )
                 .onChange(of: patternString) { _ in
                   viewModel.patternError = nil
@@ -72,7 +72,7 @@ struct AddPatternSheet: View {
                   .accessibilityLabel("Erreur: \(error)")
               } else {
                 Text(
-                  "Format international requis avec '#' comme joker en fin de numéro. Exemple : +33612345####"
+                  "Format international requis avec \"#\" comme joker en fin de numéro. Exemple : +33612345####."
                 )
                 .appFont(.caption)
                 .foregroundColor(.secondary)
@@ -112,7 +112,7 @@ struct AddPatternSheet: View {
                 )
                 .accessibilityLabel("Nom du préfixe")
                 .accessibilityHint("Entrez un nom pour identifier ce préfixe")
-              Text("Un nom pour identifier ce préfixe, par exemple 'Spam Marketing'.")
+              Text("Un nom pour identifier ce préfixe, par exemple \"Spam Marketing\".")
                 .appFont(.caption)
                 .foregroundColor(.secondary)
             }
@@ -122,7 +122,7 @@ struct AddPatternSheet: View {
                 .appFont(.subheadlineSemiBold)
               ReportChoiceButton(
                 title: "Bloquer",
-                description: "Bloquer les appels correspondants",
+                description: "Bloquer les appels correspondants.",
                 icon: "xmark.circle.fill",
                 isSelected: isBlock,
                 color: .red,
@@ -130,7 +130,7 @@ struct AddPatternSheet: View {
               )
               ReportChoiceButton(
                 title: "Identifier",
-                description: "Identifier les appels correspondants",
+                description: "Identifier les appels correspondants.",
                 icon: "info.circle.fill",
                 isSelected: !isBlock,
                 color: .blue,
