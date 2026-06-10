@@ -18,7 +18,7 @@ struct HomeNavigationView: View {
   @State private var showShortcutSetupSheet = false
   @State private var isLoading = true
   @State private var hasInitiallyLoaded = false
-  @State private var loadingStep = ""
+  @State private var loadingStep = "Démarrage..."
 
   var body: some View {
     NavigationView {

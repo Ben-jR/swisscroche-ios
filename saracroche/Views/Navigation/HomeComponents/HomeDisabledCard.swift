@@ -24,6 +24,7 @@ struct HomeDisabledCard: View {
       RoundedRectangle(cornerRadius: 16)
         .fill(Color.red.opacity(0.15))
     )
+    .modifier(BlockerStatusHapticModifier(status: blockerStatus.blockerExtensionStatus))
   }
 
   private var disabledStatusView: some View {
@@ -36,10 +37,12 @@ struct HomeDisabledCard: View {
             options: .repeat(.periodic(delay: 2.0))
           )
           .foregroundColor(.red)
+          .accessibilityHidden(true)
       } else {
         Image(systemName: "xmark.circle.fill")
           .font(.system(size: 60))
           .foregroundColor(.red)
+          .accessibilityHidden(true)
       }
 
       Text("Le bloqueur n'est pas activé")
@@ -55,6 +58,7 @@ struct HomeDisabledCard: View {
       } label: {
         HStack {
           Image(systemName: "gear")
+            .accessibilityHidden(true)
           Text("Activez dans les réglages de l'iPhone")
         }
       }
@@ -71,6 +75,7 @@ struct HomeDisabledCard: View {
           .font(.system(size: 20))
           .foregroundColor(.red)
           .frame(width: 24)
+          .accessibilityHidden(true)
 
         VStack(alignment: .leading, spacing: 2) {
           Text("Étape 1 : Ouvrir les réglages")
@@ -83,13 +88,14 @@ struct HomeDisabledCard: View {
         }
 
         Spacer()
-      }
+      }.accessibilityElement(children: .combine)
 
       HStack(spacing: 12) {
         Image(systemName: "checkmark.circle.fill")
           .font(.system(size: 20))
           .foregroundColor(.red)
           .frame(width: 24)
+          .accessibilityHidden(true)
 
         VStack(alignment: .leading, spacing: 2) {
           Text("Étape 2 : Activez Saracroche")
@@ -104,13 +110,14 @@ struct HomeDisabledCard: View {
         }
 
         Spacer()
-      }
+      }.accessibilityElement(children: .combine)
 
       HStack(spacing: 12) {
         Image(systemName: "arrow.down.circle.fill")
           .font(.system(size: 20))
           .foregroundColor(.red)
           .frame(width: 24)
+          .accessibilityHidden(true)
 
         VStack(alignment: .leading, spacing: 2) {
           Text("Étape 3 : Installez la liste")
@@ -123,7 +130,7 @@ struct HomeDisabledCard: View {
         }
 
         Spacer()
-      }
+      }.accessibilityElement(children: .combine)
     }
   }
 
@@ -134,10 +141,12 @@ struct HomeDisabledCard: View {
           .font(.system(size: 60))
           .symbolEffect(.bounce.up.byLayer, options: .repeat(.periodic(delay: 1.0)))
           .foregroundColor(.red)
+          .accessibilityHidden(true)
       } else {
         Image(systemName: "xmark.octagon.fill")
           .font(.system(size: 60))
           .foregroundColor(.red)
+          .accessibilityHidden(true)
       }
 
       Text("Erreur lors de la vérification")
@@ -177,10 +186,12 @@ struct HomeDisabledCard: View {
             options: .repeat(.periodic(delay: 2.5))
           )
           .foregroundColor(.orange)
+          .accessibilityHidden(true)
       } else {
         Image(systemName: "exclamationmark.triangle.fill")
           .font(.system(size: 60))
           .foregroundColor(.orange)
+          .accessibilityHidden(true)
       }
 
       Text("Statut inattendu")
