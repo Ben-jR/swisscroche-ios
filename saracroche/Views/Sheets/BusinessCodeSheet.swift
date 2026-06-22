@@ -14,10 +14,12 @@ struct BusinessCodeSheet: View {
                 .font(.system(size: 60))
                 .foregroundColor(.blue)
                 .symbolEffect(.bounce.down.byLayer, options: .repeat(.periodic(delay: 2.0)))
+                .accessibilityHidden(true)
             } else {
               Image(systemName: "building.2.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.blue)
+                .accessibilityHidden(true)
             }
 
             Text("Saracroche pour les entreprises")
@@ -94,6 +96,8 @@ struct BusinessCodeSheet: View {
             }
           }
           .buttonStyle(.fullWidth(background: .blue, foreground: .white))
+          .accessibilityRemoveTraits(.isButton)
+          .accessibilityAddTraits(.isLink)
         }
         .padding()
       }

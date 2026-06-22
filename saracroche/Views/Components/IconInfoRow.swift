@@ -14,6 +14,7 @@ struct IconInfoRow: View {
         .font(.system(size: 20))
         .foregroundColor(iconColor)
         .frame(width: 28, height: 24)
+        .accessibilityHidden(true)
 
       VStack(alignment: .leading, spacing: 4) {
         Text(title)
@@ -25,6 +26,7 @@ struct IconInfoRow: View {
           .frame(maxWidth: .infinity, alignment: .leading)
       }
     }
+    .accessibilityElement(children: .combine)
   }
 }
 

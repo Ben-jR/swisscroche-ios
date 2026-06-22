@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct SettingsNavigationView: View {
+
+  private static let bigBisousMagicCount = 3  // ( ˶˘ ³˘)♡
+
   // MARK: - Dependencies
   @ObservedObject var blockerStatus: BlockerStatusViewModel
   @ObservedObject var blockerUpdate: BlockerUpdateViewModel
@@ -64,6 +67,8 @@ struct SettingsNavigationView: View {
           } label: {
             Label("Aide et FAQ", systemImage: "questionmark.circle.fill")
           }
+          .accessibilityRemoveTraits(.isButton)
+          .accessibilityAddTraits(.isLink)
 
           Button {
             if let url = URL(string: "https://saracroche.org/fr/privacy") {
@@ -72,6 +77,8 @@ struct SettingsNavigationView: View {
           } label: {
             Label("Confidentialité", systemImage: "lock.shield.fill")
           }
+          .accessibilityRemoveTraits(.isButton)
+          .accessibilityAddTraits(.isLink)
 
           Button {
             if let url = URL(string: "https://saracroche.org") {
@@ -80,6 +87,8 @@ struct SettingsNavigationView: View {
           } label: {
             Label("Site officiel", systemImage: "safari.fill")
           }
+          .accessibilityRemoveTraits(.isButton)
+          .accessibilityAddTraits(.isLink)
 
           Button {
             if let url = URL(string: "https://saracroche.org/fr/support") {
@@ -88,6 +97,8 @@ struct SettingsNavigationView: View {
           } label: {
             Label("Soutien et dons", systemImage: "heart.fill")
           }
+          .accessibilityRemoveTraits(.isButton)
+          .accessibilityAddTraits(.isLink)
 
           Button {
             if let url = URL(
@@ -99,6 +110,8 @@ struct SettingsNavigationView: View {
           } label: {
             Label("Noter l'application", systemImage: "star.fill")
           }
+          .accessibilityRemoveTraits(.isButton)
+          .accessibilityAddTraits(.isLink)
 
           Button {
             if let url = URL(
@@ -112,6 +125,8 @@ struct SettingsNavigationView: View {
               systemImage: "keyboard.fill"
             )
           }
+          .accessibilityRemoveTraits(.isButton)
+          .accessibilityAddTraits(.isLink)
 
           Button {
             if let url = URL(string: "https://mastodon.social/@cbouvat") {
@@ -120,13 +135,17 @@ struct SettingsNavigationView: View {
           } label: {
             Label("Mastodon @cbouvat", systemImage: "person.bubble.fill")
           }
+          .accessibilityRemoveTraits(.isButton)
+          .accessibilityAddTraits(.isLink)
+          .modifier(CopyableTextViewModifier(copyable: "@cbouvat@mastodon.social"))
+
         } header: {
           Text("Liens")
             .appFont(.subheadlineSemiBold)
         } footer: {
           Button {
             bisouTapCount += 1
-            if bisouTapCount >= 3 {
+            if bisouTapCount >= Self.bigBisousMagicCount {
               showingDebugSheet = true
               bisouTapCount = 0
             }
@@ -143,10 +162,13 @@ struct SettingsNavigationView: View {
                 .padding(.vertical, 4)
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
+                .accessibilityHidden(true)
             }
           }
           .buttonStyle(.plain)
           .padding(.vertical, 8)
+          .accessibilityHint(
+            "Tapez \(Self.bigBisousMagicCount) fois pour ouvrir le menu de débogage")
         }
       }
       .appFont(.body)
