@@ -13,10 +13,12 @@ struct HomeInstallCard: View {
             options: .repeat(.periodic(delay: 2.0))
           )
           .foregroundColor(.blue)
+          .accessibilityHidden(true)
       } else {
         Image(systemName: "arrow.down.circle.fill")
           .font(.system(size: 60))
           .foregroundColor(.blue)
+          .accessibilityHidden(true)
       }
 
       Text("La liste n'est pas installée")
