@@ -44,7 +44,8 @@ struct ListsNavigationView: View {
                     .appFont(.caption)
                     .foregroundColor(.secondary)
                     .accessibilityLabel(
-                      "\(viewModel.frenchListBlockedCountSpelledOut) numéros bloqués")
+                      "\(ListsViewModel.spelledOut(Int64(viewModel.frenchListBlockedCount))) numéros bloqués"
+                    )
                 }
               }
             }
@@ -77,7 +78,8 @@ struct ListsNavigationView: View {
                 )
                 .appFont(.caption)
                 .foregroundColor(.secondary)
-                .accessibilityLabel("\(viewModel.userPatternsNumberCountSpelledOut) numéros")
+                .accessibilityLabel(
+                  "\(ListsViewModel.spelledOut(viewModel.userPatternsNumberCount)) numéros")
               }
             }
           }

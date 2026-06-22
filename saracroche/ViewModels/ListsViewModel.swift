@@ -24,20 +24,6 @@ class ListsViewModel: ObservableObject {
     }
   }
 
-  var userPatternsNumberCountSpelledOut: String {
-    let f = NumberFormatter()
-    f.numberStyle = .spellOut
-    f.locale = Locale(identifier: "fr_FR")
-    return f.string(from: NSNumber(value: userPatternsNumberCount)) ?? "\(userPatternsNumberCount)"
-  }
-
-  var frenchListBlockedCountSpelledOut: String {
-    let f = NumberFormatter()
-    f.numberStyle = .spellOut
-    f.locale = Locale(identifier: "fr_FR")
-    return f.string(from: NSNumber(value: frenchListBlockedCount)) ?? "\(frenchListBlockedCount)"
-  }
-
   // MARK: - Dependencies
 
   private let patternService: PatternService
