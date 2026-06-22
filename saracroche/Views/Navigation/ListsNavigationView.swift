@@ -43,6 +43,8 @@ struct ListsNavigationView: View {
                   Text("\(viewModel.frenchListBlockedCount) numéros")
                     .appFont(.caption)
                     .foregroundColor(.secondary)
+                    .accessibilityLabel(
+                      "\(viewModel.frenchListBlockedCountSpelledOut) numéros bloqués")
                 }
               }
             }
@@ -70,9 +72,12 @@ struct ListsNavigationView: View {
                 Image(systemName: "number.circle.fill")
                   .appFont(.body)
                   .foregroundColor(.primary)
-                Text("\(viewModel.userPatternsNumberCount) numéros")
-                  .appFont(.caption)
-                  .foregroundColor(.secondary)
+                Text(
+                  "\(viewModel.userPatternsNumberCount) \(viewModel.userPatternsNumberCount > 1 ? "numéros" : "numéro")"
+                )
+                .appFont(.caption)
+                .foregroundColor(.secondary)
+                .accessibilityLabel("\(viewModel.userPatternsNumberCountSpelledOut) numéros")
               }
             }
           }
