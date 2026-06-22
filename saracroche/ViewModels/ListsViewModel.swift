@@ -43,6 +43,18 @@ class ListsViewModel: ObservableObject {
   private let patternService: PatternService
   private let blockerService: BlockerService
 
+  // MARK: - Cache and helpers
+
+  /// To store for a given calculted clocked count its String rendering
+  private static var calculatedBlockedCountCache = Cache<Int64, String>()
+  /// To keep only one instance of formatter without creating several for each View decreasing performances
+  private static var numberFormatter: NumberFormatter = {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .spellOut
+    formatter.locale = Locale(identifier: "fr_FR")
+    return formatter
+  }()
+
   // MARK: - Initialization
 
   init(
@@ -192,6 +204,23 @@ class ListsViewModel: ObservableObject {
   static func displayPattern(_ pattern: String?) -> String {
     guard let pattern else { return "" }
     return "+\(pattern)"
+  }
+
+  static func calculateBlockedCount(_ pattern: Pattern) -> Int64 {
+    guard let patternString = pattern.pattern else { return 0 }
+    return PhoneNumberHelpers.countPhoneNumbers(for: patternString)
+  }
+
+  static func spelledOut(_ calculatedBlockCount: Int64) -> String {
+    if let cachedValue = calculatedBlockedCountCache.value(forKey: calculatedBlockCount) {
+      return cachedValue
+    } else {
+      let newValue =
+        numberFormatter.string(from: NSNumber(value: calculatedBlockCount))
+        ?? "\(calculatedBlockCount)"
+      calculatedBlockedCountCache.setValue(newValue, forKey: calculatedBlockCount)
+      return newValue
+    }
   }
 
   // MARK: - Validation

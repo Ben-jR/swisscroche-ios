@@ -3,6 +3,16 @@ import SwiftUI
 struct PatternRow: View {
   @ObservedObject var pattern: Pattern
 
+  private var patternName: String {
+    pattern.name ?? ""
+  }
+
+  private var calculateBlockedCountFromPattern: Int64 {
+    ListsViewModel.calculateBlockedCount(pattern)
+  }
+
+  @Environment(\.dynamicTypeSize) private var dynamicTypeSize: DynamicTypeSize
+
   var body: some View {
     HStack(alignment: .center, spacing: 6) {
       Image(systemName: actionIcon)
@@ -10,14 +20,28 @@ struct PatternRow: View {
         .foregroundColor(actionColor)
 
       VStack(alignment: .leading) {
-        // Name and blocked numbers count
-        HStack {
+
+        // If not big text sizes, keep usual layout
+        if !dynamicTypeSize.isLargeTextUsed {
+          // Name and blocked numbers count
+          HStack {
+            if !patternName.isEmpty {
+              Text(patternName)
+                .appFont(.captionSemiBold)
+            }
+            Spacer()
+            Text("\(calculateBlockedCountFromPattern) numéros")
+              .appFont(.caption2)
+              .foregroundColor(.secondary)
+          }
+          // Big text sizes in use, prefer pure vertical layout
+        } else {
           if let name = pattern.name, !name.isEmpty {
             Text(name)
               .appFont(.captionSemiBold)
           }
           Spacer()
-          Text("\(calculateBlockedCount(pattern)) numéros")
+          Text("\(calculateBlockedCountFromPattern) numéros")
             .appFont(.caption2)
             .foregroundColor(.secondary)
         }
@@ -28,10 +52,10 @@ struct PatternRow: View {
           .foregroundColor(.secondary)
       }
     }
+    .accessibilityElement(children: .ignore)
     .accessibilityLabel(
-      "Préfixe \(ListsViewModel.displayPattern(pattern.pattern)), action: \(actionLabel), \(calculateBlockedCount(pattern)) numéros bloqués"
+      "\(patternName) : \(ListsViewModel.displayPattern(pattern.pattern)), action: \(actionLabel), \(ListsViewModel.spelledOut(calculateBlockedCountFromPattern)) numéros bloqués"
     )
-    .accessibilityHint("Balayez vers la gauche pour supprimer")
   }
 
   private var actionIcon: String {
@@ -56,10 +80,5 @@ struct PatternRow: View {
     case "identify": return "identifier"
     default: return "unknown"
     }
-  }
-
-  private func calculateBlockedCount(_ pattern: Pattern) -> Int64 {
-    guard let patternString = pattern.pattern else { return 0 }
-    return PhoneNumberHelpers.countPhoneNumbers(for: patternString)
   }
 }
