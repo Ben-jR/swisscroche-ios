@@ -7,7 +7,7 @@
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>ILClassificationExtensionNetworkReportDestination</key>
-			<string>https://saracroche.org/api/v1/apple/report</string>
+			<string>https://app.saracroche.org/api/v1/apple/report</string>
 		</dict>
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).UnwantedCommunicationReportingExtension</string>

@@ -7,7 +7,7 @@
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>ILMessageFilterExtensionNetworkURL</key>
-			<string>https://saracroche.org/api/v1/apple/report</string>
+			<string>https://app.saracroche.org/api/v1/apple/report</string>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.identitylookup.message-filter</string>

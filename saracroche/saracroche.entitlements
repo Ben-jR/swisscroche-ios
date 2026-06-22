@@ -4,8 +4,8 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>classificationreport:saracroche.org</string>
-        <string>messagefilter:saracroche.org</string>
+		<string>classificationreport:app.saracroche.org</string>
+        <string>messagefilter:app.saracroche.org</string>
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
