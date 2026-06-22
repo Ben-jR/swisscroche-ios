@@ -79,7 +79,7 @@ struct ReportNavigationView: View {
               )
             )
             .disabled(viewModel.phoneNumber.isEmpty)
-            .accessibilityLabel("Bouton d'envoi du signalement")
+            .accessibilityLabel("Envoyer le signalement")
           }
           .padding(.vertical, 6)
         } footer: {

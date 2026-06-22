@@ -25,6 +25,8 @@ struct ReportChoiceButton: View {
             .appFont(.caption)
             .foregroundColor(.secondary)
             .multilineTextAlignment(.leading)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -44,6 +46,8 @@ struct ReportChoiceButton: View {
     }
     .buttonStyle(.plain)
     .accessibilityLabel(title)
+    .accessibilityHint(description)
     .accessibilityAddTraits(isSelected ? .isSelected : [])
+    .accessibilityRemoveTraits(!isSelected ? .isSelected : [])
   }
 }
