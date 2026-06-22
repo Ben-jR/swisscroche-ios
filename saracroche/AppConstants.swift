@@ -6,7 +6,7 @@ struct AppConstants {
   static let callDirectoryExtensionIdentifier = "com.cbouvat.saracroche.blocker"
   static let backgroundServiceIdentifier = "com.cbouvat.saracroche.background-update"
   static let coreDataModelName = "Database"
-  static let apiBaseURL = "https://saracroche.org/api/v1"
+  static let apiBaseURL = "https://app.saracroche.org/api/v1"
   static let apiReportURL = "\(apiBaseURL)/reports"
   static let apiFrenchListURL = "\(apiBaseURL)/lists/french-list-arcep-operators"
   static let backgroundUpdateInterval: TimeInterval = 6 * 60 * 60
