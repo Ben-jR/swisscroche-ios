@@ -31,11 +31,6 @@ Four targets sharing data via App Groups (`group.com.cbouvat.saracroche`):
 ## Commands
 
 ```bash
-# Format Swift code (REQUIRED after changes)
-swift-format --in-place --recursive .
-# or:
-make lint
-
-# Build
-xcodebuild -project saracroche.xcodeproj build
+make lint                                         # Format Swift code (REQUIRED after changes)
+xcodebuild -project saracroche.xcodeproj build    # Build
 ```
