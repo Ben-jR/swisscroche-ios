@@ -409,7 +409,7 @@ class PatternService {
           value: -AppConstants.patternFullResetDays,
           to: Date()
         )!
-          .addingTimeInterval(AppConstants.patternRetryDelay)
+        .addingTimeInterval(AppConstants.patternRetryDelay)
         Self.save(context: context)
         continuation.resume()
       }
