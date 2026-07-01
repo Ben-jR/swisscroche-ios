@@ -26,10 +26,12 @@ struct LowPowerModeModifier: ViewModifier {
         Button("Mettre à jour quand même") {
           showUpdateInProgressSheet = true
         }
+        .accessibilityLabel("Mettre à jour la liste malgré le mode économie d'énergie")
         Button("Annuler", role: .cancel) {}
+          .accessibilityLabel("Annuler la mise à jour")
       } message: {
         Text(
-          "La mise à jour de liste consomme de la batterie et peut vider votre batterie rapidement. Avec l’économisateur de batterie actif, la mise à jour sera ralentie."
+          "La mise à jour des listes consomme de la batterie et peut vider votre batterie rapidement. Avec l’économisateur de batterie actif, la mise à jour sera ralentie."
         )
       }
   }

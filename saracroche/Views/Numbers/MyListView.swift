@@ -10,6 +10,14 @@ struct MyListView: View {
   @State private var isLowPowerMode: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
   @State private var showLowPowerAlert: Bool = false
 
+  private func handleUpdateAction() {
+    if isLowPowerMode {
+      showLowPowerAlert = true
+    } else {
+      showUpdateInProgressSheet = true
+    }
+  }
+
   var body: some View {
     List {
       if viewModel.userPatterns.isEmpty {
@@ -69,11 +77,7 @@ struct MyListView: View {
     .onChange(of: viewModel.didModifyPatterns) { didModify in
       if didModify {
         viewModel.didModifyPatterns = false
-        if isLowPowerMode {
-          showLowPowerAlert = true
-        } else {
-          showUpdateInProgressSheet = true
-        }
+        handleUpdateAction()
       }
     }
     .lowPowerModeGuard(

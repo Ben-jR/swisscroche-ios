@@ -5,6 +5,14 @@ struct HomeInstallCard: View {
   @State private var isLowPowerMode: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
   @State private var showLowPowerAlert: Bool = false
 
+  private func handleUpdateAction() {
+    if isLowPowerMode {
+      showLowPowerAlert = true
+    } else {
+      showUpdateInProgressSheet = true
+    }
+  }
+
   var body: some View {
     VStack(alignment: .center, spacing: 16) {
       if #available(iOS 18.0, *) {
@@ -32,11 +40,7 @@ struct HomeInstallCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
 
       Button {
-        if isLowPowerMode {
-          showLowPowerAlert = true
-        } else {
-          showUpdateInProgressSheet = true
-        }
+        handleUpdateAction()
       } label: {
         HStack {
           Image(systemName: "arrow.down.circle.fill")
