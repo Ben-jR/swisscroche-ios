@@ -32,5 +32,5 @@ Four targets sharing data via App Groups (`group.com.cbouvat.saracroche`):
 
 ```bash
 make lint                                         # Format Swift code (REQUIRED after changes)
-xcodebuild -project saracroche.xcodeproj build    # Build
+xcodebuild -project saracroche.xcodeproj build    # Build (REQUIRED after changes)
 ```
