@@ -2,6 +2,8 @@ import SwiftUI
 
 struct HomeUpdateCard: View {
   @Binding var showUpdateInProgressSheet: Bool
+  @State private var isLowPowerMode: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
+  @State private var showLowPowerAlert: Bool = false
 
   var body: some View {
     VStack(alignment: .center, spacing: 16) {
@@ -28,7 +30,11 @@ struct HomeUpdateCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
 
       Button {
-        showUpdateInProgressSheet = true
+        if isLowPowerMode {
+          showLowPowerAlert = true
+        } else {
+          showUpdateInProgressSheet = true
+        }
       } label: {
         HStack {
           Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
@@ -44,6 +50,11 @@ struct HomeUpdateCard: View {
     .background(
       RoundedRectangle(cornerRadius: 16)
         .fill(Color.blue.opacity(0.15))
+    )
+    .lowPowerModeGuard(
+      showUpdateInProgressSheet: $showUpdateInProgressSheet,
+      showLowPowerAlert: $showLowPowerAlert,
+      isLowPowerMode: $isLowPowerMode
     )
   }
 }

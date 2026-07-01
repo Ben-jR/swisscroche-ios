@@ -7,6 +7,8 @@ struct MyListView: View {
   @Environment(\.dismiss) private var dismiss
   @State private var showAddPatternSheet = false
   @State private var showUpdateInProgressSheet = false
+  @State private var isLowPowerMode: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
+  @State private var showLowPowerAlert: Bool = false
 
   var body: some View {
     List {
@@ -67,9 +69,18 @@ struct MyListView: View {
     .onChange(of: viewModel.didModifyPatterns) { didModify in
       if didModify {
         viewModel.didModifyPatterns = false
-        showUpdateInProgressSheet = true
+        if isLowPowerMode {
+          showLowPowerAlert = true
+        } else {
+          showUpdateInProgressSheet = true
+        }
       }
     }
+    .lowPowerModeGuard(
+      showUpdateInProgressSheet: $showUpdateInProgressSheet,
+      showLowPowerAlert: $showLowPowerAlert,
+      isLowPowerMode: $isLowPowerMode
+    )
   }
 }
 
