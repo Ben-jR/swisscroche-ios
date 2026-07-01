@@ -11,10 +11,12 @@ struct HomeActiveCard: View {
           .font(.system(size: 60))
           .symbolEffect(.bounce.up.byLayer, options: .repeat(.periodic(delay: 2.0)))
           .foregroundColor(.green)
+          .accessibilityHidden(true)
       } else {
         Image(systemName: "checkmark.shield.fill")
           .font(.system(size: 60))
           .foregroundColor(.green)
+          .accessibilityHidden(true)
       }
 
       Text("Bloqueur actif et à jour")
@@ -39,7 +41,7 @@ struct HomeActiveCard: View {
       .accessibilityElement(children: .combine)
       .accessibilityLabel(
         Text(
-          "\(totalPhoneNumbersCount.formatted()) numéros dans la base de données"
+          "\(totalPhoneNumbersCount.spelledOut) numéros dans la base de données"
         )
       )
 

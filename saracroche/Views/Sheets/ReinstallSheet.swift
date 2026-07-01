@@ -20,10 +20,12 @@ struct ReinstallSheet: View {
                 .font(.system(size: 60))
                 .foregroundColor(.blue)
                 .symbolEffect(.rotate.byLayer, options: .repeat(.periodic(delay: 2)))
+                .accessibilityHidden(true)
             } else {
               Image(systemName: "arrow.clockwise.circle.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.blue)
+                .accessibilityHidden(true)
             }
 
             Text("Réinitialiser la liste de blocage.")

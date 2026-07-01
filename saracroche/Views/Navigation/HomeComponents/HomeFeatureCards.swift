@@ -74,6 +74,7 @@ struct HomeFeatureCards: View {
           .font(.system(size: 20))
           .foregroundColor(.secondary)
           .frame(width: 24)
+          .accessibilityHidden(true)
 
         VStack(alignment: .leading, spacing: 2) {
           Text(title)
@@ -89,10 +90,12 @@ struct HomeFeatureCards: View {
         Image(systemName: "chevron.right")
           .font(.system(size: 14, weight: .semibold))
           .foregroundColor(.secondary)
+          .accessibilityHidden(true)
       }
       .padding(.horizontal, 16)
       .padding(.vertical, 12)
       .contentShape(Rectangle())
+      .accessibilityElement(children: .combine)
     }
     .buttonStyle(.plain)
   }
@@ -103,6 +106,7 @@ struct HomeFeatureCards: View {
         .font(.system(size: 20))
         .foregroundColor(.secondary)
         .frame(width: 24)
+        .accessibilityHidden(true)
 
       VStack(alignment: .leading, spacing: 2) {
         Text("Rappel de mise à jour")
@@ -135,5 +139,6 @@ struct HomeFeatureCards: View {
     }
     .padding(.horizontal, 16)
     .padding(.vertical, 12)
+    .accessibilityElement(children: .combine)
   }
 }

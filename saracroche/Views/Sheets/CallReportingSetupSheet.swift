@@ -41,6 +41,7 @@ struct CallReportingSetupSheet: View {
                 icon: "phone.fill",
                 title: "Étape 1",
                 description: "Ouvrir Réglages > Apps > Téléphone.",
+                accessibleDescription: "Ouvrir Réglages, puis Apps, puis Téléphone.",
                 iconColor: .green
               )
 
@@ -48,6 +49,8 @@ struct CallReportingSetupSheet: View {
                 icon: "bell.badge.fill",
                 title: "Étape 2",
                 description: "Sélectionner \"Signalements des SMS/appels\" > Saracroche.",
+                accessibleDescription:
+                  "Sélectionner \"Signalements des SMS/appels\", puis Saracroche.",
                 iconColor: .green
               )
             }

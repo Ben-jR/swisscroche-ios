@@ -6,6 +6,7 @@ struct IconInfoRow: View {
   let icon: String
   let title: String
   let description: String
+  var accessibleDescription: String? = nil
   var iconColor: Color = .accent
 
   var body: some View {
@@ -24,6 +25,7 @@ struct IconInfoRow: View {
           .appFont(.caption)
           .foregroundColor(.secondary)
           .frame(maxWidth: .infinity, alignment: .leading)
+          .accessibilityLabel(accessibleDescription ?? description)
       }
     }
     .accessibilityElement(children: .combine)

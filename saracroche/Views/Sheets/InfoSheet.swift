@@ -18,10 +18,12 @@ struct InfoSheet: View {
                 .font(.system(size: 60))
                 .foregroundColor(.blue)
                 .symbolEffect(.wiggle.clockwise.byLayer, options: .repeat(.periodic(delay: 2)))
+                .accessibilityHidden(true)
             } else {
               Image(systemName: "info.circle.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.blue)
+                .accessibilityHidden(true)
             }
 
             Text("Informations")
@@ -48,30 +50,32 @@ struct InfoSheet: View {
     VStack(spacing: 16) {
       statisticsListItem(
         icon: "phone.circle.fill",
-        value: "\(blockerUpdate.totalPhoneNumbersCount.formatted())",
         label: "Numéros dans la base de données",
+        value: "\(blockerUpdate.totalPhoneNumbersCount)",
+        spelledOut: blockerUpdate.totalPhoneNumbersCount.spelledOut,
         color: .green
       )
 
       statisticsListItem(
         icon: "number.circle.fill",
-        value: "\(blockerUpdate.totalPatternsCount)",
         label: "Préfixes dans la base de données",
+        value: "\(blockerUpdate.totalPatternsCount)",
+        spelledOut: blockerUpdate.totalPatternsCount.spelledOut,
         color: .green
       )
 
       statisticsListItem(
         icon: backgroundServiceIcon,
-        value: backgroundServiceText,
         label: "Service en arrière-plan",
+        value: backgroundServiceText,
         color: backgroundServiceColor
       )
 
       if let lastListDownloadAt = blockerUpdate.lastListDownloadAt {
         statisticsListItem(
           icon: "arrow.down.circle.fill",
-          value: formatDate(lastListDownloadAt),
           label: "Dernier téléchargement",
+          value: formatDate(lastListDownloadAt),
           color: .green
         )
       }
@@ -79,8 +83,8 @@ struct InfoSheet: View {
       if let lastSuccessfulUpdateAt = blockerUpdate.lastSuccessfulUpdateAt {
         statisticsListItem(
           icon: "checkmark.circle.fill",
-          value: formatDate(lastSuccessfulUpdateAt),
           label: "Dernière mise à jour réussie",
+          value: formatDate(lastSuccessfulUpdateAt),
           color: .green
         )
       }
@@ -88,8 +92,8 @@ struct InfoSheet: View {
       if let lastBackgroundLaunchAt = blockerUpdate.lastBackgroundLaunchAt {
         statisticsListItem(
           icon: "clock.circle.fill",
-          value: formatDate(lastBackgroundLaunchAt),
           label: "Dernier lancement en arrière-plan",
+          value: formatDate(lastBackgroundLaunchAt),
           color: .green
         )
       }
@@ -107,8 +111,9 @@ struct InfoSheet: View {
   @ViewBuilder
   private func statisticsListItem(
     icon: String,
-    value: String,
     label: String,
+    value: String,
+    spelledOut: String = "",
     color: Color
   ) -> some View {
     HStack(spacing: 12) {
@@ -116,6 +121,7 @@ struct InfoSheet: View {
         .font(.system(size: 20))
         .foregroundColor(color)
         .frame(width: 24)
+        .accessibilityHidden(true)
 
       VStack(alignment: .leading, spacing: 2) {
         Text(label)
@@ -125,10 +131,11 @@ struct InfoSheet: View {
         Text(value)
           .appFont(.caption)
           .foregroundColor(.secondary)
+          .accessibilityLabel(!spelledOut.isEmpty ? spelledOut : value)
       }
 
       Spacer()
-    }
+    }.accessibilityElement(children: .combine)
   }
 
   private var backgroundServiceIcon: String {

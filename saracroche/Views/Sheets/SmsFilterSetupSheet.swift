@@ -19,10 +19,12 @@ struct SmsFilterSetupSheet: View {
                 .font(.system(size: 60))
                 .foregroundColor(.green)
                 .symbolEffect(.wiggle.byLayer, options: .repeat(.periodic(delay: 2)))
+                .accessibilityHidden(true)
             } else {
               Image(systemName: "message.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.green)
+                .accessibilityHidden(true)
             }
 
             Text("Filtre SMS")
@@ -42,6 +44,7 @@ struct SmsFilterSetupSheet: View {
                 icon: "gear",
                 title: "Étape 1",
                 description: "Ouvrir Réglages > Apps > Messages.",
+                accessibleDescription: "Ouvrir Réglages, puis Apps, et ensuite Messages.",
                 iconColor: .green
               )
 
@@ -56,6 +59,8 @@ struct SmsFilterSetupSheet: View {
                 icon: "message.fill",
                 title: "Étape 3",
                 description: "Sélectionner \"Filtrer les messages texte\" > Saracroche.",
+                accessibleDescription:
+                  "Sélectionner \"Filtrer les messages texte\", puis Saracroche.",
                 iconColor: .green
               )
             }

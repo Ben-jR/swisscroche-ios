@@ -18,10 +18,12 @@ struct ShortcutSetupSheet: View {
                 .font(.system(size: 60))
                 .foregroundColor(.green)
                 .symbolEffect(.wiggle.byLayer, options: .repeat(.periodic(delay: 2)))
+                .accessibilityHidden(true)
             } else {
               Image(systemName: "arrow.clockwise.circle.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.green)
+                .accessibilityHidden(true)
             }
 
             Text("Raccourci automatique")
@@ -49,14 +51,17 @@ struct ShortcutSetupSheet: View {
                 title: "Étape 2",
                 description:
                   "Onglet Automatisation > Nouvelle automatisation > Heure de la journée et choisissez une heure.",
+                accessibleDescription:
+                  "Onglet Automatisation, puis Nouvelle automatisation, puis Heure de la journée, et choisissez une heure.",
                 iconColor: .green
               )
 
               IconInfoRow(
                 icon: "arrow.clockwise",
                 title: "Étape 3",
-                description:
-                  "Recherchez Saracroche > \"Mettre à jour\" et ajoutez cette action.",
+                description: "Recherchez Saracroche > \"Mettre à jour\" et ajoutez cette action.",
+                accessibleDescription:
+                  "Recherchez Saracroche, puis \"Mettre à jour\", et ajoutez cette action.",
                 iconColor: .green
               )
             }

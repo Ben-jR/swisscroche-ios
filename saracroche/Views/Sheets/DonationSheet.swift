@@ -14,10 +14,12 @@ struct DonationSheet: View {
                 .font(.system(size: 60))
                 .foregroundColor(.pink)
                 .symbolEffect(.bounce.down.byLayer, options: .repeat(.periodic(delay: 2.0)))
+                .accessibilityHidden(true)
             } else {
               Image(systemName: "heart.fill")
                 .font(.system(size: 60))
                 .foregroundColor(.pink)
+                .accessibilityHidden(true)
             }
 
             Text("Soutenez Saracroche")
@@ -44,7 +46,9 @@ struct DonationSheet: View {
                 icon: "gift.fill",
                 title: "Entièrement gratuit",
                 description:
-                  "Pas de pub, pas d'abonnement, pas de version premium."
+                  "Pas de pub, pas d'abonnement, pas de version premium.",
+                accessibleDescription:
+                  "Pas de publicité, pas d'abonnement, pas de version premium."
               )
 
               IconInfoRow(
@@ -89,6 +93,8 @@ struct DonationSheet: View {
             .buttonStyle(
               .fullWidth(background: .indigo, foreground: .white)
             )
+            .accessibilityAddTraits(.isLink)
+            .accessibilityRemoveTraits(.isButton)
 
             Button {
               if let url = URL(
@@ -106,6 +112,8 @@ struct DonationSheet: View {
             .buttonStyle(
               .fullWidth(background: .blue, foreground: .white)
             )
+            .accessibilityAddTraits(.isLink)
+            .accessibilityRemoveTraits(.isButton)
 
             Button {
               if let url = URL(string: "https://liberapay.com/cbouvat") {
@@ -120,6 +128,8 @@ struct DonationSheet: View {
             .buttonStyle(
               .fullWidth(background: .yellow, foreground: .black)
             )
+            .accessibilityAddTraits(.isLink)
+            .accessibilityRemoveTraits(.isButton)
 
             Button {
               if let url = URL(
@@ -134,6 +144,8 @@ struct DonationSheet: View {
             .buttonStyle(
               .fullWidth(background: .pink, foreground: .white)
             )
+            .accessibilityAddTraits(.isLink)
+            .accessibilityRemoveTraits(.isButton)
 
             Button {
               userPreferences.dismissDonation()
