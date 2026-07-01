@@ -386,7 +386,7 @@ class PatternService {
     }
   }
 
-  /// Marks a pattern for retry by setting completedDate slightly before the reprocess cutoff,
+  /// Marks a pattern for retry by setting completedDate slightly before the full reset cutoff,
   /// so it becomes eligible for reprocessing after patternRetryDelay.
   /// - Parameter pattern: The Pattern entity to mark for retry
   func markPatternForRetry(_ pattern: Pattern) async {
@@ -404,9 +404,12 @@ class PatternService {
           continuation.resume()
           return
         }
-        patternInContext.completedDate = Date(
-          timeIntervalSinceNow:
-            -(AppConstants.patternReprocessInterval - AppConstants.patternRetryDelay))
+        patternInContext.completedDate = Calendar.current.date(
+          byAdding: .day,
+          value: -AppConstants.patternFullResetDays,
+          to: Date()
+        )!
+          .addingTimeInterval(AppConstants.patternRetryDelay)
         Self.save(context: context)
         continuation.resume()
       }
@@ -474,9 +477,8 @@ class PatternService {
     }
   }
 
-  /// Resets completedDate to nil for a percentage of patterns completed more than the reprocess interval ago
+  /// Resets completedDate to nil for ALL patterns completed more than patternFullResetDays ago
   /// Only affects "block" and "identify" actions (not removal actions)
-  /// The percentage is defined by AppConstants.patternResetPercentage (default 5%), with a minimum of 1 pattern
   /// - Returns: The number of patterns that were reset
   func resetExpiredCompletedPatterns() async -> Int {
     let context = dataStack.persistentContainer.viewContext
@@ -484,8 +486,11 @@ class PatternService {
     return await withCheckedContinuation { continuation in
       context.perform {
         let fetchRequest = NSFetchRequest<Pattern>(entityName: "Pattern")
-        let cutoffDate = Date(
-          timeIntervalSinceNow: -AppConstants.patternReprocessInterval)
+        let cutoffDate = Calendar.current.date(
+          byAdding: .day,
+          value: -AppConstants.patternFullResetDays,
+          to: Date()
+        )!
         fetchRequest.predicate = NSPredicate(
           format:
             "completedDate != nil AND completedDate < %@ AND (action == %@ OR action == %@)",
@@ -500,13 +505,11 @@ class PatternService {
             continuation.resume(returning: 0)
             return
           }
-          let resetCount = max(1, Int(Double(patterns.count) * AppConstants.patternResetPercentage))
-          let patternsToReset = patterns.shuffled().prefix(resetCount)
-          for pattern in patternsToReset {
+          for pattern in patterns {
             pattern.completedDate = nil
           }
           Self.save(context: context)
-          continuation.resume(returning: patternsToReset.count)
+          continuation.resume(returning: patterns.count)
         } catch {
           Logger.error(
             "Failed to reset expired completed patterns: %{public}@",
