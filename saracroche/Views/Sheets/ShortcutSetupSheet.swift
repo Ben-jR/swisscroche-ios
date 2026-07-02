@@ -50,18 +50,26 @@ struct ShortcutSetupSheet: View {
                 icon: "clock.fill",
                 title: "Étape 2",
                 description:
-                  "Onglet Automatisation > Nouvelle automatisation > Heure de la journée et choisissez une heure.",
+                  "Onglet Automatisation > Nouvelle automatisation > Heure de la journée et choisissez une heure, de préférence la nuit ou quand l'appareil est en charge.",
                 accessibleDescription:
-                  "Onglet Automatisation, puis Nouvelle automatisation, puis Heure de la journée, et choisissez une heure.",
+                  "Onglet Automatisation, puis Nouvelle automatisation, puis Heure de la journée, et choisissez une heure, de préférence la nuit ou quand l'appareil est en charge.",
                 iconColor: .green
               )
 
               IconInfoRow(
                 icon: "arrow.clockwise",
                 title: "Étape 3",
-                description: "Recherchez Saracroche > \"Mettre à jour\" et ajoutez cette action.",
+                description: "Recherchez Saracroche > « Mettre à jour » et ajoutez cette action.",
                 accessibleDescription:
-                  "Recherchez Saracroche, puis \"Mettre à jour\", et ajoutez cette action.",
+                  "Recherchez Saracroche, puis « Mettre à jour », et ajoutez cette action.",
+                iconColor: .green
+              )
+
+              IconInfoRow(
+                icon: "slider.horizontal.3",
+                title: "Étape 4",
+                description:
+                  "Choisissez « Exécuter immédiatement », puis désactivez « Me prévenir lors de l'exécution ». Sur les anciens iPhones, ces options apparaissent sous forme de boutons.",
                 iconColor: .green
               )
             }
