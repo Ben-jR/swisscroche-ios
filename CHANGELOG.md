@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.13.0] - 2026-07-02
+
+### Added
+
+- Add `Integers+SpelledOut` extension for French spelled-out number formatting
+- Add `LowPowerModeModifier` to guard heavy updates when low power mode is active
+- Add low power mode alerts for list updates in HomeInstallCard, HomeUpdateCard, and MyListView
+- Add accessible descriptions to IconInfoRow and various setup sheets for VoiceOver compatibility
+- Add battery optimization tips to ShortcutSetupSheet instructions
+- Add Step 4 to ShortcutSetupSheet with execution options
+- Add accessibility link traits to donation buttons in DonationSheet
+
+### Changed
+
+- Refactor pattern reset logic to use time-based full reset (20 days) instead of percentage-based (10%) reset
+- Update pattern retry delay from 1 hour to 2 hours
+- Improve French typography by replacing `"` with `« »` in validation messages and UI text
+- Update UpdateBlockerIntent description from "la liste" to "les listes" and simplify partial update message
+- Reorder feature card bindings in HomeNavigationView
+- Update InfoSheet to use spelled-out numbers for screen reader accessibility
+- Simplify Forgejo issue templates for bug reports and feature requests
+
+### Fixed
+
+- Fix swapped feature sheet bindings in HomeNavigationView
+
+### Removed
+
+- Remove SPDX license headers from source files
+
 ## [4.12.0] - 2026-06-22
 
 ### Added
