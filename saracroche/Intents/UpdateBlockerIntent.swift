@@ -5,7 +5,7 @@ import Foundation
 @available(iOS 16.0, *)
 struct UpdateBlockerIntent: AppIntent {
   static var title: LocalizedStringResource = "Mettre à jour"
-  static var description = IntentDescription("Met à jour la liste de Saracroche.")
+  static var description = IntentDescription("Met à jour les listes de Saracroche.")
 
   static var openAppWhenRun: Bool = false
 
@@ -29,7 +29,7 @@ struct UpdateBlockerIntent: AppIntent {
     if completed {
       return .result(value: "Mise à jour effectuée.")
     } else {
-      return .result(value: "Mise à jour partielle, veuillez relancer si nécessaire.")
+      return .result(value: "Mise à jour partielle, veuillez relancer.")
     }
   }
 }
