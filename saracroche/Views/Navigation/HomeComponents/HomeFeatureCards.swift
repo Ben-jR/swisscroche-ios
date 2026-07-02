@@ -2,9 +2,9 @@ import SwiftUI
 
 struct HomeFeatureCards: View {
   @ObservedObject var userPreferences: UserPreferencesViewModel
+  @Binding var showShortcutSetupSheet: Bool
   @Binding var showSmsFilterSetupSheet: Bool
   @Binding var showCallReportingSetupSheet: Bool
-  @Binding var showShortcutSetupSheet: Bool
 
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
@@ -22,28 +22,6 @@ struct HomeFeatureCards: View {
 
       notificationRow
 
-      Divider().padding(.horizontal, 16)
-
-      if #available(iOS 16.0, *) {
-        featureRow(
-          icon: "message.fill",
-          title: "Filtre SMS",
-          subtitle: "Filtrez les SMS indésirables."
-        ) {
-          showSmsFilterSetupSheet = true
-        }
-
-        Divider().padding(.horizontal, 16)
-      }
-
-      featureRow(
-        icon: "phone.fill",
-        title: "Signalement d'appels",
-        subtitle: "Signalez les appels indésirables depuis le journal d'appels."
-      ) {
-        showCallReportingSetupSheet = true
-      }
-
       if #available(iOS 16.0, *) {
         Divider().padding(.horizontal, 16)
 
@@ -54,6 +32,28 @@ struct HomeFeatureCards: View {
         ) {
           showShortcutSetupSheet = true
         }
+      }
+
+      if #available(iOS 16.0, *) {
+        Divider().padding(.horizontal, 16)
+
+        featureRow(
+          icon: "message.fill",
+          title: "Filtre SMS",
+          subtitle: "Filtrez les SMS indésirables."
+        ) {
+          showSmsFilterSetupSheet = true
+        }
+      }
+
+      Divider().padding(.horizontal, 16)
+
+      featureRow(
+        icon: "phone.fill",
+        title: "Signalement d'appels",
+        subtitle: "Signalez les appels indésirables depuis le journal d'appels."
+      ) {
+        showCallReportingSetupSheet = true
       }
     }
     .background(

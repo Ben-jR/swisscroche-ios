@@ -45,9 +45,9 @@ struct HomeNavigationView: View {
                 )
                 HomeFeatureCards(
                   userPreferences: userPreferences,
-                  showSmsFilterSetupSheet: $showSmsFilterSetupSheet,
-                  showCallReportingSetupSheet: $showCallReportingSetupSheet,
-                  showShortcutSetupSheet: $showShortcutSetupSheet
+                  showShortcutSetupSheet: $showCallReportingSetupSheet,
+                  showSmsFilterSetupSheet: $showShortcutSetupSheet,
+                  showCallReportingSetupSheet: $showSmsFilterSetupSheet
                 )
                 HomeDonationCard(
                   userPreferences: userPreferences,
