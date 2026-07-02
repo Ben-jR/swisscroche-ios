@@ -31,7 +31,7 @@ struct CallReportingSetupSheet: View {
 
           VStack(alignment: .leading, spacing: 16) {
             Text(
-              "Activez ou désactivez le signalement dans les réglages pour pouvoir signaler les appels indésirables directement depuis le journal d'appel. Pour signaler un appel, glissez vers la droite sur un appel dans le journal d'appel et cliquez sur l'icône \"main\"."
+              "Activez ou désactivez le signalement dans les réglages pour pouvoir signaler les appels indésirables directement depuis le journal d'appel. Pour signaler un appel, glissez vers la droite sur un appel dans le journal d'appel et cliquez sur l'icône « main »."
             )
             .appFont(.body)
             .multilineTextAlignment(.leading)
@@ -48,9 +48,9 @@ struct CallReportingSetupSheet: View {
               IconInfoRow(
                 icon: "bell.badge.fill",
                 title: "Étape 2",
-                description: "Sélectionner \"Signalements des SMS/appels\" > Saracroche.",
+                description: "Sélectionner « Signalements des SMS/appels » > Saracroche.",
                 accessibleDescription:
-                  "Sélectionner \"Signalements des SMS/appels\", puis Saracroche.",
+                  "Sélectionner « Signalements des SMS/appels », puis Saracroche.",
                 iconColor: .green
               )
             }

@@ -51,16 +51,16 @@ struct SmsFilterSetupSheet: View {
               IconInfoRow(
                 icon: "person.crop.circle.badge.exclamationmark",
                 title: "Étape 2",
-                description: "Activer \"Filtrer les expéditeurs inconnus\".",
+                description: "Activer « Filtrer les expéditeurs inconnus ».",
                 iconColor: .green
               )
 
               IconInfoRow(
                 icon: "message.fill",
                 title: "Étape 3",
-                description: "Sélectionner \"Filtrer les messages texte\" > Saracroche.",
+                description: "Sélectionner « Filtrer les messages texte » > Saracroche.",
                 accessibleDescription:
-                  "Sélectionner \"Filtrer les messages texte\", puis Saracroche.",
+                  "Sélectionner « Filtrer les messages texte », puis Saracroche.",
                 iconColor: .green
               )
             }
