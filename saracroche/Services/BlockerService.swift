@@ -9,6 +9,10 @@ final class BlockerService {
   /// Pattern start callback: (patternString, action)
   typealias PatternStartCallback = @Sendable (String, String) async -> Void
 
+  /// Number progress callback: (processedNumbersCount, totalNumbersCount)
+  /// Reported after each processed chunk, so progress moves smoothly within large patterns
+  typealias NumberProgressCallback = @Sendable (Int64, Int64) async -> Void
+
   // MARK: - Dependencies
 
   private let callDirectoryService: CallDirectoryService
@@ -106,7 +110,8 @@ final class BlockerService {
   /// Performs a foreground update: checks iOS version, then processes pending patterns with progress callback
   func performForegroundUpdate(
     onPatternStarted: PatternStartCallback? = nil,
-    onPatternCompleted: PatternProgressCallback? = nil
+    onPatternCompleted: PatternProgressCallback? = nil,
+    onNumbersProgress: NumberProgressCallback? = nil
   ) async throws {
     Logger.debug("performForegroundUpdate called", category: .blockerService)
     try await handleFirstLaunch()
@@ -114,7 +119,8 @@ final class BlockerService {
     await cleanupDuplicatePatterns()
     try await processPendingPatterns(
       onPatternStarted: onPatternStarted,
-      onPatternCompleted: onPatternCompleted
+      onPatternCompleted: onPatternCompleted,
+      onNumbersProgress: onNumbersProgress
     )
     await deleteCompletedRemovalPatterns()
     userDefaultsService.setLastSuccessfulUpdateAt(Date())
@@ -170,13 +176,16 @@ final class BlockerService {
   /// Processes all pending patterns
   private func processPendingPatterns(
     onPatternStarted: PatternStartCallback? = nil,
-    onPatternCompleted: PatternProgressCallback? = nil
+    onPatternCompleted: PatternProgressCallback? = nil,
+    onNumbersProgress: NumberProgressCallback? = nil
   ) async throws {
     let totalCount = await patternService.getPendingPatternsCount()
     guard totalCount > 0 else { return }
 
     Logger.debug("Pending patterns found: \(totalCount)", category: .blockerService)
     var completedCount = 0
+    var totalNumbersCount = await patternService.getPendingPhoneNumbersCount()
+    var processedNumbersCount: Int64 = 0
 
     while true {
       try Task.checkCancellation()
@@ -187,8 +196,15 @@ final class BlockerService {
 
       await onPatternStarted?(patternString, pattern.action ?? "block")
 
+      let patternNumbersCount = PhoneNumberHelpers.countPhoneNumbers(for: patternString)
+      var patternProcessedNumbersCount: Int64 = 0
+
       do {
-        try await processPendingPattern(pattern)
+        try await processPendingPattern(pattern) { chunkNumbersCount in
+          patternProcessedNumbersCount += Int64(chunkNumbersCount)
+          processedNumbersCount += Int64(chunkNumbersCount)
+          await onNumbersProgress?(processedNumbersCount, totalNumbersCount)
+        }
       } catch is CancellationError {
         throw CancellationError()
       } catch {
@@ -196,6 +212,10 @@ final class BlockerService {
           "Pattern '\(patternString)' failed, retrying later",
           category: .blockerService, error: error)
         await patternService.markPatternForRetry(pattern)
+        // Exclude the failed pattern from progress so remaining work stays accurate
+        processedNumbersCount -= patternProcessedNumbersCount
+        totalNumbersCount -= patternNumbersCount
+        await onNumbersProgress?(processedNumbersCount, totalNumbersCount)
         continue
       }
 
@@ -235,7 +255,10 @@ final class BlockerService {
   // MARK: - Private Helpers
 
   /// Processes a specific pending pattern
-  private func processPendingPattern(_ pattern: Pattern) async throws {
+  private func processPendingPattern(
+    _ pattern: Pattern,
+    onChunkCompleted: ((Int) async -> Void)? = nil
+  ) async throws {
     try Task.checkCancellation()
 
     let patternString = pattern.pattern ?? ""
@@ -247,7 +270,7 @@ final class BlockerService {
       Array(numbers[$0..<min($0 + chunkSize, numbers.count)])
     }
 
-    try await processChunks(chunks, for: pattern)
+    try await processChunks(chunks, for: pattern, onChunkCompleted: onChunkCompleted)
     Logger.debug("Completed pattern: \(patternString)", category: .blockerService)
     await patternService.markPatternAsCompleted(pattern)
   }
@@ -255,7 +278,8 @@ final class BlockerService {
   /// Process chunks iteratively: removes then adds numbers for each chunk
   private func processChunks(
     _ chunks: [[String]],
-    for pattern: Pattern
+    for pattern: Pattern,
+    onChunkCompleted: ((Int) async -> Void)? = nil
   ) async throws {
     let currentAction = pattern.action ?? "block"
     let isRemovalAction = currentAction.hasPrefix("remove_")
@@ -303,6 +327,8 @@ final class BlockerService {
         )
         throw BlockerServiceError.extensionReloadFailed(error)
       }
+
+      await onChunkCompleted?(chunk.count)
     }
   }
 }

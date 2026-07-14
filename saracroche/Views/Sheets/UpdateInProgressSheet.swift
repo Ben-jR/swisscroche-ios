@@ -18,6 +18,33 @@ struct UpdateInProgressSheet: View {
     }
   }
 
+  /// Formatter for the estimated time remaining
+  private static let timeRemainingFormatter: DateComponentsFormatter = {
+    let formatter = DateComponentsFormatter()
+    formatter.unitsStyle = .full
+    formatter.allowedUnits = [.hour, .minute]
+    var calendar = Calendar.current
+    calendar.locale = Locale(identifier: "fr_FR")
+    formatter.calendar = calendar
+    return formatter
+  }()
+
+  /// Returns a human-readable label for the estimated time remaining
+  private var estimatedTimeRemainingLabel: String? {
+    guard let remaining = blockerUpdate.estimatedTimeRemaining else {
+      return nil
+    }
+    if remaining < 60 {
+      return "Temps restant estimé : moins d'une minute"
+    }
+    // Round up to the next minute to avoid showing an overly optimistic estimate
+    let roundedToMinute = (remaining / 60).rounded(.up) * 60
+    guard let formatted = Self.timeRemainingFormatter.string(from: roundedToMinute) else {
+      return nil
+    }
+    return "Temps restant estimé : environ \(formatted)"
+  }
+
   var body: some View {
     NavigationView {
       adaptiveViewContent
@@ -99,6 +126,16 @@ struct UpdateInProgressSheet: View {
           )
           .tint(.blue)
           .accessibilityHidden(true)
+
+          if let timeRemainingLabel = estimatedTimeRemainingLabel {
+            Text(timeRemainingLabel)
+              .appFont(.caption)
+              .foregroundColor(.secondary)
+              .frame(maxWidth: .infinity, alignment: .leading)
+              .lineLimit(nil)
+              .fixedSize(horizontal: false, vertical: true)
+              .accessibilityAddTraits(.updatesFrequently)
+          }
 
           if let patternString = blockerUpdate.currentPatternString {
             Text("\(currentPatternActionLabel) +\(patternString)")

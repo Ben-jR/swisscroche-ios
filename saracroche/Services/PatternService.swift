@@ -307,6 +307,16 @@ class PatternService {
     return await getPendingPatterns().count
   }
 
+  /// Counts the total number of phone numbers represented by pending patterns
+  /// - Returns: Total count of phone numbers across patterns with completedDate == nil
+  func getPendingPhoneNumbersCount() async -> Int64 {
+    let pendingPatterns = await getPendingPatterns()
+    return pendingPatterns.reduce(0) { total, pattern in
+      guard let patternString = pattern.pattern else { return total }
+      return total + PhoneNumberHelpers.countPhoneNumbers(for: patternString)
+    }
+  }
+
   /// Counts the total number of patterns (completed + pending)
   /// - Returns: Total count of all patterns
   func getTotalPatternsCount() async -> Int {

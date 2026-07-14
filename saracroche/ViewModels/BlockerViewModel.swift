@@ -26,6 +26,13 @@ class BlockerUpdateViewModel: ObservableObject {
   @Published var currentPatternString: String? = nil
   @Published var currentPatternAction: String? = nil
 
+  // Estimated time remaining for the current update, in seconds
+  @Published var estimatedTimeRemaining: TimeInterval? = nil
+
+  // MARK: - Private Properties
+
+  private var updateStartedAt: Date? = nil
+
   // MARK: - Dependencies
 
   private let userDefaults: UserDefaultsService
@@ -88,6 +95,8 @@ class BlockerUpdateViewModel: ObservableObject {
     // Set starting state
     updateState = .inProgress(progress: 0.0)
     isCancellationRequested = false
+    estimatedTimeRemaining = nil
+    updateStartedAt = Date()
 
     // Calculate total patterns count at the start for progress tracking
     totalPatternsCount = completedPatternsCount + pendingPatternsCount
@@ -106,9 +115,15 @@ class BlockerUpdateViewModel: ObservableObject {
           await MainActor.run {
             self.completedPatternsCount = completedCount
             self.totalPatternsCount = totalCount
-            let progress =
-              totalCount > 0 ? Double(completedCount) * 100.0 / Double(totalCount) : 0.0
-            self.updateState = .inProgress(progress: progress)
+          }
+        },
+        onNumbersProgress: { [weak self] processedNumbers, totalNumbers in
+          guard let self = self else { return }
+          await MainActor.run {
+            self.handleNumbersProgress(
+              processedNumbers: processedNumbers,
+              totalNumbers: totalNumbers
+            )
           }
         }
       )
@@ -116,11 +131,15 @@ class BlockerUpdateViewModel: ObservableObject {
       Logger.debug("Update task cancelled", category: .blockerViewModel)
       currentPatternString = nil
       currentPatternAction = nil
+      estimatedTimeRemaining = nil
+      updateStartedAt = nil
       return
     } catch {
       Logger.error("Update failed", category: .blockerViewModel, error: error)
       currentPatternString = nil
       currentPatternAction = nil
+      estimatedTimeRemaining = nil
+      updateStartedAt = nil
       updateState = .ok
       showUpdateError = true
       return
@@ -129,12 +148,43 @@ class BlockerUpdateViewModel: ObservableObject {
     // Success - refresh data and set ok state
     currentPatternString = nil
     currentPatternAction = nil
+    estimatedTimeRemaining = nil
+    updateStartedAt = nil
     completedPatternsCount = await patternService.getCompletedPatternsCount()
     pendingPatternsCount = await patternService.getPendingPatternsCount()
     lastSuccessfulUpdateAt = userDefaults.getLastSuccessfulUpdateAt()
     lastListDownloadAt = userDefaults.getLastListDownloadAt()
     shouldUpdateList = userDefaults.shouldUpdateList()
     updateState = .ok
+  }
+
+  /// Updates the progress and the estimated time remaining from number-level progress
+  /// Progress is weighted by phone numbers (not patterns), since processing time is
+  /// proportional to the number of numbers sent to the Call Directory extension
+  private func handleNumbersProgress(processedNumbers: Int64, totalNumbers: Int64) {
+    guard totalNumbers > 0 else { return }
+
+    let progress = min(Double(processedNumbers) * 100.0 / Double(totalNumbers), 100.0)
+    updateState = .inProgress(progress: max(progress, 0.0))
+
+    guard let startedAt = updateStartedAt, processedNumbers > 0 else {
+      estimatedTimeRemaining = nil
+      return
+    }
+
+    // Wait a few seconds before showing an estimate, to let the average rate settle
+    let elapsed = Date().timeIntervalSince(startedAt)
+    guard elapsed >= 5 else { return }
+
+    let numbersPerSecond = Double(processedNumbers) / elapsed
+    let remainingSeconds = Double(max(totalNumbers - processedNumbers, 0)) / numbersPerSecond
+
+    if let previousEstimate = estimatedTimeRemaining {
+      // Smooth the estimate to avoid jumps between chunks
+      estimatedTimeRemaining = previousEstimate * 0.6 + remainingSeconds * 0.4
+    } else {
+      estimatedTimeRemaining = remainingSeconds
+    }
   }
 
   /// Reinstalls the block list by resetting the extension and marking all patterns as pending
