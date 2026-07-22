@@ -13,7 +13,7 @@ Four targets sharing data via App Groups (`group.com.cbouvat.saracroche`):
 - **unwanted** (Unwanted Communication Reporting extension): Reports spam calls/SMS.
 - **filter** (Message Filter extension): Checks incoming SMS senders against CoreData patterns (read-only).
 
-Plus `Shared/`, a synchronized folder compiled into `saracroche`, `blocker` and `filter`, and `saracrocheTests/`, a unit test bundle hosted by the main app.
+Plus `shared/`, a synchronized folder compiled into `saracroche`, `blocker` and `filter`, and `saracrocheTests/`, a unit test bundle hosted by the main app.
 
 **Inter-process data flow (critical):**
 
@@ -25,15 +25,15 @@ Plus `Shared/`, a synchronized folder compiled into `saracroche`, `blocker` and 
 ## Conventions
 
 - **Don't commit code** unless explicitly asked.
-- All app configuration lives in `Shared/AppConstants.swift` — do not hardcode values elsewhere. It is compiled into the app and the `blocker`/`filter` extensions, so both can reference it directly.
+- All app configuration lives in `shared/AppConstants.swift` — do not hardcode values elsewhere. It is compiled into the app and the `blocker`/`filter` extensions, so both can reference it directly.
 - App Groups identifier: `group.com.cbouvat.saracroche`. Blocker extension bundle ID: `com.cbouvat.saracroche.blocker`.
-- Pure logic that extensions and the app both need (pattern expansion, matching) belongs in `Shared/` so it stays unit-testable.
+- Pure logic that extensions and the app both need (pattern expansion, matching) belongs in `shared/` so it stays unit-testable.
 - CoreData entity `Pattern` uses Xcode code generation (`codeGenerationType="class"`, `representedClassName=".Pattern"`) — do not manually create a `Pattern.swift` file.
 
 ## Commands
 
 ```bash
-make lint                                         # Format Swift code (REQUIRED after changes)
-xcodebuild -project saracroche.xcodeproj build    # Build (REQUIRED after changes)
-make test                                         # Run the unit tests on a simulator
+make lint       # Format Swift code (REQUIRED after changes)
+make build      # Build (REQUIRED after changes)
+make test       # Run the unit tests on a simulator
 ```

@@ -123,9 +123,9 @@
 			path = filter;
 			sourceTree = "<group>";
 		};
-		85A1B0012F40000100A1B001 /* Shared */ = {
+		85A1B0012F40000100A1B001 /* shared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Shared;
+			path = shared;
 			sourceTree = "<group>";
 		};
 		85A1B0022F40000100A1B002 /* saracrocheTests */ = {
@@ -185,7 +185,7 @@
 		853F847F2D904A1B00279342 = {
 			isa = PBXGroup;
 			children = (
-				85A1B0012F40000100A1B001 /* Shared */,
+				85A1B0012F40000100A1B001 /* shared */,
 				853F848A2D904A1B00279342 /* saracroche */,
 				85C9CE972D904D8C00584259 /* blocker */,
 				856E5AB62F2C056600F2A520 /* unwanted */,
@@ -228,7 +228,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				853F848A2D904A1B00279342 /* saracroche */,
-				85A1B0012F40000100A1B001 /* Shared */,
+				85A1B0012F40000100A1B001 /* shared */,
 			);
 			name = saracroche;
 			packageProductDependencies = (
@@ -273,7 +273,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				8576DA942F2D02ED00064165 /* filter */,
-				85A1B0012F40000100A1B001 /* Shared */,
+				85A1B0012F40000100A1B001 /* shared */,
 			);
 			name = filter;
 			packageProductDependencies = (
@@ -318,7 +318,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				85A1B0012F40000100A1B001 /* Shared */,
+				85A1B0012F40000100A1B001 /* shared */,
 				85C9CE972D904D8C00584259 /* blocker */,
 			);
 			name = blocker;
@@ -823,6 +823,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cbouvat.saracrocheTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -843,6 +846,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cbouvat.saracrocheTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
