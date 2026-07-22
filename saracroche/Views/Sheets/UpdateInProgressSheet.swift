@@ -30,19 +30,19 @@ struct UpdateInProgressSheet: View {
   }()
 
   /// Returns a human-readable label for the estimated time remaining
-  private var estimatedTimeRemainingLabel: String? {
+  private var estimatedTimeRemainingLabel: String {
     guard let remaining = blockerUpdate.estimatedTimeRemaining else {
-      return nil
+      return "Temps restant estimé en cours de calcul"
     }
-    if remaining < 60 {
-      return "Temps restant estimé : moins d'une minute"
+    if remaining < 59 {
+      return "Temps restant estimé moins d'une minute"
     }
     // Round up to the next minute to avoid showing an overly optimistic estimate
     let roundedToMinute = (remaining / 60).rounded(.up) * 60
     guard let formatted = Self.timeRemainingFormatter.string(from: roundedToMinute) else {
-      return nil
+      return "Temps restant estimé en cours de calcul"
     }
-    return "Temps restant estimé : environ \(formatted)"
+    return "Temps restant estimé \(formatted)"
   }
 
   var body: some View {
@@ -127,23 +127,39 @@ struct UpdateInProgressSheet: View {
           .tint(.blue)
           .accessibilityHidden(true)
 
-          if let timeRemainingLabel = estimatedTimeRemainingLabel {
-            Text(timeRemainingLabel)
-              .appFont(.caption)
-              .foregroundColor(.secondary)
-              .frame(maxWidth: .infinity, alignment: .leading)
-              .lineLimit(nil)
-              .fixedSize(horizontal: false, vertical: true)
-              .accessibilityAddTraits(.updatesFrequently)
-          }
+          VStack(spacing: 4) {
+            HStack(spacing: 8) {
+              Image(systemName: "clock.fill")
+                .font(.system(size: 14))
+                .foregroundColor(.blue)
+                .frame(width: 14, alignment: .leading)
+                .accessibilityHidden(true)
 
-          if let patternString = blockerUpdate.currentPatternString {
-            Text("\(currentPatternActionLabel) +\(patternString)")
-              .appFont(.caption)
-              .foregroundColor(.secondary)
+              Text(estimatedTimeRemainingLabel)
+                .appFont(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.updatesFrequently)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            if let patternString = blockerUpdate.currentPatternString {
+              HStack(spacing: 8) {
+                Image(systemName: "plus.circle.fill")
+                  .font(.system(size: 14))
+                  .foregroundColor(.blue)
+                  .frame(width: 14, alignment: .leading)
+                  .accessibilityHidden(true)
+
+                Text("\(currentPatternActionLabel) +\(patternString)")
+                  .appFont(.caption)
+                  .foregroundColor(.secondary)
+                  .lineLimit(nil)
+                  .fixedSize(horizontal: false, vertical: true)
+              }
               .frame(maxWidth: .infinity, alignment: .leading)
-              .lineLimit(nil)
-              .fixedSize(horizontal: false, vertical: true)
+            }
           }
         } else {
           ProgressView(
@@ -169,11 +185,11 @@ struct UpdateInProgressSheet: View {
 
     Spacer()
 
-    HStack(alignment: .center, spacing: 12) {
+    HStack(alignment: .center, spacing: 16) {
       Image(systemName: "info.circle.fill")
         .font(.system(size: 16))
         .foregroundColor(.blue)
-        .frame(width: 24, height: 24)
+        .frame(width: 16, height: 16)
         .accessibilityHidden(true)
 
       Text(
@@ -183,15 +199,14 @@ struct UpdateInProgressSheet: View {
       .foregroundColor(.secondary)
       .lineLimit(nil)
       .fixedSize(horizontal: false, vertical: true)
-
-      Spacer()
     }
+    .frame(maxWidth: .infinity, alignment: .leading)
 
-    HStack(alignment: .center, spacing: 12) {
+    HStack(alignment: .center, spacing: 16) {
       Image(systemName: "battery.100.bolt")
         .font(.system(size: 16))
         .foregroundColor(.blue)
-        .frame(width: 24, height: 24)
+        .frame(width: 16, height: 16)
         .accessibilityHidden(true)
 
       Text("Il est préférable de faire cette mise à jour en branchant votre appareil.")
@@ -199,15 +214,14 @@ struct UpdateInProgressSheet: View {
         .foregroundColor(.secondary)
         .lineLimit(nil)
         .fixedSize(horizontal: false, vertical: true)
-
-      Spacer()
     }
+    .frame(maxWidth: .infinity, alignment: .leading)
 
-    HStack(alignment: .center, spacing: 12) {
-      Image(systemName: "arrow.clockwise")
+    HStack(alignment: .center, spacing: 16) {
+      Image(systemName: "square.and.arrow.down.badge.clock.fill")
         .font(.system(size: 16))
         .foregroundColor(.blue)
-        .frame(width: 24, height: 24)
+        .frame(width: 16, height: 16)
         .accessibilityHidden(true)
 
       Text("Les mises à jour se font aussi en arrière-plan quand votre appareil est en charge.")
@@ -215,9 +229,8 @@ struct UpdateInProgressSheet: View {
         .foregroundColor(.secondary)
         .lineLimit(nil)
         .fixedSize(horizontal: false, vertical: true)
-
-      Spacer()
     }
+    .frame(maxWidth: .infinity, alignment: .leading)
   }
 }
 

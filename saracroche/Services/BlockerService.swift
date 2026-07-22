@@ -180,11 +180,16 @@ final class BlockerService {
     onNumbersProgress: NumberProgressCallback? = nil
   ) async throws {
     let totalCount = await patternService.getPendingPatternsCount()
-    guard totalCount > 0 else { return }
+    var totalNumbersCount = await patternService.getPendingPhoneNumbersCount()
+    guard totalCount > 0 && totalNumbersCount > 0 else {
+      Logger.debug(
+        "No pending items to process: patterns=\(totalCount), numbers=\(totalNumbersCount)",
+        category: .blockerService)
+      return
+    }
 
     Logger.debug("Pending patterns found: \(totalCount)", category: .blockerService)
     var completedCount = 0
-    var totalNumbersCount = await patternService.getPendingPhoneNumbersCount()
     var processedNumbersCount: Int64 = 0
 
     while true {
@@ -257,7 +262,7 @@ final class BlockerService {
   /// Processes a specific pending pattern
   private func processPendingPattern(
     _ pattern: Pattern,
-    onChunkCompleted: ((Int) async -> Void)? = nil
+    onNumbersProgress: ((Int) async -> Void)? = nil
   ) async throws {
     try Task.checkCancellation()
 
@@ -270,7 +275,7 @@ final class BlockerService {
       Array(numbers[$0..<min($0 + chunkSize, numbers.count)])
     }
 
-    try await processChunks(chunks, for: pattern, onChunkCompleted: onChunkCompleted)
+    try await processChunks(chunks, for: pattern, onNumbersProgress: onNumbersProgress)
     Logger.debug("Completed pattern: \(patternString)", category: .blockerService)
     await patternService.markPatternAsCompleted(pattern)
   }
@@ -279,7 +284,7 @@ final class BlockerService {
   private func processChunks(
     _ chunks: [[String]],
     for pattern: Pattern,
-    onChunkCompleted: ((Int) async -> Void)? = nil
+    onNumbersProgress: ((Int) async -> Void)? = nil
   ) async throws {
     let currentAction = pattern.action ?? "block"
     let isRemovalAction = currentAction.hasPrefix("remove_")
@@ -328,7 +333,7 @@ final class BlockerService {
         throw BlockerServiceError.extensionReloadFailed(error)
       }
 
-      await onChunkCompleted?(chunk.count)
+      await onNumbersProgress?(chunk.count)
     }
   }
 }

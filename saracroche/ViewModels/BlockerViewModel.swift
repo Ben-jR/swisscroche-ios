@@ -33,6 +33,10 @@ class BlockerUpdateViewModel: ObservableObject {
 
   private var updateStartedAt: Date? = nil
 
+  // MARK: - Private Constants
+
+  private static let smoothingFactor: Double = 0.4
+
   // MARK: - Dependencies
 
   private let userDefaults: UserDefaultsService
@@ -172,16 +176,24 @@ class BlockerUpdateViewModel: ObservableObject {
       return
     }
 
-    // Wait a few seconds before showing an estimate, to let the average rate settle
     let elapsed = Date().timeIntervalSince(startedAt)
-    guard elapsed >= 5 else { return }
-
     let numbersPerSecond = Double(processedNumbers) / elapsed
+
+    // Protection against extremely slow processing rates
+    // If processing less than 0.001 numbers/second, don't display an estimate
+    // (i.e., less than 1 number every 16 minutes)
+    guard numbersPerSecond > 0.001 else {
+      estimatedTimeRemaining = nil
+      return
+    }
+
     let remainingSeconds = Double(max(totalNumbers - processedNumbers, 0)) / numbersPerSecond
 
     if let previousEstimate = estimatedTimeRemaining {
       // Smooth the estimate to avoid jumps between chunks
-      estimatedTimeRemaining = previousEstimate * 0.6 + remainingSeconds * 0.4
+      // smoothingFactor = 0.4 means 40% weight on new estimate, 60% on previous
+      estimatedTimeRemaining =
+        previousEstimate * (1 - Self.smoothingFactor) + remainingSeconds * Self.smoothingFactor
     } else {
       estimatedTimeRemaining = remainingSeconds
     }

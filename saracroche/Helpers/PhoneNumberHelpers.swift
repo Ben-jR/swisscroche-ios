@@ -3,6 +3,7 @@ import Foundation
 /// Helper functions for phone number patterns
 public enum PhoneNumberHelpers {
   public static func countPhoneNumbers(for pattern: String) -> Int64 {
+    guard !pattern.isEmpty else { return 0 }
     let hashCount = pattern.filter { $0 == "#" }.count
     return Int64(pow(10, Double(hashCount)))
   }
