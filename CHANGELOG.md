@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.14.0] - 2026-07-22
+
+### Added
+
+- Add `shared/` folder compiled into app and extensions for shared code (AppConstants, PhoneNumberHelpers)
+- Add unit test bundle target `saracrocheTests` with test files
+- Add estimated time remaining display during blocklist updates
+- Add number-level progress tracking in BlockerService with new callback
+- Add `PatternValidationTests` for pattern format validation
+- Add `PhoneNumberHelpersTests` for phone number matching and expansion
+- Add `getPendingPhoneNumbersCount()` method to PatternService
+- Add `matches(number:pattern:)` function to PhoneNumberHelpers
+
+### Changed
+
+- Move `AppConstants.swift` from `saracroche/` to `shared/`
+- Move `PhoneNumberHelpers.swift` from `saracroche/Helpers/` to `shared/`
+- Update AppConstants with `coreDataStoreFilename` and `SharedDefaultsKeys` struct
+- Refactor CallDirectoryHandler to use AppConstants for app group identifier and shared defaults keys
+- Refactor MessageFilterService to use shared PhoneNumberHelpers and AppConstants
+- Refactor CoreDataStack to use AppConstants for model name and store filename
+- Refactor SharedUserDefaultsService to use AppConstants.SharedDefaultsKeys
+- Update BlockerService to report progress at phone number level instead of pattern level
+- Update BlockerViewModel to calculate and display ETA based on processing rate
+- Update UpdateInProgressSheet UI with clock icon and time remaining display
+- Update Makefile with `build` and `test` commands
+
 ## [4.13.1] - 2026-07-03
 
 ### Fixed
