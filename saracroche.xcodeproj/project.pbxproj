@@ -27,6 +27,13 @@
 			remoteGlobalIDString = 8576DA922F2D02ED00064165;
 			remoteInfo = filter;
 		};
+		85A1B00C2F40000100A1B00C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 853F84802D904A1B00279342 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 853F84872D904A1B00279342;
+			remoteInfo = saracroche;
+		};
 		85C9CE9B2D904D8C00584259 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 853F84802D904A1B00279342 /* Project object */;
@@ -56,6 +63,7 @@
 		853F84882D904A1B00279342 /* saracroche.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = saracroche.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		856E5AB52F2C056600F2A520 /* unwanted.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = unwanted.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		8576DA932F2D02ED00064165 /* filter.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = filter.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		85A1B0042F40000100A1B004 /* saracrocheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = saracrocheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		85C9CE962D904D8C00584259 /* blocker.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = blocker.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -115,6 +123,16 @@
 			path = filter;
 			sourceTree = "<group>";
 		};
+		85A1B0012F40000100A1B001 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		85A1B0022F40000100A1B002 /* saracrocheTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = saracrocheTests;
+			sourceTree = "<group>";
+		};
 		85C9CE972D904D8C00584259 /* blocker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -147,6 +165,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		85A1B0062F40000100A1B006 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		85C9CE932D904D8C00584259 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -160,10 +185,12 @@
 		853F847F2D904A1B00279342 = {
 			isa = PBXGroup;
 			children = (
+				85A1B0012F40000100A1B001 /* Shared */,
 				853F848A2D904A1B00279342 /* saracroche */,
 				85C9CE972D904D8C00584259 /* blocker */,
 				856E5AB62F2C056600F2A520 /* unwanted */,
 				8576DA942F2D02ED00064165 /* filter */,
+				85A1B0022F40000100A1B002 /* saracrocheTests */,
 				853F84892D904A1B00279342 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -175,6 +202,7 @@
 				85C9CE962D904D8C00584259 /* blocker.appex */,
 				856E5AB52F2C056600F2A520 /* unwanted.appex */,
 				8576DA932F2D02ED00064165 /* filter.appex */,
+				85A1B0042F40000100A1B004 /* saracrocheTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,6 +228,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				853F848A2D904A1B00279342 /* saracroche */,
+				85A1B0012F40000100A1B001 /* Shared */,
 			);
 			name = saracroche;
 			packageProductDependencies = (
@@ -244,6 +273,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				8576DA942F2D02ED00064165 /* filter */,
+				85A1B0012F40000100A1B001 /* Shared */,
 			);
 			name = filter;
 			packageProductDependencies = (
@@ -251,6 +281,29 @@
 			productName = filter;
 			productReference = 8576DA932F2D02ED00064165 /* filter.appex */;
 			productType = "com.apple.product-type.app-extension";
+		};
+		85A1B0032F40000100A1B003 /* saracrocheTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85A1B0082F40000100A1B008 /* Build configuration list for PBXNativeTarget "saracrocheTests" */;
+			buildPhases = (
+				85A1B0052F40000100A1B005 /* Sources */,
+				85A1B0062F40000100A1B006 /* Frameworks */,
+				85A1B0072F40000100A1B007 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				85A1B00B2F40000100A1B00B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				85A1B0022F40000100A1B002 /* saracrocheTests */,
+			);
+			name = saracrocheTests;
+			packageProductDependencies = (
+			);
+			productName = saracrocheTests;
+			productReference = 85A1B0042F40000100A1B004 /* saracrocheTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		85C9CE952D904D8C00584259 /* blocker */ = {
 			isa = PBXNativeTarget;
@@ -265,6 +318,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				85A1B0012F40000100A1B001 /* Shared */,
 				85C9CE972D904D8C00584259 /* blocker */,
 			);
 			name = blocker;
@@ -293,6 +347,10 @@
 					8576DA922F2D02ED00064165 = {
 						CreatedOnToolsVersion = 26.2;
 					};
+					85A1B0032F40000100A1B003 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = 853F84872D904A1B00279342;
+					};
 					85C9CE952D904D8C00584259 = {
 						CreatedOnToolsVersion = 16.2;
 					};
@@ -313,6 +371,7 @@
 			projectRoot = "";
 			targets = (
 				853F84872D904A1B00279342 /* saracroche */,
+				85A1B0032F40000100A1B003 /* saracrocheTests */,
 				85C9CE952D904D8C00584259 /* blocker */,
 				856E5AB42F2C056600F2A520 /* unwanted */,
 				8576DA922F2D02ED00064165 /* filter */,
@@ -336,6 +395,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8576DA912F2D02ED00064165 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85A1B0072F40000100A1B007 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -373,6 +439,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		85A1B0052F40000100A1B005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		85C9CE922D904D8C00584259 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -392,6 +465,11 @@
 			isa = PBXTargetDependency;
 			target = 8576DA922F2D02ED00064165 /* filter */;
 			targetProxy = 8576DA982F2D02ED00064165 /* PBXContainerItemProxy */;
+		};
+		85A1B00B2F40000100A1B00B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 853F84872D904A1B00279342 /* saracroche */;
+			targetProxy = 85A1B00C2F40000100A1B00C /* PBXContainerItemProxy */;
 		};
 		85C9CE9C2D904D8C00584259 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -732,6 +810,46 @@
 			};
 			name = Release;
 		};
+		85A1B0092F40000100A1B009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UQZ9E7YS88;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 4.13.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cbouvat.saracrocheTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/saracroche.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/saracroche";
+			};
+			name = Debug;
+		};
+		85A1B00A2F40000100A1B00A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UQZ9E7YS88;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 4.13.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cbouvat.saracrocheTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/saracroche.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/saracroche";
+			};
+			name = Release;
+		};
 		85C9CEA02D904D8C00584259 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -829,6 +947,15 @@
 			buildConfigurations = (
 				8576DA9C2F2D02ED00064165 /* Debug */,
 				8576DA9D2F2D02ED00064165 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		85A1B0082F40000100A1B008 /* Build configuration list for PBXNativeTarget "saracrocheTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85A1B0092F40000100A1B009 /* Debug */,
+				85A1B00A2F40000100A1B00A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

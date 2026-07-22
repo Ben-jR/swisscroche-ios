@@ -10,7 +10,7 @@ class CoreDataStack: ObservableObject {
 
   /// The main persistent container, stored in App Group for extension access
   lazy var persistentContainer: NSPersistentContainer = {
-    let container = NSPersistentContainer(name: "DataModel")
+    let container = NSPersistentContainer(name: AppConstants.coreDataModelName)
 
     guard
       let containerURL = FileManager.default
@@ -21,7 +21,7 @@ class CoreDataStack: ObservableObject {
       return container
     }
 
-    let storeURL = containerURL.appendingPathComponent("DataModel.sqlite")
+    let storeURL = containerURL.appendingPathComponent(AppConstants.coreDataStoreFilename)
 
     let description = NSPersistentStoreDescription(url: storeURL)
     container.persistentStoreDescriptions = [description]

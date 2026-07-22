@@ -5,10 +5,7 @@ class SharedUserDefaultsService {
   private let userDefaults: UserDefaults?
 
   // MARK: - Constants
-  private struct Keys {
-    static let action = "action"
-    static let numbers = "numbers"
-  }
+  private typealias Keys = AppConstants.SharedDefaultsKeys
 
   init() {
     userDefaults = UserDefaults(suiteName: AppConstants.appGroupIdentifier)

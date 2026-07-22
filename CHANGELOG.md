@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `saracrocheTests` unit test target, hosted by the main app, covering pattern expansion, phone number counting, pattern matching, and user prefix validation
+- Add `Shared/` synchronized folder compiled into the `saracroche`, `blocker`, and `filter` targets
+- Add `AppConstants.SharedDefaultsKeys` for the shared UserDefaults keys bridging the app and the Call Directory extension
+- Add `AppConstants.coreDataStoreFilename` for the CoreData store file name
+- Add `PhoneNumberHelpers.matches(number:pattern:)` for pattern matching
+- Add `make test` command to run the unit tests on a simulator
+
+### Changed
+
+- Move `AppConstants` and `PhoneNumberHelpers` from `saracroche/` to `Shared/` so the extensions can reference them
+- Reference `AppConstants` from `CallDirectoryHandler` and `MessageFilterService` instead of hardcoding the App Group identifier, the CoreData model name, and the shared UserDefaults keys
+- Move SMS sender matching out of `MessageFilterService` into `PhoneNumberHelpers` to make it unit-testable
+
+### Fixed
+
+- Fix `AppConstants.coreDataModelName` pointing at the `.xcdatamodel` name (`Database`) instead of the `.xcdatamodeld` name (`DataModel`), which would have prevented CoreData from loading the model had the constant been used
+- Fix the `#` wildcard matching any character instead of only a digit when checking SMS senders
+
 ## [4.13.1] - 2026-07-03
 
 ### Fixed

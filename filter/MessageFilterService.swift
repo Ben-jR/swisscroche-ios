@@ -7,9 +7,6 @@ private let logger = Logger(
 /// Service responsible for checking incoming SMS senders against blocking patterns
 final class MessageFilterService {
 
-  /// App Group identifier shared with the main app
-  private static let appGroupIdentifier = "group.com.cbouvat.saracroche"
-
   /// Checks if a sender should be filtered based on stored blocking patterns
   /// - Parameter sender: The phone number or identifier of the SMS sender
   /// - Returns: `true` if the sender matches a blocking pattern
@@ -24,7 +21,7 @@ final class MessageFilterService {
         guard let pattern = patternObject.value(forKey: "pattern") as? String else {
           continue
         }
-        if Self.matches(sender: sender, pattern: pattern) {
+        if PhoneNumberHelpers.matches(number: sender, pattern: pattern) {
           logger.info("Sender \(sender, privacy: .private) matched pattern \(pattern)")
           return true
         }
@@ -36,34 +33,20 @@ final class MessageFilterService {
     return false
   }
 
-  /// Checks if a sender matches a blocking pattern character by character
-  /// - `#` in the pattern matches any digit
-  /// - Any other character must match exactly
-  /// - Parameters:
-  ///   - sender: The phone number to check
-  ///   - pattern: The blocking pattern (e.g. `0899######`)
-  /// - Returns: `true` if the sender matches the pattern
-  static func matches(sender: String, pattern: String) -> Bool {
-    guard sender.count == pattern.count else { return false }
-    return zip(sender, pattern).allSatisfy { s, p in
-      p == "#" || s == p
-    }
-  }
-
   // MARK: - CoreData Stack (read-only, lightweight)
 
   private static let persistentContainer: NSPersistentContainer = {
-    let container = NSPersistentContainer(name: "DataModel")
+    let container = NSPersistentContainer(name: AppConstants.coreDataModelName)
 
     guard
       let containerURL = FileManager.default
-        .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)
+        .containerURL(forSecurityApplicationGroupIdentifier: AppConstants.appGroupIdentifier)
     else {
       logger.fault("Failed to get App Group container URL")
       return container
     }
 
-    let storeURL = containerURL.appendingPathComponent("DataModel.sqlite")
+    let storeURL = containerURL.appendingPathComponent(AppConstants.coreDataStoreFilename)
 
     let description = NSPersistentStoreDescription(url: storeURL)
     description.isReadOnly = true

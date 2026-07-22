@@ -1,11 +1,12 @@
 import Foundation
 
-/// Application-wide constants
+/// Application-wide constants, shared by the app and its extensions
 struct AppConstants {
   static let appGroupIdentifier = "group.com.cbouvat.saracroche"
   static let callDirectoryExtensionIdentifier = "com.cbouvat.saracroche.blocker"
   static let backgroundServiceIdentifier = "com.cbouvat.saracroche.background-update"
-  static let coreDataModelName = "Database"
+  static let coreDataModelName = "DataModel"
+  static let coreDataStoreFilename = "DataModel.sqlite"
   static let apiBaseURL = "https://app.saracroche.org/api/v1"
   static let apiReportURL = "\(apiBaseURL)/reports"
   static let apiFrenchListURL = "\(apiBaseURL)/lists/french-list-arcep-operators"
@@ -17,4 +18,10 @@ struct AppConstants {
   static let donationDismissInterval: TimeInterval = 30 * 24 * 60 * 60
   static let numberChunkSize = 10_000
   static let intentTimeoutDelay: UInt64 = 25_000_000_000
+
+  /// Keys of the shared UserDefaults bridge between the app and the Call Directory extension
+  struct SharedDefaultsKeys {
+    static let action = "action"
+    static let numbers = "numbers"
+  }
 }

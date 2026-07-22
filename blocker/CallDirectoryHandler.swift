@@ -13,7 +13,7 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
 
   /// Get shared UserDefaults
   private func sharedUserDefaults() -> UserDefaults? {
-    UserDefaults(suiteName: "group.com.cbouvat.saracroche")
+    UserDefaults(suiteName: AppConstants.appGroupIdentifier)
   }
 
   /// Handle CallKit request
@@ -44,12 +44,14 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
       throw CallDirectoryHandlerError.sharedUserDefaultsUnavailable
     }
 
-    let action = sharedDefaults.string(forKey: "action") ?? ""
-    let numbersData = sharedDefaults.array(forKey: "numbers") as? [[String: Any]] ?? []
+    let action = sharedDefaults.string(forKey: AppConstants.SharedDefaultsKeys.action) ?? ""
+    let numbersData =
+      sharedDefaults.array(forKey: AppConstants.SharedDefaultsKeys.numbers) as? [[String: Any]]
+      ?? []
 
     // Clear shared defaults after reading
-    sharedDefaults.set("", forKey: "action")
-    sharedDefaults.set([], forKey: "numbers")
+    sharedDefaults.set("", forKey: AppConstants.SharedDefaultsKeys.action)
+    sharedDefaults.set([], forKey: AppConstants.SharedDefaultsKeys.numbers)
 
     // Process action using switch statement
     switch action {
@@ -183,8 +185,8 @@ class CallDirectoryHandler: CXCallDirectoryProvider {
   private func fullUpdate(to context: CXCallDirectoryExtensionContext) throws {
     // Clear any stale data from previous operations
     if let sharedDefaults = sharedUserDefaults() {
-      sharedDefaults.set("", forKey: "action")
-      sharedDefaults.set([], forKey: "numbers")
+      sharedDefaults.set("", forKey: AppConstants.SharedDefaultsKeys.action)
+      sharedDefaults.set([], forKey: AppConstants.SharedDefaultsKeys.numbers)
     }
     addFakeNumbers(to: context)
   }
