@@ -4,16 +4,7 @@ import Foundation
 class UserDefaultsService {
 
   private let userDefaults: UserDefaults
-
-  private struct Keys {
-    static let lastListDownloadAt = "lastListDownloadAt"
-    static let lastBackgroundLaunchAt = "lastBackgroundLaunchAt"
-    static let lastSuccessfulUpdateAt = "lastSuccessfulUpdateAt"
-    static let notificationReminderEnabled = "notificationReminderEnabled"
-    static let donationDismissedAt = "donationDismissedAt"
-    static let deviceIdentifier = "deviceIdentifier"
-    static let lastKnownIOSVersion = "lastKnownIOSVersion"
-  }
+  private typealias Keys = AppConstants.DefaultsKeys
 
   init() {
     userDefaults = UserDefaults.standard

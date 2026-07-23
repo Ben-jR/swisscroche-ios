@@ -5,6 +5,7 @@
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.cbouvat.saracroche.background-update</string>
+		<string>com.cbouvat.saracroche.healthcheck</string>
 	</array>
 	<key>UIAppFonts</key>
 	<array>

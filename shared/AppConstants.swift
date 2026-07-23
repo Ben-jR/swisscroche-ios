@@ -5,11 +5,18 @@ struct AppConstants {
   static let appGroupIdentifier = "group.com.cbouvat.saracroche"
   static let callDirectoryExtensionIdentifier = "com.cbouvat.saracroche.blocker"
   static let backgroundServiceIdentifier = "com.cbouvat.saracroche.background-update"
+  static let healthCheckServiceIdentifier = "com.cbouvat.saracroche.healthcheck"
   static let coreDataModelName = "DataModel"
   static let coreDataStoreFilename = "DataModel.sqlite"
   static let apiBaseURL = "https://app.saracroche.org/api/v1"
   static let apiReportURL = "\(apiBaseURL)/reports"
   static let apiFrenchListURL = "\(apiBaseURL)/lists/french-list-arcep-operators"
+
+  // API v2 URLs
+  static let apiBaseURLV2 = "https://app.saracroche.org/api/v2"
+  static let apiHealthCheckURL = "\(apiBaseURLV2)/health-check"
+  static let apiListsURL = "\(apiBaseURLV2)/lists"
+  static let apiReportsURLV2 = "\(apiBaseURLV2)/reports"
   static let backgroundUpdateInterval: TimeInterval = 6 * 60 * 60
   static let listDownloadInterval: TimeInterval = 24 * 60 * 60
   static let patternRetryDelay: TimeInterval = 2 * 60 * 60
@@ -23,5 +30,18 @@ struct AppConstants {
   struct SharedDefaultsKeys {
     static let action = "action"
     static let numbers = "numbers"
+    static let organizationAPIKey = "organizationAPIKey"
+    static let lastHealthCheckAt = "lastHealthCheckAt"
+  }
+
+  /// Keys for UserDefaults.standard (app-specific storage)
+  struct DefaultsKeys {
+    static let lastListDownloadAt = "lastListDownloadAt"
+    static let lastBackgroundLaunchAt = "lastBackgroundLaunchAt"
+    static let lastSuccessfulUpdateAt = "lastSuccessfulUpdateAt"
+    static let notificationReminderEnabled = "notificationReminderEnabled"
+    static let donationDismissedAt = "donationDismissedAt"
+    static let deviceIdentifier = "deviceIdentifier"
+    static let lastKnownIOSVersion = "lastKnownIOSVersion"
   }
 }

@@ -15,7 +15,23 @@ class APIService {
     return UserDefaultsService().getOrCreateDeviceIdentifier()
   }
 
+  // Organization API key for MDM-managed devices
+  private var customAPIKey: String?
+
+  var apiKey: String? {
+    return customAPIKey ?? SharedUserDefaultsService().getOrganizationAPIKey()
+  }
+
   init(configuration: URLSessionConfiguration = .default) {
+    self.customAPIKey = nil
+    configuration.timeoutIntervalForRequest = 10.0
+    configuration.timeoutIntervalForResource = 30.0
+    self.session = URLSession(configuration: configuration)
+  }
+
+  /// Initializer with optional API key (for testing or dependency injection)
+  init(apiKey: String?, configuration: URLSessionConfiguration = .default) {
+    self.customAPIKey = apiKey
     configuration.timeoutIntervalForRequest = 10.0
     configuration.timeoutIntervalForResource = 30.0
     self.session = URLSession(configuration: configuration)
@@ -28,6 +44,12 @@ class APIService {
       request.setValue(value, forHTTPHeaderField: field)
     }
     request.setValue(deviceIdentifier, forHTTPHeaderField: "X-Device-ID")
+
+    // Add X-API-Key header if organization API key is available
+    if let apiKey = self.apiKey, !apiKey.isEmpty {
+      request.setValue(apiKey, forHTTPHeaderField: "X-API-Key")
+    }
+
     return request
   }
 

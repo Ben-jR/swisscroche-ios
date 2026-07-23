@@ -18,6 +18,8 @@ enum Logger {
     case messageFilterExtension = "MessageFilterExtension"
     case notificationService = "NotificationService"
     case coreData = "CoreData"
+    case mdm = "MDM"
+    case healthCheck = "HealthCheck"
   }
 
   /// Logs a message with the specified category and level
