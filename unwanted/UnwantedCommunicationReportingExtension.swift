@@ -75,11 +75,13 @@ class UnwantedCommunicationReportingExtension: ILClassificationUIExtensionViewCo
       isGood = false  // Default to spam for unknown actions
     }
 
-    // Create userInfo with phone, device ID, and is good flag
+    // Create userInfo with phone, device ID, is good flag, and country code
+    // iOS will automatically nest these into the classification object
     response.userInfo = [
       "phone": phone,
       "device_id": deviceId,
       "is_good": isGood,
+      "country_code": "FR",
     ]
 
     return response

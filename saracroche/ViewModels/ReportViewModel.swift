@@ -33,8 +33,7 @@ class ReportViewModel: ObservableObject {
     guard validatePhoneNumber() else { return }
 
     do {
-      let phoneNumberInt64 = convertToInt64(phoneNumber)
-      try await apiService.report(phoneNumberInt64, isGood: isGood)
+      try await apiService.report(phoneNumber, isGood: isGood)
       handleSuccess()
     } catch {
       handleError(error)
@@ -46,19 +45,36 @@ class ReportViewModel: ObservableObject {
       in: .whitespacesAndNewlines
     )
 
-    // Validation for E.164 format
-    let e164Regex = "^\\+[1-9]\\d{7,14}$"
-    let isValidFormat = trimmedNumber.matches(e164Regex)
-
     if trimmedNumber.isEmpty {
-      showError("Veuillez entrer un numéro de téléphone.")
+      showError("Veuillez entrer un numéro de téléphone")
       return false
     }
 
-    if !isValidFormat {
-      showError("Le numéro doit être au format E.164 (par exemple, +33612345678).")
+    // Clean: keep + at the beginning if present, then digits only
+    let cleaned: String
+    if trimmedNumber.hasPrefix("+") {
+      let remaining = String(trimmedNumber.dropFirst())
+      let digits = remaining.filter { $0.isNumber }
+      cleaned = "+" + digits
+    } else {
+      cleaned = trimmedNumber.filter { $0.isNumber }
+    }
+
+    // Extract digits only (without +) for validation
+    let digitsOnly = cleaned.replacingOccurrences(of: "+", with: "")
+
+    // Validate: must contain at least 2 digits and at most 15 digits
+    if digitsOnly.count < 2 {
+      showError("Le numéro doit contenir au moins 2 chiffres")
       return false
     }
+    if digitsOnly.count > 15 {
+      showError("Le numéro doit contenir au maximum 15 chiffres")
+      return false
+    }
+
+    // Update with the cleaned version
+    phoneNumber = cleaned
 
     return true
   }
@@ -68,8 +84,8 @@ class ReportViewModel: ObservableObject {
     alertType = .success
     let message =
       isGood
-      ? "Numéro de téléphone signalé comme légitime. Merci pour votre contribution 😊 !"
-      : "Numéro de téléphone signalé comme spam. Merci pour votre contribution 😊 !"
+      ? "Numéro de téléphone signalé comme légitime. Merci pour votre contribution !"
+      : "Numéro de téléphone signalé comme spam. Merci pour votre contribution !"
     alertMessage = message
     showAlert = true
   }
@@ -92,14 +108,15 @@ class ReportViewModel: ObservableObject {
   }
 
   func formatPhoneNumber(_ input: String) -> String {
-    let cleaned = input.replacingOccurrences(of: " ", with: "")
-    return cleaned.filter { $0.isNumber || $0 == "+" }
+    let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
+    if trimmed.hasPrefix("+") {
+      let remaining = String(trimmed.dropFirst())
+      let digits = remaining.filter { $0.isNumber }
+      return "+" + digits
+    }
+    return trimmed.filter { $0.isNumber }
   }
 
-  private func convertToInt64(_ phoneNumber: String) -> Int64 {
-    let digitsOnly = phoneNumber.filter { $0.isNumber }
-    return Int64(digitsOnly) ?? 0
-  }
 }
 
 // Extension for String to match regex

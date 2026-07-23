@@ -9,14 +9,14 @@ struct AppConstants {
   static let coreDataModelName = "DataModel"
   static let coreDataStoreFilename = "DataModel.sqlite"
   static let apiBaseURL = "https://app.saracroche.org/api/v1"
-  static let apiReportURL = "\(apiBaseURL)/reports"
   static let apiFrenchListURL = "\(apiBaseURL)/lists/french-list-arcep-operators"
 
   // API v2 URLs
   static let apiBaseURLV2 = "https://app.saracroche.org/api/v2"
   static let apiHealthCheckURL = "\(apiBaseURLV2)/health-check"
   static let apiListsURL = "\(apiBaseURLV2)/lists"
-  static let apiReportsURLV2 = "\(apiBaseURLV2)/reports"
+  static let apiReportsURL = "\(apiBaseURLV2)/reports"
+
   static let backgroundUpdateInterval: TimeInterval = 6 * 60 * 60
   static let listDownloadInterval: TimeInterval = 24 * 60 * 60
   static let patternRetryDelay: TimeInterval = 2 * 60 * 60

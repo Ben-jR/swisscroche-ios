@@ -44,6 +44,7 @@ class APIService {
       request.setValue(value, forHTTPHeaderField: field)
     }
     request.setValue(deviceIdentifier, forHTTPHeaderField: "X-Device-ID")
+    request.setValue("FR", forHTTPHeaderField: "X-Country-Code")
 
     // Add X-API-Key header if organization API key is available
     if let apiKey = self.apiKey, !apiKey.isEmpty {
