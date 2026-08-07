@@ -1,89 +1,134 @@
-# Saracroche iOS
+# SwissCroche iOS
 
-> 🤖 **Also available for Android**: [Saracroche Android](https://codeberg.org/cbouvat/saracroche-android)
+> **A fork of [Saracroche](https://codeberg.org/cbouvat/saracroche-ios)**, adapted for Switzerland.
+> Not affiliated with, endorsed by, or supported by the original project or its author.
+> All credit for the original work goes to [cbouvat](https://codeberg.org/cbouvat).
+
+## Status
+
+⚠️ **Work in progress — not released.** This app is not on the App Store or TestFlight, and building it
+requires your own Apple Developer account (see [Building from source](#building-from-source)).
+Read [Known limitations](#known-limitations) before using it for anything real.
 
 ## Overview
 
-Saracroche is a privacy-focused iOS call blocking application that protects users from spam and unwanted calls using native CallKit extensions. Built with MVVM architecture and SwiftUI, it features a sophisticated pattern-based blocking system with wildcard support.
+SwissCroche blocks unwanted calls on iOS using Apple's native CallKit extensions. Blocking rules are
+wildcard number patterns (e.g. `41900######` blocks every number starting with +41 900), applied
+entirely on-device — no call data leaves your phone for the blocking itself.
 
 ## Features
 
-- 🛡️ **Pattern-based blocking**: Uses wildcard patterns (e.g., `33899######`) to block number ranges
-- 📱 **Native CallKit extensions**: System-level call blocking and identification
-- 🔒 **Privacy by design**: Zero call data collection, all processing happens on-device
-- 🔄 **Automatic updates**: Background updates every 6 hours with smart reprocessing
-- 📞 **Spam reporting**: Built-in reporting for unwanted calls and SMS
-- 💬 **SMS filtering**: Message filtering extension for text messages
+- 🛡️ **Pattern-based blocking** — wildcard patterns cover whole number ranges
+- 📱 **Native CallKit extensions** — system-level call blocking and identification
+- 🔒 **On-device blocking** — the block list is bundled in the app, no server needed
+- 💬 **SMS filtering** — message filter extension checks senders against the same patterns
+- ✏️ **Custom patterns** — add your own prefixes to block on top of the bundled list
 
-## Installation
+## What's different from upstream
 
-**App Store**: 📱 [Download Saracroche](https://apps.apple.com/app/saracroche/id6743679292)
+| | Saracroche (upstream) | SwissCroche |
+|---|---|---|
+| Block list | French ARCEP operator list, downloaded from `app.saracroche.org` | Swiss BAKOM/OFCOM premium-rate prefixes, **bundled in the app** |
+| Blocked prefixes | French ranges | `+41 900` (services), `+41 901` (contests/voting), `+41 906` (adult) |
+| Report country code | `FR` | `CH` |
+| Number examples in UI | `+33…` | `+41…` |
+| Number spelling | `fr_FR` (soixante-dix, quatre-vingt-dix) | `fr_CH` (septante, nonante) |
+| Bundle ID / App Group | `com.cbouvat.saracroche` | `ch.swisscroche.app` |
 
-**TestFlight**: 🧪 [Try Beta Version](https://testflight.apple.com/join/CFCjF6d2)
+Upstream's donation links, App Store review link, support/help/website links, and Enterprise offering
+were removed rather than rebranded — they belong to the original author and would be misleading under a
+different app identity.
 
-## Enterprise Edition
+## Known limitations
 
-Saracroche offers an **Enterprise edition** for business users with centralized management:
+Be aware of these before relying on the app:
 
-- 🏢 **Centralized dashboard** for managing reports and blocking data
-- 📋 **Custom allow lists** for trusted business numbers
-- 📊 **Centralized reporting** of unwanted calls across the organization
-- 📱 **Multi-channel blocking** for calls and SMS with phishing protection
-- 🔧 **MDM deployment** with zero-touch configuration
-- 🔄 **Automatic updates** to keep protection current
+- **This is not a spam database.** The bundled list only covers Switzerland's official premium-rate
+  ranges (090x). It does *not* block reported spam numbers, scam callers, or spoofed numbers. Real
+  anti-spam coverage would need a data source we don't currently have.
+- **Spam reporting still points at upstream's server.** In-app reports and the periodic health check
+  still POST to `app.saracroche.org` (see `shared/AppConstants.swift`). Reported phone numbers would be
+  sent to a third party's infrastructure. Don't use the reporting feature until this is replaced with
+  our own backend or removed.
+- **The list no longer updates over the network.** Background refresh still re-applies patterns to
+  CallKit, but the list itself only changes when the app is updated.
+- **French UI only.** No German, Italian, or Romansh — a real Swiss app should be localized. There is
+  currently no localization infrastructure at all (strings are hardcoded in the views).
+- **Wangiri / call spoofing are not addressed.** Blocking by foreign country code would also block
+  legitimate calls, so it isn't done automatically. Since January 2026 Swiss operators are required to
+  flag or block spoofed numbers at network level.
 
-💼 [Learn more about Saracroche for Business](https://saracroche.org/fr/business)
-
-## For Developers
-
-### Building from Source
+## Building from source
 
 ```bash
-# Clone repository
 git clone https://github.com/Ben-jR/swisscroche-ios.git
 cd swisscroche-ios
-
-# Open in Xcode
 open swisscroche.xcodeproj
 ```
 
-**Requirements**:
+**Requirements**: Xcode 15.0+, iOS 15.0+ deployment target, Swift 5.9+.
 
-- Xcode 15.0+
-- iOS 15.0+ deployment target
-- Swift 5.9+ toolchain
+### Code signing
 
-### Architecture
+The app and its extensions share data through an App Group, so **running on a device or simulator
+requires your own Apple Developer team**:
 
-Saracroche uses a 4-target architecture:
+1. Create an App ID and an App Group in your Apple Developer account.
+2. Set your team and the new identifiers in the target settings and in the `*.entitlements` files.
+3. Update `AppConstants.appGroupIdentifier` and the related IDs in `shared/AppConstants.swift`.
 
-- **Main App**: SwiftUI interface with CoreData pattern storage
-- **Call Directory Extension**: CallKit-based system-level call blocking
-- **Unwanted Communication Reporting**: Call/SMS spam reporting UI
-- **Message Filter Extension**: SMS filtering capabilities
+To only check that it compiles, you can skip signing:
 
-### Technical Stack
+```bash
+xcodebuild -project swisscroche.xcodeproj -scheme swisscroche -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+```
 
-- **Language**: Swift 5.9+ with async/await
-- **UI**: SwiftUI with MVVM architecture
-- **Data**: CoreData (single "Pattern" entity)
-- **iOS APIs**: CallKit, IdentityLookup, App Groups
-- **Target**: iOS 15.0+, built with Xcode 15.0+
+Note that an unsigned build has no App Group access, so the app crashes on launch when CoreData
+initializes — it is only useful for verifying compilation.
+
+### Commands
+
+```bash
+make lint    # Format Swift code with swift-format (required after changes)
+make build   # Build the project
+make test    # Run unit tests on a simulator
+```
+
+## Architecture
+
+Four targets sharing data through the `group.ch.swisscroche.app` App Group:
+
+- **swisscroche** — main app: SwiftUI + MVVM, CoreData pattern storage, orchestrates updates
+- **blocker** — Call Directory extension: applies block/identify actions to the CallKit directory
+- **unwanted** — Unwanted Communication Reporting extension: call/SMS spam reporting UI
+- **filter** — Message Filter extension: checks incoming SMS senders against stored patterns
+
+Plus `shared/`, compiled into the app and the `blocker`/`filter` extensions, and `swisscrocheTests/`.
+
+**Technical stack**: Swift 5.9+ with async/await, SwiftUI (MVVM), CoreData (single `Pattern` entity),
+CallKit / IdentityLookup / App Groups.
+
+See [AGENTS.md](AGENTS.md) for the inter-process data flow and project conventions.
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+Issues and pull requests are welcome on
+[this fork](https://github.com/Ben-jR/swisscroche-ios). See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Support
+Improvements that aren't Switzerland-specific are better sent
+[upstream](https://codeberg.org/cbouvat/saracroche-ios) so everyone benefits.
 
-If you find Saracroche useful, consider sponsoring the project to help with maintenance and new features:
+To pull in upstream changes:
 
-- [Sponsor and support on Saracroche.org](https://saracroche.org/fr/support)
-
-## Star the Project ⭐
-
-If you like Saracroche, please consider giving it a star on Codeberg to show your support and help others discover the project.
+```bash
+git fetch upstream
+git merge upstream/main
+```
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+GNU General Public License v3.0 — see [LICENSE](LICENSE).
+
+This is a derivative work of Saracroche by cbouvat, used under the terms of the GPLv3. If you
+distribute a build of this app, the GPLv3 requires you to make your source code available to its
+users.
