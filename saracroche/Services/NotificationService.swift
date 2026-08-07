@@ -3,7 +3,7 @@ import UserNotifications
 /// Service for managing local notification reminders
 class NotificationService {
 
-  private static let reminderIdentifier = "com.cbouvat.saracroche.update-reminder"
+  private static let reminderIdentifier = "ch.swisscroche.app.update-reminder"
 
   private let center = UNUserNotificationCenter.current()
   private let userDefaults: UserDefaultsService
@@ -44,7 +44,7 @@ class NotificationService {
     cancelReminderNotification()
 
     let content = UNMutableNotificationContent()
-    content.title = "Saracroche"
+    content.title = "SwissCroche"
     content.body =
       "Ouvrez l'application pour la garder active et mettre à jour votre liste de blocage"
 

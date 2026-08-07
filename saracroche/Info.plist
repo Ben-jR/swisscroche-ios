@@ -4,8 +4,8 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.cbouvat.saracroche.background-update</string>
-		<string>com.cbouvat.saracroche.healthcheck</string>
+		<string>ch.swisscroche.app.background-update</string>
+		<string>ch.swisscroche.app.healthcheck</string>
 	</array>
 	<key>UIAppFonts</key>
 	<array>

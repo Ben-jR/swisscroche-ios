@@ -61,7 +61,7 @@ struct HomeNavigationView: View {
           .padding()
         }
       }
-      .navigationTitle("Saracroche")
+      .navigationTitle("SwissCroche")
       .onAppear {
         Task {
           await handleActivation()

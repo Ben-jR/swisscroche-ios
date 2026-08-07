@@ -48,9 +48,9 @@ struct CallReportingSetupSheet: View {
               IconInfoRow(
                 icon: "bell.badge.fill",
                 title: "Étape 2",
-                description: "Sélectionner « Signalements des SMS/appels » > Saracroche.",
+                description: "Sélectionner « Signalements des SMS/appels » > SwissCroche.",
                 accessibleDescription:
-                  "Sélectionner « Signalements des SMS/appels », puis Saracroche.",
+                  "Sélectionner « Signalements des SMS/appels », puis SwissCroche.",
                 iconColor: .green
               )
             }

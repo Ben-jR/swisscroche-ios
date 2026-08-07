@@ -22,7 +22,7 @@ struct ListsNavigationView: View {
             } label: {
               VStack(alignment: .leading, spacing: 8) {
                 // List name
-                Text(viewModel.frenchListName)
+                Text(viewModel.officialListName)
                   .appFont(.headline)
 
                 // Version
@@ -30,7 +30,7 @@ struct ListsNavigationView: View {
                   Image(systemName: "tag.circle.fill")
                     .appFont(.body)
                     .foregroundColor(.primary)
-                  Text("Version du " + viewModel.frenchListVersion)
+                  Text("Version du " + viewModel.officialListVersion)
                     .appFont(.caption)
                     .foregroundColor(.secondary)
                 }
@@ -40,11 +40,11 @@ struct ListsNavigationView: View {
                   Image(systemName: "number.circle.fill")
                     .appFont(.body)
                     .foregroundColor(.primary)
-                  Text("\(viewModel.frenchListBlockedCount) numéros")
+                  Text("\(viewModel.officialListBlockedCount) numéros")
                     .appFont(.caption)
                     .foregroundColor(.secondary)
                     .accessibilityLabel(
-                      "\(ListsViewModel.spelledOut(Int64(viewModel.frenchListBlockedCount))) numéros bloqués"
+                      "\(ListsViewModel.spelledOut(Int64(viewModel.officialListBlockedCount))) numéros bloqués"
                     )
                 }
               }

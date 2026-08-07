@@ -3,7 +3,7 @@ import OSLog
 /// Centralized logging system for the application
 enum Logger {
   /// Application subsystem identifier
-  private static let subsystem = "com.cbouvat.saracroche"
+  private static let subsystem = "ch.swisscroche.app"
 
   /// Available log categories
   enum Category: String {

@@ -157,7 +157,7 @@ struct InfoSheet: View {
     let formatter = DateFormatter()
     formatter.dateStyle = .medium
     formatter.timeStyle = .short
-    formatter.locale = Locale(identifier: "fr_FR")
+    formatter.locale = Locale(identifier: "fr_CH")
     return formatter.string(from: date)
   }
 }

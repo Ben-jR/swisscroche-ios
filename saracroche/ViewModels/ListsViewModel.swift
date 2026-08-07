@@ -4,10 +4,10 @@ import Foundation
 class ListsViewModel: ObservableObject {
   // MARK: - Published Properties
 
-  // French list metadata
-  @Published var frenchListName: String = ""
-  @Published var frenchListVersion: String = ""
-  @Published var frenchListBlockedCount: Int = 0
+  // official list metadata
+  @Published var officialListName: String = ""
+  @Published var officialListVersion: String = ""
+  @Published var officialListBlockedCount: Int = 0
 
   // Pattern arrays
   @Published var apiPatterns: [Pattern] = []
@@ -37,7 +37,7 @@ class ListsViewModel: ObservableObject {
   private static var numberFormatter: NumberFormatter = {
     let formatter = NumberFormatter()
     formatter.numberStyle = .spellOut
-    formatter.locale = Locale(identifier: "fr_FR")
+    formatter.locale = Locale(identifier: "fr_CH")
     return formatter
   }()
 
@@ -59,7 +59,7 @@ class ListsViewModel: ObservableObject {
   func loadData() async {
     await loadAPIPatterns()
     await loadUserPatterns()
-    await updateFrenchListMetadata()
+    await updateOfficialListMetadata()
   }
 
   private func loadAPIPatterns() async {
@@ -72,11 +72,11 @@ class ListsViewModel: ObservableObject {
       .sorted { ($0.addedDate ?? Date()) > ($1.addedDate ?? Date()) }
   }
 
-  private func updateFrenchListMetadata() async {
-    if let metadata = await patternService.getFrenchListMetadata() {
-      frenchListName = metadata.name
-      frenchListVersion = Self.formatVersionDate(metadata.version)
-      frenchListBlockedCount = metadata.blockedCount
+  private func updateOfficialListMetadata() async {
+    if let metadata = await patternService.getOfficialListMetadata() {
+      officialListName = metadata.name
+      officialListVersion = Self.formatVersionDate(metadata.version)
+      officialListBlockedCount = metadata.blockedCount
     }
   }
 

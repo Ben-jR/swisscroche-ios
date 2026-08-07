@@ -2,10 +2,10 @@ import Foundation
 
 /// Application-wide constants, shared by the app and its extensions
 struct AppConstants {
-  static let appGroupIdentifier = "group.com.cbouvat.saracroche"
-  static let callDirectoryExtensionIdentifier = "com.cbouvat.saracroche.blocker"
-  static let backgroundServiceIdentifier = "com.cbouvat.saracroche.background-update"
-  static let healthCheckServiceIdentifier = "com.cbouvat.saracroche.healthcheck"
+  static let appGroupIdentifier = "group.ch.swisscroche.app"
+  static let callDirectoryExtensionIdentifier = "ch.swisscroche.app.blocker"
+  static let backgroundServiceIdentifier = "ch.swisscroche.app.background-update"
+  static let healthCheckServiceIdentifier = "ch.swisscroche.app.healthcheck"
   static let coreDataModelName = "DataModel"
   static let coreDataStoreFilename = "DataModel.sqlite"
   static let apiBaseURL = "https://app.saracroche.org/api/v1"

@@ -14,7 +14,7 @@ struct HomeFeatureCards: View {
         .padding(.top, 16)
         .padding(.bottom, 4)
 
-      Text("Activez toutes les protections pour profiter pleinement de Saracroche.")
+      Text("Activez toutes les protections pour profiter pleinement de SwissCroche.")
         .appFont(.caption)
         .foregroundColor(.secondary)
         .padding(.horizontal, 16)

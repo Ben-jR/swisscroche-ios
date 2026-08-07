@@ -22,15 +22,15 @@ struct DonationSheet: View {
                 .accessibilityHidden(true)
             }
 
-            Text("Soutenez Saracroche")
+            Text("Soutenez SwissCroche")
               .appFont(.titleBold)
               .multilineTextAlignment(.center)
           }
 
           VStack(alignment: .leading, spacing: 16) {
             Text(
-              "Saracroche est développée par Camille sur son temps libre. Vos dons permettent d'améliorer l'application et de maintenir les listes de blocage à jour. "
-                + "Une note sur le store est toujours appréciée et aide beaucoup !"
+              "SwissCroche est un fork indépendant de Saracroche, adapté pour la Suisse. "
+                + "C'est un projet open source et gratuit, sans lien avec l'équipe originale."
             )
             .appFont(.body)
             .multilineTextAlignment(.leading)
@@ -49,12 +49,6 @@ struct DonationSheet: View {
                   "Pas de pub, pas d'abonnement, pas de version premium.",
                 accessibleDescription:
                   "Pas de publicité, pas d'abonnement, pas de version premium."
-              )
-
-              IconInfoRow(
-                icon: "person.fill",
-                title: "Développement indépendant",
-                description: "Création par Camille."
               )
 
               IconInfoRow(
@@ -80,78 +74,12 @@ struct DonationSheet: View {
           }
 
           VStack(spacing: 16) {
-            Button {
-              if let url = URL(string: "https://donate.stripe.com/9B6aEXcJ8flofsgfIU2oE01") {
-                UIApplication.shared.open(url)
-              }
-            } label: {
-              HStack {
-                Image(systemName: "creditcard.fill")
-                Text("Carte Bancaire et Apple Pay")
-              }
-            }
-            .buttonStyle(
-              .fullWidth(background: .indigo, foreground: .white)
-            )
-            .accessibilityAddTraits(.isLink)
-            .accessibilityRemoveTraits(.isButton)
-
-            Button {
-              if let url = URL(
-                string:
-                  "https://www.paypal.com/donate/?hosted_button_id=PPMLFH859R58N&locale.x=fr_FR")
-              {
-                UIApplication.shared.open(url)
-              }
-            } label: {
-              HStack {
-                Image(systemName: "wallet.bifold.fill")
-                Text("PayPal")
-              }
-            }
-            .buttonStyle(
-              .fullWidth(background: .blue, foreground: .white)
-            )
-            .accessibilityAddTraits(.isLink)
-            .accessibilityRemoveTraits(.isButton)
-
-            Button {
-              if let url = URL(string: "https://liberapay.com/cbouvat") {
-                UIApplication.shared.open(url)
-              }
-            } label: {
-              HStack {
-                Image(systemName: "eurosign.circle.fill")
-                Text("Liberapay")
-              }
-            }
-            .buttonStyle(
-              .fullWidth(background: .yellow, foreground: .black)
-            )
-            .accessibilityAddTraits(.isLink)
-            .accessibilityRemoveTraits(.isButton)
-
-            Button {
-              if let url = URL(
-                string:
-                  "https://apps.apple.com/app/id6743679292?action=write-review"
-              ) {
-                UIApplication.shared.open(url)
-              }
-            } label: {
-              Label("Noter l'application", systemImage: "star.bubble.fill")
-            }
-            .buttonStyle(
-              .fullWidth(background: .pink, foreground: .white)
-            )
-            .accessibilityAddTraits(.isLink)
-            .accessibilityRemoveTraits(.isButton)
-
+            // TODO: add SwissCroche's own donation links and App Store review link once published.
             Button {
               userPreferences.dismissDonation()
               dismiss()
             } label: {
-              Label("Plus tard, non merci", systemImage: "xmark")
+              Label("Compris", systemImage: "checkmark")
             }
             .buttonStyle(
               .fullWidth(background: .black, foreground: .white)

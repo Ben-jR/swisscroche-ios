@@ -39,7 +39,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 }
 
 @main
-struct SaracrocheApp: App {
+struct SwissCrocheApp: App {
   @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
   @Environment(\.scenePhase) private var scenePhase
 
@@ -88,7 +88,7 @@ struct SaracrocheApp: App {
 
   var body: some Scene {
     WindowGroup {
-      SaracrocheView()
+      SwissCrocheView()
     }
     .onChange(of: scenePhase) { newPhase in
       if newPhase == .background {

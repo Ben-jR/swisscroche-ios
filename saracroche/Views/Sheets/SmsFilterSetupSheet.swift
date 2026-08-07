@@ -34,7 +34,7 @@ struct SmsFilterSetupSheet: View {
 
           VStack(alignment: .leading, spacing: 16) {
             Text(
-              "Activez ou désactivez le filtre SMS dans les réglages pour que Saracroche filtre automatiquement les messages indésirables."
+              "Activez ou désactivez le filtre SMS dans les réglages pour que SwissCroche filtre automatiquement les messages indésirables."
             )
             .appFont(.body)
             .multilineTextAlignment(.leading)
@@ -58,9 +58,9 @@ struct SmsFilterSetupSheet: View {
               IconInfoRow(
                 icon: "message.fill",
                 title: "Étape 3",
-                description: "Sélectionner « Filtrer les messages texte » > Saracroche.",
+                description: "Sélectionner « Filtrer les messages texte » > SwissCroche.",
                 accessibleDescription:
-                  "Sélectionner « Filtrer les messages texte », puis Saracroche.",
+                  "Sélectionner « Filtrer les messages texte », puis SwissCroche.",
                 iconColor: .green
               )
             }

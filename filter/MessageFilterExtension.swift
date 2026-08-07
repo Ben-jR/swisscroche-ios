@@ -2,7 +2,7 @@ import IdentityLookup
 import OSLog
 
 private let logger = Logger(
-  subsystem: "com.cbouvat.saracroche.filter", category: "MessageFilterExtension")
+  subsystem: "ch.swisscroche.app.filter", category: "MessageFilterExtension")
 
 final class MessageFilterExtension: ILMessageFilterExtension {}
 

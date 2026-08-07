@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SaracrocheView: View {
+struct SwissCrocheView: View {
   @StateObject private var blockerStatus = BlockerStatusViewModel()
   @StateObject private var blockerUpdate = BlockerUpdateViewModel()
   @StateObject private var userPreferences = UserPreferencesViewModel()
@@ -36,5 +36,5 @@ struct SaracrocheView: View {
 }
 
 #Preview {
-  SaracrocheView()
+  SwissCrocheView()
 }

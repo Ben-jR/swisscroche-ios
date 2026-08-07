@@ -1,8 +1,8 @@
 import CoreData
 import Foundation
 
-/// Metadata about the French blocking list, extracted as plain Swift types
-struct FrenchListMetadata {
+/// Metadata about the official blocking list, extracted as plain Swift types
+struct OfficialListMetadata {
   let name: String
   let version: String
   let blockedCount: Int
@@ -179,9 +179,9 @@ class PatternService {
     }
   }
 
-  /// Fetches metadata about the French blocking list entirely within the CoreData context
-  /// - Returns: FrenchListMetadata with plain Swift types, or nil if no API patterns exist
-  func getFrenchListMetadata() async -> FrenchListMetadata? {
+  /// Fetches metadata about the official blocking list entirely within the CoreData context
+  /// - Returns: OfficialListMetadata with plain Swift types, or nil if no API patterns exist
+  func getOfficialListMetadata() async -> OfficialListMetadata? {
     let context = dataStack.persistentContainer.viewContext
 
     return await withCheckedContinuation { continuation in
@@ -197,7 +197,7 @@ class PatternService {
             return
           }
 
-          let name = firstPattern.sourceListName ?? "Liste Française"
+          let name = firstPattern.sourceListName ?? "Liste Suisse"
           let version = firstPattern.sourceVersion ?? "1.0"
           let blockedCount = patterns.reduce(0) { total, pattern in
             guard let patternString = pattern.pattern else { return total }
@@ -205,11 +205,11 @@ class PatternService {
           }
 
           continuation.resume(
-            returning: FrenchListMetadata(
+            returning: OfficialListMetadata(
               name: name, version: version, blockedCount: blockedCount))
         } catch {
           Logger.error(
-            "Failed to fetch French list metadata: %{public}@",
+            "Failed to fetch official list metadata: %{public}@",
             category: .patternService,
             error: error
           )

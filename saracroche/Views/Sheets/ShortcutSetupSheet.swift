@@ -33,7 +33,7 @@ struct ShortcutSetupSheet: View {
 
           VStack(alignment: .leading, spacing: 16) {
             Text(
-              "Créez une automatisation dans l'app Raccourcis pour mettre à jour la liste de blocage tous les jours, même sans ouvrir Saracroche."
+              "Créez une automatisation dans l'app Raccourcis pour mettre à jour la liste de blocage tous les jours, même sans ouvrir SwissCroche."
             )
             .appFont(.body)
             .multilineTextAlignment(.leading)
@@ -59,9 +59,9 @@ struct ShortcutSetupSheet: View {
               IconInfoRow(
                 icon: "arrow.clockwise",
                 title: "Étape 3",
-                description: "Recherchez Saracroche > « Mettre à jour » et ajoutez cette action.",
+                description: "Recherchez SwissCroche > « Mettre à jour » et ajoutez cette action.",
                 accessibleDescription:
-                  "Recherchez Saracroche, puis « Mettre à jour », et ajoutez cette action.",
+                  "Recherchez SwissCroche, puis « Mettre à jour », et ajoutez cette action.",
                 iconColor: .green
               )
 

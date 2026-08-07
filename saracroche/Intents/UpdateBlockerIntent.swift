@@ -5,7 +5,7 @@ import Foundation
 @available(iOS 16.0, *)
 struct UpdateBlockerIntent: AppIntent {
   static var title: LocalizedStringResource = "Mettre à jour"
-  static var description = IntentDescription("Met à jour les listes de Saracroche.")
+  static var description = IntentDescription("Met à jour les listes de SwissCroche.")
 
   static var openAppWhenRun: Bool = false
 

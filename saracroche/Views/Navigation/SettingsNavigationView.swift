@@ -25,7 +25,7 @@ struct SettingsNavigationView: View {
             }
           } label: {
             Label(
-              "Activer ou désactiver Saracroche dans **Réglages**",
+              "Activer ou désactiver SwissCroche dans **Réglages**",
               systemImage: "gearshape.fill"
             )
           }
@@ -60,59 +60,7 @@ struct SettingsNavigationView: View {
         }
 
         Section {
-          Button {
-            if let url = URL(string: "https://saracroche.org/fr/help") {
-              UIApplication.shared.open(url)
-            }
-          } label: {
-            Label("Aide et FAQ", systemImage: "questionmark.circle.fill")
-          }
-          .accessibilityRemoveTraits(.isButton)
-          .accessibilityAddTraits(.isLink)
-
-          Button {
-            if let url = URL(string: "https://saracroche.org/fr/privacy") {
-              UIApplication.shared.open(url)
-            }
-          } label: {
-            Label("Confidentialité", systemImage: "lock.shield.fill")
-          }
-          .accessibilityRemoveTraits(.isButton)
-          .accessibilityAddTraits(.isLink)
-
-          Button {
-            if let url = URL(string: "https://saracroche.org") {
-              UIApplication.shared.open(url)
-            }
-          } label: {
-            Label("Site officiel", systemImage: "safari.fill")
-          }
-          .accessibilityRemoveTraits(.isButton)
-          .accessibilityAddTraits(.isLink)
-
-          Button {
-            if let url = URL(string: "https://saracroche.org/fr/support") {
-              UIApplication.shared.open(url)
-            }
-          } label: {
-            Label("Soutien et dons", systemImage: "heart.fill")
-          }
-          .accessibilityRemoveTraits(.isButton)
-          .accessibilityAddTraits(.isLink)
-
-          Button {
-            if let url = URL(
-              string:
-                "https://apps.apple.com/app/id6743679292?action=write-review"
-            ) {
-              UIApplication.shared.open(url)
-            }
-          } label: {
-            Label("Noter l'application", systemImage: "star.fill")
-          }
-          .accessibilityRemoveTraits(.isButton)
-          .accessibilityAddTraits(.isLink)
-
+          // TODO: replace with SwissCroche's own help/privacy/website/support/App Store links once available.
           Button {
             if let url = URL(
               string: "https://codeberg.org/cbouvat/saracroche-ios"
@@ -121,23 +69,12 @@ struct SettingsNavigationView: View {
             }
           } label: {
             Label(
-              "Code source",
+              "Projet original (upstream)",
               systemImage: "keyboard.fill"
             )
           }
           .accessibilityRemoveTraits(.isButton)
           .accessibilityAddTraits(.isLink)
-
-          Button {
-            if let url = URL(string: "https://mastodon.social/@cbouvat") {
-              UIApplication.shared.open(url)
-            }
-          } label: {
-            Label("Mastodon @cbouvat", systemImage: "person.bubble.fill")
-          }
-          .accessibilityRemoveTraits(.isButton)
-          .accessibilityAddTraits(.isLink)
-          .modifier(CopyableTextViewModifier(copyable: "@cbouvat@mastodon.social"))
 
         } header: {
           Text("Liens")

@@ -22,7 +22,7 @@ struct BusinessCodeSheet: View {
                 .accessibilityHidden(true)
             }
 
-            Text("Saracroche pour les entreprises")
+            Text("SwissCroche pour les entreprises")
               .appFont(.titleBold)
               .multilineTextAlignment(.center)
           }

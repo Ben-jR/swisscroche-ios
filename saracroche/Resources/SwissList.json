@@ -1,0 +1,21 @@
+{
+  "version": "2026-08-07",
+  "name": "Liste Suisse (BAKOM 090x)",
+  "patterns": [
+    {
+      "name": "BAKOM 0900 – Services à valeur ajoutée",
+      "action": "block",
+      "pattern": "41900######"
+    },
+    {
+      "name": "BAKOM 0901 – Concours et sondages",
+      "action": "block",
+      "pattern": "41901######"
+    },
+    {
+      "name": "BAKOM 0906 – Contenu pour adultes",
+      "action": "block",
+      "pattern": "41906######"
+    }
+  ]
+}

@@ -20,43 +20,43 @@ final class ListService {
 
   // MARK: - Dependencies
 
-  private let listAPIService: ListAPIService
   private let userDefaultsService: UserDefaultsService
   private let patternService: PatternService
 
   // MARK: - Initialization
 
   init(
-    listAPIService: ListAPIService = ListAPIService(),
     userDefaultsService: UserDefaultsService = UserDefaultsService(),
     patternService: PatternService = PatternService()
   ) {
-    self.listAPIService = listAPIService
     self.userDefaultsService = userDefaultsService
     self.patternService = patternService
   }
 
   // MARK: - Public API
 
-  /// Download and update the French block list
+  /// Load and apply the bundled Swiss block list
   func update() async throws {
     Logger.debug("Starting list update", category: .listService)
 
     do {
-      let jsonResponse = try await listAPIService.downloadFrenchList()
-      let apiResponse = try decodeListResponse(jsonResponse)
+      let apiResponse = try loadBundledSwissList()
       await updateCoreData(apiResponse)
       userDefaultsService.setLastListDownloadAt(Date())
       Logger.info("List update completed successfully", category: .listService)
     } catch {
-      Logger.error("Failed to download blocklist", category: .listService, error: error)
+      Logger.error("Failed to load blocklist", category: .listService, error: error)
       throw ListServiceError.downloadFailed(error)
     }
   }
 
-  private func decodeListResponse(_ json: [String: Any]) throws -> APIListResponse {
-    let jsonData = try JSONSerialization.data(withJSONObject: json)
-    return try JSONDecoder().decode(APIListResponse.self, from: jsonData)
+  /// Loads the Swiss block list bundled with the app (no network dependency)
+  private func loadBundledSwissList() throws -> APIListResponse {
+    guard let url = Bundle.main.url(forResource: "SwissList", withExtension: "json") else {
+      throw NetworkError.noData
+    }
+    let data = try Data(contentsOf: url)
+    return try JSONDecoder().decode(APIListResponse.self, from: data)
   }
 
   /// Convert list from API response to CoreData

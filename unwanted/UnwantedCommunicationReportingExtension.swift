@@ -81,7 +81,7 @@ class UnwantedCommunicationReportingExtension: ILClassificationUIExtensionViewCo
       "phone": phone,
       "device_id": deviceId,
       "is_good": isGood,
-      "country_code": "FR",
+      "country_code": "CH",
     ]
 
     return response

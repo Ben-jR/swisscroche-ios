@@ -2,7 +2,7 @@ import CoreData
 import OSLog
 
 private let logger = Logger(
-  subsystem: "com.cbouvat.saracroche.filter", category: "MessageFilterService")
+  subsystem: "ch.swisscroche.app.filter", category: "MessageFilterService")
 
 /// Service responsible for checking incoming SMS senders against blocking patterns
 final class MessageFilterService {

@@ -24,7 +24,7 @@ struct UpdateInProgressSheet: View {
     formatter.unitsStyle = .full
     formatter.allowedUnits = [.hour, .minute]
     var calendar = Calendar.current
-    calendar.locale = Locale(identifier: "fr_FR")
+    calendar.locale = Locale(identifier: "fr_CH")
     formatter.calendar = calendar
     return formatter
   }()

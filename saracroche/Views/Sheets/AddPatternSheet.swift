@@ -39,7 +39,7 @@ struct AddPatternSheet: View {
             VStack(alignment: .leading, spacing: 8) {
               Text("Préfixe")
                 .appFont(.subheadlineSemiBold)
-              TextField("+33612345####", text: $patternString)
+              TextField("+41791234####", text: $patternString)
                 .keyboardType(.phonePad)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled(true)
@@ -59,7 +59,7 @@ struct AddPatternSheet: View {
                 )
                 .accessibilityLabel("Champ de saisie du préfixe de blocage")
                 .accessibilityHint(
-                  "Entrez un numéro avec des jokers « # » en fin de numéro. Exemple: +33612345####."
+                  "Entrez un numéro avec des jokers « # » en fin de numéro. Exemple: +41791234####."
                 )
                 .onChange(of: patternString) { _ in
                   viewModel.patternError = nil
@@ -72,7 +72,7 @@ struct AddPatternSheet: View {
                   .accessibilityLabel("Erreur: \(error)")
               } else {
                 Text(
-                  "Format international requis avec « # » comme joker en fin de numéro. Exemple : +33612345####."
+                  "Format international requis avec « # » comme joker en fin de numéro. Exemple : +41791234####."
                 )
                 .appFont(.caption)
                 .foregroundColor(.secondary)

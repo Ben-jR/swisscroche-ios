@@ -7,14 +7,14 @@ struct HomeDonationCard: View {
   var body: some View {
     if !userPreferences.isDonationDismissed {
       VStack(alignment: .leading, spacing: 0) {
-        Text("Soutenez Saracroche")
+        Text("Soutenez SwissCroche")
           .appFont(.headlineSemiBold)
           .padding(.horizontal, 16)
           .padding(.top, 16)
           .padding(.bottom, 4)
 
         Text(
-          "Saracroche est une application entièrement gratuite, open source et sans publicité. "
+          "SwissCroche est une application entièrement gratuite, open source et sans publicité. "
             + "Elle vit grâce aux dons de toutes les personnes qui l'utilisent pour continuer à évoluer."
         )
         .appFont(.caption)

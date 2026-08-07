@@ -6,7 +6,7 @@ Saracroche is a privacy-focused iOS call blocking app using CallKit. Swift-only,
 
 ## Architecture
 
-Four targets sharing data via App Groups (`group.com.cbouvat.saracroche`):
+Four targets sharing data via App Groups (`group.ch.swisscroche.app`):
 
 - **saracroche** (main app): SwiftUI + MVVM. Stores patterns in CoreData, orchestrates updates.
 - **blocker** (Call Directory extension): Reads action/numbers from shared UserDefaults, applies block/identify/remove to CallKit directory.
@@ -26,7 +26,7 @@ Plus `shared/`, a synchronized folder compiled into `saracroche`, `blocker` and 
 
 - **Don't commit code** unless explicitly asked.
 - All app configuration lives in `shared/AppConstants.swift` — do not hardcode values elsewhere. It is compiled into the app and the `blocker`/`filter` extensions, so both can reference it directly.
-- App Groups identifier: `group.com.cbouvat.saracroche`. Blocker extension bundle ID: `com.cbouvat.saracroche.blocker`.
+- App Groups identifier: `group.ch.swisscroche.app`. Blocker extension bundle ID: `ch.swisscroche.app.blocker`.
 - Pure logic that extensions and the app both need (pattern expansion, matching) belongs in `shared/` so it stays unit-testable.
 - CoreData entity `Pattern` uses Xcode code generation (`codeGenerationType="class"`, `representedClassName=".Pattern"`) — do not manually create a `Pattern.swift` file.
 

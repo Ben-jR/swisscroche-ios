@@ -1,7 +1,7 @@
 import AppIntents
 
 @available(iOS 16.0, *)
-struct SaracrocheShortcuts: AppShortcutsProvider {
+struct SwissCrocheShortcuts: AppShortcutsProvider {
   static var appShortcuts: [AppShortcut] {
     AppShortcut(
       intent: UpdateBlockerIntent(),

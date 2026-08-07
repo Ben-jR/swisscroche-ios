@@ -98,12 +98,12 @@ struct HomeDisabledCard: View {
           .accessibilityHidden(true)
 
         VStack(alignment: .leading, spacing: 2) {
-          Text("Étape 2 : Activez Saracroche")
+          Text("Étape 2 : Activez SwissCroche")
             .appFont(.subheadlineMedium)
             .foregroundColor(.primary)
 
           Text(
-            "Activez Saracroche dans la liste des apps de blocage d'appels et identification."
+            "Activez SwissCroche dans la liste des apps de blocage d'appels et identification."
           )
           .appFont(.caption)
           .foregroundColor(.secondary)
