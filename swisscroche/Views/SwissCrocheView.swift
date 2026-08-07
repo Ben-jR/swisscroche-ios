@@ -15,10 +15,6 @@ struct SwissCrocheView: View {
       .tabItem {
         Label("Accueil", systemImage: "house.fill")
       }
-      ReportNavigationView()
-        .tabItem {
-          Label("Signaler", systemImage: "megaphone.fill")
-        }
       ListsNavigationView(blockerUpdate: blockerUpdate)
         .tabItem {
           Label("Listes", systemImage: "number.square.fill")

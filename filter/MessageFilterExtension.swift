@@ -23,50 +23,27 @@ extension MessageFilterExtension: ILMessageFilterQueryHandling,
     completion(response)
   }
 
+  /// Filtering is resolved entirely on-device against the stored patterns.
+  /// Requests are never deferred to the network, so no message data leaves the device.
   func handle(
     _ queryRequest: ILMessageFilterQueryRequest, context: ILMessageFilterExtensionContext,
     completion: @escaping (ILMessageFilterQueryResponse) -> Void
   ) {
-    // First, check whether to filter using offline data (if possible).
-    let (offlineAction, offlineSubAction) = self.offlineAction(for: queryRequest)
+    let (action, subAction) = self.offlineAction(for: queryRequest)
 
-    switch offlineAction {
-    case .allow, .junk, .promotion, .transaction:
-      // Based on offline data, we know this message should either be Allowed, Filtered as Junk, Promotional or Transactional. Send response immediately.
-      let response = ILMessageFilterQueryResponse()
-      response.action = offlineAction
-      response.subAction = offlineSubAction
+    let response = ILMessageFilterQueryResponse()
+    response.action = action
+    response.subAction = subAction
 
-      completion(response)
-
-    case .none:
-      // Based on offline data, we do not know whether this message should be Allowed or Filtered. Defer to network.
-      // Note: Deferring requests to network requires the extension target's Info.plist to contain a key with a URL to use. See documentation for details.
-      context.deferQueryRequestToNetwork { (networkResponse, error) in
-        let response = ILMessageFilterQueryResponse()
-        response.action = .none
-        response.subAction = .none
-
-        if let networkResponse = networkResponse {
-          // If we received a network response, parse it to determine an action to return in our response.
-          (response.action, response.subAction) = self.networkAction(for: networkResponse)
-        } else {
-          logger.error("Error deferring query request to network: \(String(describing: error))")
-        }
-
-        completion(response)
-      }
-
-    @unknown default:
-      break
-    }
+    completion(response)
   }
 
   private func offlineAction(for queryRequest: ILMessageFilterQueryRequest) -> (
     ILMessageFilterAction, ILMessageFilterSubAction
   ) {
+    // Without a sender there is nothing to match against, so let the message through.
     guard let sender = queryRequest.sender else {
-      return (.none, .none)
+      return (.allow, .none)
     }
 
     let service = MessageFilterService()
@@ -77,12 +54,4 @@ extension MessageFilterExtension: ILMessageFilterQueryHandling,
 
     return (.allow, .none)
   }
-
-  private func networkAction(for networkResponse: ILNetworkResponse) -> (
-    ILMessageFilterAction, ILMessageFilterSubAction
-  ) {
-    // TODO: Replace with logic to parse the HTTP response and data payload of `networkResponse` to return an action.
-    return (.none, .none)
-  }
-
 }

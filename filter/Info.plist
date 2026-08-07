@@ -4,11 +4,6 @@
 <dict>
 	<key>NSExtension</key>
 	<dict>
-		<key>NSExtensionAttributes</key>
-		<dict>
-			<key>ILMessageFilterExtensionNetworkURL</key>
-			<string>https://app.saracroche.org/api/v2/apple/report</string>
-		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.identitylookup.message-filter</string>
 		<key>NSExtensionPrincipalClass</key>

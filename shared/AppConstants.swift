@@ -15,7 +15,6 @@ struct AppConstants {
   static let apiBaseURLV2 = "https://app.saracroche.org/api/v2"
   static let apiHealthCheckURL = "\(apiBaseURLV2)/health-check"
   static let apiListsURL = "\(apiBaseURLV2)/lists"
-  static let apiReportsURL = "\(apiBaseURLV2)/reports"
 
   static let backgroundUpdateInterval: TimeInterval = 6 * 60 * 60
   static let listDownloadInterval: TimeInterval = 24 * 60 * 60

@@ -14,7 +14,6 @@ struct HomeNavigationView: View {
   @State private var showInfoSheet = false
   @State private var showUpdateInProgressSheet = false
   @State private var showSmsFilterSetupSheet = false
-  @State private var showCallReportingSetupSheet = false
   @State private var showShortcutSetupSheet = false
   @State private var isLoading = true
   @State private var hasInitiallyLoaded = false
@@ -46,8 +45,7 @@ struct HomeNavigationView: View {
                 HomeFeatureCards(
                   userPreferences: userPreferences,
                   showShortcutSetupSheet: $showShortcutSetupSheet,
-                  showSmsFilterSetupSheet: $showSmsFilterSetupSheet,
-                  showCallReportingSetupSheet: $showCallReportingSetupSheet
+                  showSmsFilterSetupSheet: $showSmsFilterSetupSheet
                 )
                 HomeDonationCard(
                   userPreferences: userPreferences,
@@ -83,7 +81,6 @@ struct HomeNavigationView: View {
           showInfoSheet: $showInfoSheet,
           showUpdateInProgressSheet: $showUpdateInProgressSheet,
           showSmsFilterSetupSheet: $showSmsFilterSetupSheet,
-          showCallReportingSetupSheet: $showCallReportingSetupSheet,
           showShortcutSetupSheet: $showShortcutSetupSheet
         )
       )

@@ -10,7 +10,6 @@ struct HomeSheetModifier: ViewModifier {
   @Binding var showInfoSheet: Bool
   @Binding var showUpdateInProgressSheet: Bool
   @Binding var showSmsFilterSetupSheet: Bool
-  @Binding var showCallReportingSetupSheet: Bool
   @Binding var showShortcutSetupSheet: Bool
 
   func body(content: Content) -> some View {
@@ -41,12 +40,6 @@ struct HomeSheetModifier: ViewModifier {
             userPreferences: userPreferences
           )
         }
-      }
-      .sheet(isPresented: $showCallReportingSetupSheet) {
-        CallReportingSetupSheet(
-          blockerStatus: blockerStatus,
-          userPreferences: userPreferences
-        )
       }
       .sheet(isPresented: $showShortcutSetupSheet) {
         if #available(iOS 16.0, *) {

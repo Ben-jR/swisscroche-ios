@@ -4,7 +4,6 @@ struct HomeFeatureCards: View {
   @ObservedObject var userPreferences: UserPreferencesViewModel
   @Binding var showShortcutSetupSheet: Bool
   @Binding var showSmsFilterSetupSheet: Bool
-  @Binding var showCallReportingSetupSheet: Bool
 
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
@@ -44,16 +43,6 @@ struct HomeFeatureCards: View {
         ) {
           showSmsFilterSetupSheet = true
         }
-      }
-
-      Divider().padding(.horizontal, 16)
-
-      featureRow(
-        icon: "phone.fill",
-        title: "Signalement d'appels",
-        subtitle: "Signalez les appels indésirables depuis le journal d'appels."
-      ) {
-        showCallReportingSetupSheet = true
       }
     }
     .background(
