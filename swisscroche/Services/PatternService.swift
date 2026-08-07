@@ -676,9 +676,22 @@ class PatternService {
 
   // MARK: - Private Methods
 
-  /// Saves changes to the CoreData context
+  /// Saves changes to the CoreData context.
+  ///
+  /// Saving with no persistent store loaded raises an Objective-C exception that `try`
+  /// cannot catch, aborting the app — so the store is checked before writing rather
+  /// than relying on the `catch` below.
   private static func save(context: NSManagedObjectContext) {
     guard context.hasChanges else { return }
+
+    guard CoreDataStack.shared.isStoreLoaded else {
+      Logger.error(
+        "Skipping save: no persistent store is loaded",
+        category: .patternService,
+        error: CoreDataError.storeUnavailable
+      )
+      return
+    }
 
     do {
       try context.save()

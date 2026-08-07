@@ -16,8 +16,13 @@ class CoreDataStack: ObservableObject {
       let containerURL = FileManager.default
         .containerURL(forSecurityApplicationGroupIdentifier: AppConstants.appGroupIdentifier)
     else {
+      // Almost always a signing problem: the build is unsigned, or the App Group
+      // is missing from the entitlements / provisioning profile. The container is
+      // returned without a store, and `isStoreLoaded` keeps writes from aborting.
       Logger.log(
-        "Failed to get App Group container URL", category: .coreData, type: .fault)
+        "App Group \(AppConstants.appGroupIdentifier) is unreachable — the app cannot store "
+          + "patterns. Check the signing team and App Group entitlement.",
+        category: .coreData, type: .fault)
       return container
     }
 
@@ -67,6 +72,16 @@ class CoreDataStack: ObservableObject {
     }
   }
 
+  /// Whether a persistent store actually loaded.
+  ///
+  /// When the App Group container is unreachable, or the store cannot be opened or
+  /// recovered, the coordinator ends up with no stores. Saving in that state raises an
+  /// Objective-C exception that Swift's `try` cannot catch, which aborts the app — so
+  /// every write must check this first and degrade instead.
+  var isStoreLoaded: Bool {
+    !persistentContainer.persistentStoreCoordinator.persistentStores.isEmpty
+  }
+
   // MARK: - Background Context
 
   /// Private background context for off-main-thread operations
@@ -109,6 +124,12 @@ class CoreDataStack: ObservableObject {
 
   /// Save changes in a context
   func saveContext(_ context: NSManagedObjectContext) throws {
+    guard isStoreLoaded else {
+      Logger.log(
+        "Skipping save: no persistent store is loaded", category: .coreData, type: .fault)
+      throw CoreDataError.storeUnavailable
+    }
+
     var saveError: Error?
     context.performAndWait {
       if context.hasChanges {
