@@ -74,15 +74,6 @@ struct DebugSheet: View {
 
             DebugButton(
               action: {
-                downloadList()
-              },
-              title: "Download list",
-              background: .blue,
-              foreground: .white
-            )
-
-            DebugButton(
-              action: {
                 convertList()
               },
               title: "Update list",
@@ -125,24 +116,6 @@ struct DebugSheet: View {
       Button("OK") {}
     } message: {
       Text(alertMessage ?? "Operation completed")
-    }
-  }
-
-  private func downloadList() {
-    Task {
-      do {
-        let jsonResponse = try await ListAPIService().downloadFrenchList()
-        DispatchQueue.main.async {
-          alertMessage =
-            "✅ Download successful: version \(jsonResponse["version"] as? String ?? "unknown")"
-          showAlert = true
-        }
-      } catch {
-        DispatchQueue.main.async {
-          alertMessage = "❌ Download failed: \(error.localizedDescription)"
-          showAlert = true
-        }
-      }
     }
   }
 

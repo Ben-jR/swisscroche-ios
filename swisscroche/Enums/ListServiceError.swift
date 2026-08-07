@@ -1,15 +1,18 @@
 import Foundation
 
 enum ListServiceError: LocalizedError {
-  case downloadFailed(Error)
+  case loadFailed(Error)
   case decodingFailed(Error)
+  case bundledListMissing
 
   var errorDescription: String? {
     switch self {
-    case .downloadFailed(let error):
-      return "Failed to download blocklist: \(error.localizedDescription)"
+    case .loadFailed(let error):
+      return "Failed to load blocklist: \(error.localizedDescription)"
     case .decodingFailed(let error):
       return "Failed to decode blocklist: \(error.localizedDescription)"
+    case .bundledListMissing:
+      return "The bundled blocklist is missing from the app bundle."
     }
   }
 }

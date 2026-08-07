@@ -5,16 +5,11 @@ struct AppConstants {
   static let appGroupIdentifier = "group.ch.swisscroche.app"
   static let callDirectoryExtensionIdentifier = "ch.swisscroche.app.blocker"
   static let backgroundServiceIdentifier = "ch.swisscroche.app.background-update"
-  static let healthCheckServiceIdentifier = "ch.swisscroche.app.healthcheck"
   static let coreDataModelName = "DataModel"
   static let coreDataStoreFilename = "DataModel.sqlite"
-  static let apiBaseURL = "https://app.saracroche.org/api/v1"
-  static let apiFrenchListURL = "\(apiBaseURL)/lists/french-list-arcep-operators"
 
-  // API v2 URLs
-  static let apiBaseURLV2 = "https://app.saracroche.org/api/v2"
-  static let apiHealthCheckURL = "\(apiBaseURLV2)/health-check"
-  static let apiListsURL = "\(apiBaseURLV2)/lists"
+  /// Name of the block list bundled with the app (see `swisscroche/Resources`)
+  static let bundledListResourceName = "SwissList"
 
   static let backgroundUpdateInterval: TimeInterval = 6 * 60 * 60
   static let listDownloadInterval: TimeInterval = 24 * 60 * 60
@@ -29,8 +24,6 @@ struct AppConstants {
   struct SharedDefaultsKeys {
     static let action = "action"
     static let numbers = "numbers"
-    static let organizationAPIKey = "organizationAPIKey"
-    static let lastHealthCheckAt = "lastHealthCheckAt"
   }
 
   /// Keys for UserDefaults.standard (app-specific storage)

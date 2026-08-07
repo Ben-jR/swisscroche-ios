@@ -19,21 +19,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
       BackgroundService.shared.handleBackgroundUpdate(task: processingTask)
     }
 
-    // Register health check background task
-    BGTaskScheduler.shared.register(
-      forTaskWithIdentifier: AppConstants.healthCheckServiceIdentifier,
-      using: nil
-    ) { task in
-      guard let processingTask = task as? BGProcessingTask else {
-        task.setTaskCompleted(success: false)
-        return
-      }
-      HealthCheckService.shared.handleBackgroundHealthCheck(task: processingTask)
-    }
-
-    // Start health check service after handlers are registered
-    HealthCheckService.shared.start()
-
     return true
   }
 }
@@ -44,8 +29,6 @@ struct SwissCrocheApp: App {
   @Environment(\.scenePhase) private var scenePhase
 
   init() {
-    // Load MDM configuration at app launch
-    loadMDMConfiguration()
     let boldFontName = "AtkinsonHyperlegibleNextVFLight-Bold"
     let regularFontName = "AtkinsonHyperlegibleNextVFLight-Regular"
 
@@ -73,17 +56,6 @@ struct SwissCrocheApp: App {
     tabBarAppearance.stackedLayoutAppearance = tabAppearance
     UITabBar.appearance().standardAppearance = tabBarAppearance
     UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
-  }
-
-  // MARK: - MDM Configuration
-
-  private func loadMDMConfiguration() {
-    let mdmService = MDMConfigurationService()
-    let hasNewKey = mdmService.loadConfiguration()
-
-    if hasNewKey {
-      Logger.info("MDM configuration loaded with API key", category: .mdm)
-    }
   }
 
   var body: some Scene {

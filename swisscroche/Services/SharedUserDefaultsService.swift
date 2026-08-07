@@ -32,43 +32,9 @@ class SharedUserDefaultsService {
     userDefaults?.set([], forKey: Keys.numbers)
   }
 
-  // MARK: - Organization API Key
-
-  func setOrganizationAPIKey(_ apiKey: String?) {
-    if let apiKey = apiKey {
-      userDefaults?.set(apiKey, forKey: Keys.organizationAPIKey)
-    } else {
-      userDefaults?.removeObject(forKey: Keys.organizationAPIKey)
-    }
-  }
-
-  func getOrganizationAPIKey() -> String? {
-    return userDefaults?.string(forKey: Keys.organizationAPIKey)
-  }
-
-  func clearOrganizationAPIKey() {
-    userDefaults?.removeObject(forKey: Keys.organizationAPIKey)
-  }
-
-  // MARK: - Health Check
-
-  func setLastHealthCheckAt(_ date: Date) {
-    userDefaults?.set(date, forKey: Keys.lastHealthCheckAt)
-  }
-
-  func getLastHealthCheckAt() -> Date? {
-    return userDefaults?.object(forKey: Keys.lastHealthCheckAt) as? Date
-  }
-
-  func clearLastHealthCheckAt() {
-    userDefaults?.removeObject(forKey: Keys.lastHealthCheckAt)
-  }
-
   // MARK: - Reset All
   func resetAllData() {
     clearAction()
     clearNumbers()
-    clearOrganizationAPIKey()
-    clearLastHealthCheckAt()
   }
 }

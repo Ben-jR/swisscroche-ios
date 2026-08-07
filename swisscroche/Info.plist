@@ -5,7 +5,6 @@
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>ch.swisscroche.app.background-update</string>
-		<string>ch.swisscroche.app.healthcheck</string>
 	</array>
 	<key>UIAppFonts</key>
 	<array>
