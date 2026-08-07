@@ -26,6 +26,7 @@ entirely on-device — no call data leaves your phone for the blocking itself.
   bundled list as an offline fallback
 - 💬 **SMS filtering** — message filter extension checks senders against the same patterns
 - ✏️ **Custom patterns** — add your own numbers, or import a list
+- 🤝 **Shareable lists** — export your list and send it to someone; they import it as-is
 
 ## What's different from upstream
 

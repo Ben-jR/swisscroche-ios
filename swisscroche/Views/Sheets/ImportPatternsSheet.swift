@@ -82,21 +82,24 @@ struct ImportPatternsSheet: View {
 
         Text(
           "Un numéro par ligne, au format international. Un nom peut suivre après une virgule. "
-            + "Les lignes commençant par « // » sont ignorées."
+            + "Les lignes commençant par « // » sont ignorées. L'action choisie ci-dessous "
+            + "s'applique, sauf aux lignes qui précisent la leur."
         )
         .appFont(.caption)
         .foregroundColor(.secondary)
 
-        Text("+41791234567\n+41791234####, Démarchage\n// un commentaire")
-          .appFont(.caption)
-          .foregroundColor(.secondary)
-          .padding(12)
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .background(
-            RoundedRectangle(cornerRadius: 12)
-              .fill(Color.gray.opacity(0.1))
-          )
-          .accessibilityHidden(true)
+        Text(
+          "+41791234567\n+41791234####, Démarchage\n+41221234567, Sondage, identify\n// un commentaire"
+        )
+        .appFont(.caption)
+        .foregroundColor(.secondary)
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+          RoundedRectangle(cornerRadius: 12)
+            .fill(Color.gray.opacity(0.1))
+        )
+        .accessibilityHidden(true)
 
         if let fileError {
           Text(fileError)

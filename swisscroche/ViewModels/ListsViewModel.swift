@@ -167,6 +167,9 @@ class ListsViewModel: ObservableObject {
   /// Unlike the manual form this accepts exact numbers without a `#` wildcard, since
   /// shared spam lists are usually made of individual numbers.
   ///
+  /// - Parameter action: Applied to entries that don't state their own, so a list
+  ///   exported from the app keeps each pattern's original action.
+  ///
   /// The caller is responsible for setting `didModifyPatterns` once the import UI is
   /// dismissed, so the update sheet does not open on top of it.
   func importPatterns(from text: String, action: String) async -> ImportSummary {
@@ -204,7 +207,7 @@ class ListsViewModel: ObservableObject {
 
       if await patternService.createPattern(
         patternString: stored,
-        action: action,
+        action: entry.action ?? action,
         name: entry.name,
         source: "user"
       ) != nil {
@@ -221,6 +224,38 @@ class ListsViewModel: ObservableObject {
     }
 
     return summary
+  }
+
+  // MARK: - Export
+
+  /// Renders the user's own patterns as shareable text.
+  ///
+  /// Only user-added patterns are exported: the bundled list is public already, and
+  /// re-sharing it would only create duplicates on the receiving device.
+  func exportUserPatterns(date: Date = Date()) -> String {
+    let items = userPatterns.compactMap { pattern -> PatternExportBuilder.Item? in
+      guard let patternString = pattern.pattern else { return nil }
+      return PatternExportBuilder.Item(
+        pattern: patternString,
+        name: pattern.name,
+        action: pattern.action ?? "block"
+      )
+    }
+    return PatternExportBuilder.build(from: items, date: date)
+  }
+
+  /// Writes the export to a temporary file so it can be shared as a document.
+  /// - Returns: The file URL, or `nil` if it could not be written.
+  func exportUserPatternsToFile() -> URL? {
+    let url = FileManager.default.temporaryDirectory
+      .appendingPathComponent(PatternExportBuilder.filename())
+    do {
+      try exportUserPatterns().write(to: url, atomically: true, encoding: .utf8)
+      return url
+    } catch {
+      Logger.error("Failed to write export file", category: .listsViewModel, error: error)
+      return nil
+    }
   }
 
   func deletePattern(_ pattern: Pattern) async {

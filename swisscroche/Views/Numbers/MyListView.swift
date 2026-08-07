@@ -10,6 +10,22 @@ struct MyListView: View {
   @State private var showUpdateInProgressSheet = false
   @State private var isLowPowerMode: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
   @State private var showLowPowerAlert: Bool = false
+  @State private var exportFile: ExportFile?
+  @State private var showExportError = false
+
+  /// `sheet(item:)` needs an Identifiable, and URL isn't one.
+  private struct ExportFile: Identifiable {
+    let id = UUID()
+    let url: URL
+  }
+
+  private func shareList() {
+    guard let url = viewModel.exportUserPatternsToFile() else {
+      showExportError = true
+      return
+    }
+    exportFile = ExportFile(url: url)
+  }
 
   private func handleUpdateAction() {
     if isLowPowerMode {
@@ -66,6 +82,12 @@ struct MyListView: View {
           } label: {
             Label("Importer une liste", systemImage: "square.and.arrow.down")
           }
+          Button {
+            shareList()
+          } label: {
+            Label("Partager ma liste", systemImage: "square.and.arrow.up")
+          }
+          .disabled(viewModel.userPatterns.isEmpty)
         } label: {
           Label("Ajouter", systemImage: "plus")
         }
@@ -76,6 +98,14 @@ struct MyListView: View {
     }
     .sheet(isPresented: $showImportSheet) {
       ImportPatternsSheet(viewModel: viewModel, isPresented: $showImportSheet)
+    }
+    .sheet(item: $exportFile) { file in
+      ShareSheet(items: [file.url])
+    }
+    .alert("Export impossible", isPresented: $showExportError) {
+      Button("OK", role: .cancel) {}
+    } message: {
+      Text("Le fichier n'a pas pu être créé. Réessayez.")
     }
     .sheet(
       isPresented: $showUpdateInProgressSheet,

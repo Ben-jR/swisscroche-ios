@@ -33,6 +33,8 @@ Plus `shared/`, a synchronized folder compiled into `swisscroche`, `blocker` and
 - `ListService` picks the newest of {published, cached, bundled} by `version` (ISO date) and applies it only when that version is not already in CoreData. `RemoteListService` does the fetch.
 - **The only outbound request is that anonymous GET.** Reporting and the Enterprise/MDM features were removed — don't reintroduce any request that carries an identifier without asking first.
 - CoreData `Pattern.source` is `"api"` for bundled-list patterns and `"user"` for user-added ones. The `"api"` name is historical; it means "from the bundled list".
+- `PatternExportBuilder` and `PatternImportParser` are two halves of one text format (`+number, name, action`) — they must round-trip. Change one and you change the other; `PatternExportBuilderTests` guards this.
+- Users share lists with each other by exporting a file. The app **never uploads** anything a user reports: a crowdsourced list published from the app would be trivially poisoned (no accounts, so report counts are meaningless) and would republish third parties' numbers, which spoofing makes frequently innocent. Any such feature needs a moderation queue, not auto-publishing.
 - CoreData entity `Pattern` uses Xcode code generation (`codeGenerationType="class"`, `representedClassName=".Pattern"`) — do not manually create a `Pattern.swift` file.
 
 ## Commands
