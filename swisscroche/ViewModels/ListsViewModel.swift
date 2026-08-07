@@ -118,11 +118,12 @@ class ListsViewModel: ObservableObject {
     }
 
     // Check for overlapping ranges
-    if let (overlapping, newIsSubset) = findOverlappingPattern(storedPattern) {
+    if let (overlapping, overlap) = findOverlappingPattern(storedPattern) {
       let overlappingName = overlapping.pattern ?? ""
-      if newIsSubset {
+      switch overlap {
+      case .coveredByExisting:
         patternError = "Ce préfixe est déjà couvert par le préfixe existant \(overlappingName)."
-      } else {
+      case .coversExisting:
         patternError = "Ce préfixe englobe le préfixe existant \(overlappingName)."
       }
       return
@@ -148,6 +149,80 @@ class ListsViewModel: ObservableObject {
     isLoading = false
   }
 
+  // MARK: - Import
+
+  /// Outcome of importing a pasted or imported list.
+  struct ImportSummary {
+    var added = 0
+    var duplicates = 0
+    var overlaps = 0
+    var invalid: [(pattern: String, reason: String)] = []
+
+    var total: Int { added + duplicates + overlaps + invalid.count }
+    var isEmpty: Bool { total == 0 }
+  }
+
+  /// Imports every entry of a pasted list, skipping duplicates and overlapping ranges.
+  ///
+  /// Unlike the manual form this accepts exact numbers without a `#` wildcard, since
+  /// shared spam lists are usually made of individual numbers.
+  ///
+  /// The caller is responsible for setting `didModifyPatterns` once the import UI is
+  /// dismissed, so the update sheet does not open on top of it.
+  func importPatterns(from text: String, action: String) async -> ImportSummary {
+    var summary = ImportSummary()
+    let entries = PatternImportParser.parse(text)
+    guard !entries.isEmpty else { return summary }
+
+    isLoading = true
+    defer { isLoading = false }
+
+    // Patterns added during this import are not in `userPatterns` until reload,
+    // so overlaps within the imported list are tracked separately.
+    var addedInThisBatch: [String] = []
+
+    for entry in entries {
+      if let error = Self.validatePatternFormat(entry.pattern, requireWildcard: false) {
+        summary.invalid.append((entry.pattern, error))
+        continue
+      }
+
+      // Stored without the leading '+', as validation guaranteed it is there.
+      let stored = String(entry.pattern.dropFirst())
+
+      if await patternService.getPattern(byPatternString: stored) != nil {
+        summary.duplicates += 1
+        continue
+      }
+
+      let overlapsExisting = findOverlappingPattern(stored) != nil
+      let overlapsBatch = addedInThisBatch.contains { Self.overlap(of: stored, with: $0) != nil }
+      if overlapsExisting || overlapsBatch {
+        summary.overlaps += 1
+        continue
+      }
+
+      if await patternService.createPattern(
+        patternString: stored,
+        action: action,
+        name: entry.name,
+        source: "user"
+      ) != nil {
+        addedInThisBatch.append(stored)
+        summary.added += 1
+      } else {
+        summary.invalid.append((entry.pattern, "Impossible de créer le préfixe."))
+      }
+    }
+
+    if summary.added > 0 {
+      Logger.info("Imported \(summary.added) patterns", category: .listsViewModel)
+      await loadData()
+    }
+
+    return summary
+  }
+
   func deletePattern(_ pattern: Pattern) async {
     await patternService.markPatternForDeletion(pattern)
     Logger.info("Prefix marked for removal: \(pattern.pattern ?? "")", category: .listsViewModel)
@@ -157,28 +232,40 @@ class ListsViewModel: ObservableObject {
 
   // MARK: - Overlap Detection
 
-  /// Checks if a new pattern overlaps with any existing pattern (API or user).
-  /// Two patterns overlap when they have the same total length and one's fixed prefix
-  /// is a prefix of the other's (since wildcards are always trailing).
+  /// How a new pattern relates to an existing one when their numbers overlap.
+  enum PatternOverlap {
+    /// The new pattern is already covered by the existing one.
+    case coveredByExisting
+    /// The new pattern covers the existing one.
+    case coversExisting
+  }
+
+  /// Whether two patterns cover overlapping numbers.
+  /// They overlap when they have the same total length and one's fixed prefix is a
+  /// prefix of the other's (since wildcards are always trailing).
+  static func overlap(of new: String, with existing: String) -> PatternOverlap? {
+    guard new.count == existing.count else { return nil }
+
+    let newPrefix = new.replacingOccurrences(of: "#", with: "")
+    let existingPrefix = existing.replacingOccurrences(of: "#", with: "")
+
+    if newPrefix.hasPrefix(existingPrefix) {
+      return .coveredByExisting
+    }
+    if existingPrefix.hasPrefix(newPrefix) {
+      return .coversExisting
+    }
+    return nil
+  }
+
+  /// Checks if a new pattern overlaps with any already loaded pattern (bundled list or user).
   private func findOverlappingPattern(_ patternString: String) -> (
-    pattern: Pattern, newIsSubset: Bool
+    pattern: Pattern, overlap: PatternOverlap
   )? {
-    let newPrefix = patternString.replacingOccurrences(of: "#", with: "")
-    let newLength = patternString.count
-
-    let allPatterns = apiPatterns + userPatterns
-    for existing in allPatterns {
+    for existing in apiPatterns + userPatterns {
       guard let existingString = existing.pattern else { continue }
-      let existingPrefix = existingString.replacingOccurrences(of: "#", with: "")
-      let existingLength = existingString.count
-
-      guard newLength == existingLength else { continue }
-
-      if newPrefix.hasPrefix(existingPrefix) {
-        return (existing, newIsSubset: true)
-      }
-      if existingPrefix.hasPrefix(newPrefix) {
-        return (existing, newIsSubset: false)
+      if let overlap = Self.overlap(of: patternString, with: existingString) {
+        return (existing, overlap)
       }
     }
     return nil
@@ -212,7 +299,9 @@ class ListsViewModel: ObservableObject {
   // MARK: - Validation
 
   /// Validates a pattern string and returns an error message if invalid, or `nil` if valid.
-  static func validatePatternFormat(_ pattern: String) -> String? {
+  /// - Parameter requireWildcard: When `false`, an exact number without any `#` is accepted.
+  ///   Imported lists commonly hold exact spam numbers, which the blocking engine handles fine.
+  static func validatePatternFormat(_ pattern: String, requireWildcard: Bool = true) -> String? {
     let trimmed = pattern.trimmingCharacters(in: .whitespacesAndNewlines)
 
     if trimmed.isEmpty {
@@ -234,7 +323,7 @@ class ListsViewModel: ObservableObject {
 
     let hashCount = trimmed.filter { $0 == "#" }.count
 
-    if hashCount == 0 {
+    if requireWildcard, hashCount == 0 {
       return "Le préfixe doit contenir au moins un joker « # »."
     }
 

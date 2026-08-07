@@ -6,6 +6,7 @@ struct MyListView: View {
 
   @Environment(\.dismiss) private var dismiss
   @State private var showAddPatternSheet = false
+  @State private var showImportSheet = false
   @State private var showUpdateInProgressSheet = false
   @State private var isLowPowerMode: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled
   @State private var showLowPowerAlert: Bool = false
@@ -54,15 +55,27 @@ struct MyListView: View {
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
       ToolbarItem(placement: .navigationBarTrailing) {
-        Button {
-          showAddPatternSheet = true
+        Menu {
+          Button {
+            showAddPatternSheet = true
+          } label: {
+            Label("Ajouter un préfixe", systemImage: "plus")
+          }
+          Button {
+            showImportSheet = true
+          } label: {
+            Label("Importer une liste", systemImage: "square.and.arrow.down")
+          }
         } label: {
-          Label("Ajouter un préfixe", systemImage: "plus")
+          Label("Ajouter", systemImage: "plus")
         }
       }
     }
     .sheet(isPresented: $showAddPatternSheet) {
       AddPatternSheet(viewModel: viewModel, isPresented: $showAddPatternSheet)
+    }
+    .sheet(isPresented: $showImportSheet) {
+      ImportPatternsSheet(viewModel: viewModel, isPresented: $showImportSheet)
     }
     .sheet(
       isPresented: $showUpdateInProgressSheet,
