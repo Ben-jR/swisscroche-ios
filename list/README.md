@@ -11,29 +11,29 @@ The same file is bundled inside the app *and* served publicly. Do not create a
 second copy — the bundled list is the offline fallback, and the two drifting
 apart would be silently confusing.
 
-## Hosting (Cloudflare Pages)
+## Hosting (GitHub Pages)
 
-Connect this repository as a Cloudflare Pages project:
+GitHub Pages serves this repository from the `main` branch root, so the file is
+published at the same path it has in the repo:
 
-| Setting | Value |
-|---|---|
-| Framework preset | None |
-| Build command | *(leave empty)* |
-| Build output directory | `swisscroche/Resources` |
+```
+https://ben-jr.github.io/swisscroche-ios/swisscroche/Resources/SwissList.json
+```
 
-That serves the file at `https://<project>.pages.dev/SwissList.json`, which is
-what `AppConstants.remoteListURL` points at. Change that constant if the project
-name or a custom domain differs.
+That is what `AppConstants.remoteListURL` points at. Pages is already enabled
+(Settings → Pages, source `main` / `/`); nothing needs to be rebuilt by hand.
 
-> ⚠️ Everything in `swisscroche/Resources/` becomes publicly downloadable.
-> Keep only the block list there.
+`raw.githubusercontent.com` serves the same file and needs no setup, but GitHub
+states it is not a CDN and rate-limits it — not something to depend on from a
+distributed app. Pages is backed by a CDN and is the supported way to serve
+static files.
 
 ## Publishing an update
 
 1. Edit `swisscroche/Resources/SwissList.json`
 2. **Bump `version` to today's date** (`YYYY-MM-DD`) — the app compares versions
    to decide whether to apply a list, so an unchanged version is ignored
-3. Commit and push — Cloudflare Pages redeploys automatically
+3. Commit and push — Pages redeploys automatically, usually within a minute
 
 Devices pick it up within 24 hours (`AppConstants.listDownloadInterval`).
 

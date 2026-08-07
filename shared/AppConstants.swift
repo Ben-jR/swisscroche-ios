@@ -11,11 +11,14 @@ struct AppConstants {
   /// Name of the block list bundled with the app (see `swisscroche/Resources`)
   static let bundledListResourceName = "SwissList"
 
-  /// Public URL the block list is fetched from.
+  /// Public URL the block list is fetched from — GitHub Pages serving this repository.
   ///
-  /// A plain anonymous GET of a static file — no identifiers are sent. The bundled
-  /// list stays the fallback, so the app works offline and if this is unreachable.
-  static let remoteListURL = "https://swisscroche.pages.dev/SwissList.json"
+  /// The path mirrors the file's location in the repo, so the bundled copy and the
+  /// published one are the same file. A plain anonymous GET of a static file: no
+  /// identifiers are sent. The bundled list stays the fallback, so the app works
+  /// offline and if this is unreachable.
+  static let remoteListURL =
+    "https://ben-jr.github.io/swisscroche-ios/swisscroche/Resources/SwissList.json"
 
   /// Cached copy of the last successfully fetched remote list, in the App Group container.
   static let remoteListCacheFilename = "RemoteSwissList.json"
