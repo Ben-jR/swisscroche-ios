@@ -6,11 +6,10 @@ SwissCroche is a privacy-focused iOS call blocking app using CallKit, adapted fo
 
 ## Architecture
 
-Four targets sharing data via App Groups (`group.ch.swisscroche.app`):
+Three targets sharing data via App Groups (`group.ch.swisscroche.app`):
 
 - **swisscroche** (main app): SwiftUI + MVVM. Stores patterns in CoreData, orchestrates updates.
 - **blocker** (Call Directory extension): Reads action/numbers from shared UserDefaults, applies block/identify/remove to CallKit directory.
-- **unwanted** (Unwanted Communication Reporting extension): Reports spam calls/SMS.
 - **filter** (Message Filter extension): Checks incoming SMS senders against CoreData patterns (read-only).
 
 Plus `shared/`, a synchronized folder compiled into `swisscroche`, `blocker` and `filter`, and `swisscrocheTests/`, a unit test bundle hosted by the main app.

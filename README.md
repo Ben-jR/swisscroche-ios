@@ -20,7 +20,8 @@ entirely on-device — no call data leaves your phone for the blocking itself.
 
 - 🛡️ **Pattern-based blocking** — wildcard patterns cover whole number ranges
 - 📱 **Native CallKit extensions** — system-level call blocking and identification
-- 🔒 **On-device blocking** — the block list is bundled in the app, no server needed
+- 🔒 **Fully on-device** — the block list is bundled in the app; nothing about your calls or
+  messages is sent anywhere
 - 💬 **SMS filtering** — message filter extension checks senders against the same patterns
 - ✏️ **Custom patterns** — add your own prefixes to block on top of the bundled list
 
@@ -30,7 +31,8 @@ entirely on-device — no call data leaves your phone for the blocking itself.
 |---|---|---|
 | Block list | French ARCEP operator list, downloaded from `app.saracroche.org` | Swiss BAKOM/OFCOM premium-rate prefixes, **bundled in the app** |
 | Blocked prefixes | French ranges | `+41 900` (services), `+41 901` (contests/voting), `+41 906` (adult) |
-| Report country code | `FR` | `CH` |
+| Spam reporting | Reports sent to `app.saracroche.org` | **Removed** — no backend of our own to send to |
+| Targets | 4 (app, blocker, filter, unwanted) | 3 (app, blocker, filter) |
 | Number examples in UI | `+33…` | `+41…` |
 | Number spelling | `fr_FR` (soixante-dix, quatre-vingt-dix) | `fr_CH` (septante, nonante) |
 | Bundle ID / App Group | `com.cbouvat.saracroche` | `ch.swisscroche.app` |
@@ -46,12 +48,13 @@ Be aware of these before relying on the app:
 - **This is not a spam database.** The bundled list only covers Switzerland's official premium-rate
   ranges (090x). It does *not* block reported spam numbers, scam callers, or spoofed numbers. Real
   anti-spam coverage would need a data source we don't currently have.
-- **Spam reporting still points at upstream's server.** In-app reports and the periodic health check
-  still POST to `app.saracroche.org` (see `shared/AppConstants.swift`). Reported phone numbers would be
-  sent to a third party's infrastructure. Don't use the reporting feature until this is replaced with
-  our own backend or removed.
+- **There is no spam reporting.** It was removed rather than left pointing at upstream's server.
+  Adding it back requires a backend of our own.
 - **The list no longer updates over the network.** Background refresh still re-applies patterns to
   CallKit, but the list itself only changes when the app is updated.
+- **Enterprise/MDM code still targets upstream.** The inherited business features (organization API
+  key, health check, the hidden debug menu's list download) still point at `app.saracroche.org`.
+  They are dormant without an MDM-provisioned API key, but the code is still there.
 - **French UI only.** No German, Italian, or Romansh — a real Swiss app should be localized. There is
   currently no localization infrastructure at all (strings are hardcoded in the views).
 - **Wangiri / call spoofing are not addressed.** Blocking by foreign country code would also block
@@ -96,11 +99,10 @@ make test    # Run unit tests on a simulator
 
 ## Architecture
 
-Four targets sharing data through the `group.ch.swisscroche.app` App Group:
+Three targets sharing data through the `group.ch.swisscroche.app` App Group:
 
 - **swisscroche** — main app: SwiftUI + MVVM, CoreData pattern storage, orchestrates updates
 - **blocker** — Call Directory extension: applies block/identify actions to the CallKit directory
-- **unwanted** — Unwanted Communication Reporting extension: call/SMS spam reporting UI
 - **filter** — Message Filter extension: checks incoming SMS senders against stored patterns
 
 Plus `shared/`, compiled into the app and the `blocker`/`filter` extensions, and `swisscrocheTests/`.
