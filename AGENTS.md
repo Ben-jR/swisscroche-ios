@@ -29,8 +29,9 @@ Plus `shared/`, a synchronized folder compiled into `swisscroche`, `blocker` and
 - All app configuration lives in `shared/AppConstants.swift` — do not hardcode values elsewhere. It is compiled into the app and the `blocker`/`filter` extensions, so both can reference it directly.
 - App Groups identifier: `group.ch.swisscroche.app`. Blocker extension bundle ID: `ch.swisscroche.app.blocker`.
 - Pure logic that extensions and the app both need (pattern expansion, matching) belongs in `shared/` so it stays unit-testable.
-- The block list is bundled at `swisscroche/Resources/SwissList.json` (BAKOM 090x premium-rate prefixes) and loaded by `ListService`.
-- **The app makes no network requests.** Reporting, the Enterprise/MDM features and the whole networking layer were removed — don't reintroduce outbound calls without asking first.
+- `swisscroche/Resources/SwissList.json` (BAKOM 090x premium-rate prefixes) is the **single** list file: bundled in the app *and* served publicly by Cloudflare Pages. Never add a second copy, and never put anything else in that folder — it is publicly downloadable. See `list/README.md`.
+- `ListService` picks the newest of {published, cached, bundled} by `version` (ISO date) and applies it only when that version is not already in CoreData. `RemoteListService` does the fetch.
+- **The only outbound request is that anonymous GET.** Reporting and the Enterprise/MDM features were removed — don't reintroduce any request that carries an identifier without asking first.
 - CoreData `Pattern.source` is `"api"` for bundled-list patterns and `"user"` for user-added ones. The `"api"` name is historical; it means "from the bundled list".
 - CoreData entity `Pattern` uses Xcode code generation (`codeGenerationType="class"`, `representedClassName=".Pattern"`) — do not manually create a `Pattern.swift` file.
 

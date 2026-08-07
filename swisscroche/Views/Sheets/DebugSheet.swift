@@ -83,6 +83,15 @@ struct DebugSheet: View {
 
             DebugButton(
               action: {
+                refreshFromRemote()
+              },
+              title: "Fetch remote list",
+              background: .blue,
+              foreground: .white
+            )
+
+            DebugButton(
+              action: {
                 Task {
                   await clearCoreData()
                 }
@@ -148,6 +157,24 @@ struct DebugSheet: View {
       } catch {
         DispatchQueue.main.async {
           alertMessage = "❌ Conversion failed: \(error.localizedDescription)"
+          showAlert = true
+        }
+      }
+    }
+  }
+
+  private func refreshFromRemote() {
+    Task {
+      do {
+        try await ListService().refreshFromRemote()
+        let applied = UserDefaultsService().getAppliedListVersion() ?? "unknown"
+        DispatchQueue.main.async {
+          alertMessage = "✅ Refresh done — applied version: \(applied)"
+          showAlert = true
+        }
+      } catch {
+        DispatchQueue.main.async {
+          alertMessage = "❌ Refresh failed: \(error.localizedDescription)"
           showAlert = true
         }
       }

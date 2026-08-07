@@ -73,11 +73,11 @@ final class BlockerService {
     userDefaultsService.clearLastSuccessfulUpdateAt()
   }
 
-  // MARK: - Download
+  // MARK: - List
 
-  /// Downloads the list from the API and updates the timestamp
-  private func downloadList() async throws {
-    Logger.debug("Downloading list", category: .blockerService)
+  /// Applies the best list already on device (bundled or previously downloaded), no network
+  private func applyLocalList() async throws {
+    Logger.debug("Applying local list", category: .blockerService)
     do {
       try await listService.update()
     } catch {
@@ -85,11 +85,20 @@ final class BlockerService {
     }
   }
 
-  /// Downloads the list only if it is stale (>24h)
+  /// Checks the published list for a newer version, at most once every 24h.
+  ///
+  /// The local list is applied either way, so a new version bundled with an app update
+  /// takes effect immediately instead of waiting for the refresh window.
   func downloadListIfStale() async throws {
-    if userDefaultsService.shouldUpdateList() {
-      Logger.debug("List is stale, downloading", category: .blockerService)
-      try await downloadList()
+    do {
+      if userDefaultsService.shouldUpdateList() {
+        Logger.debug("Refresh window elapsed, checking published list", category: .blockerService)
+        try await listService.refreshFromRemote()
+      } else {
+        try await listService.update()
+      }
+    } catch {
+      throw BlockerServiceError.listUpdateFailed(error)
     }
   }
 
@@ -233,8 +242,8 @@ final class BlockerService {
   private func handleFirstLaunch() async throws {
     let hasPatterns = await patternService.hasPatterns()
     if !hasPatterns {
-      Logger.debug("No patterns found, launching update", category: .blockerService)
-      try await downloadList()
+      Logger.debug("No patterns found, applying list", category: .blockerService)
+      try await applyLocalList()
     }
   }
 

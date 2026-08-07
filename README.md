@@ -20,9 +20,12 @@ entirely on-device — no call data leaves your phone for the blocking itself.
 
 - 🛡️ **Pattern-based blocking** — wildcard patterns cover whole number ranges
 - 📱 **Native CallKit extensions** — system-level call blocking and identification
-- 🔒 **Fully on-device** — the app makes no network requests whatsoever; the block list ships with it
+- 🔒 **Anonymous by design** — the only network request is an unauthenticated GET of a public
+  list file; no account, no identifier, nothing about your calls or messages leaves the device
+- 🔄 **Updatable list** — new blocking rules arrive without an App Store update, with the
+  bundled list as an offline fallback
 - 💬 **SMS filtering** — message filter extension checks senders against the same patterns
-- ✏️ **Custom patterns** — add your own prefixes to block on top of the bundled list
+- ✏️ **Custom patterns** — add your own numbers, or import a list
 
 ## What's different from upstream
 
@@ -32,7 +35,7 @@ entirely on-device — no call data leaves your phone for the blocking itself.
 | Blocked prefixes | French ranges | `+41 900` (services), `+41 901` (contests/voting), `+41 906` (adult) |
 | Spam reporting | Reports sent to `app.saracroche.org` | **Removed** — no backend of our own to send to |
 | Enterprise/MDM edition | Organization API key, health check | **Removed** |
-| Network access | Downloads lists, reports, health check | **None at all** |
+| Network access | Downloads lists, reports, health check | One anonymous GET of a public list file |
 | Targets | 4 (app, blocker, filter, unwanted) | 3 (app, blocker, filter) |
 | Number examples in UI | `+33…` | `+41…` |
 | Number spelling | `fr_FR` (soixante-dix, quatre-vingt-dix) | `fr_CH` (septante, nonante) |
@@ -51,9 +54,9 @@ Be aware of these before relying on the app:
   anti-spam coverage would need a data source we don't currently have.
 - **There is no spam reporting.** It was removed rather than left pointing at upstream's server.
   Adding it back requires a backend of our own.
-- **The list only changes when the app is updated.** The app makes no network requests at all, so
-  new blocking rules ship with a new build. Background refresh only re-applies existing patterns to
-  CallKit.
+- **Updating the list reveals your IP to the host,** as any HTTP request does. The request is
+  anonymous — no identifier, no cookies, no custom headers — but it is not invisible. See
+  [`list/README.md`](list/README.md) for how the list is published.
 - **No Enterprise/MDM edition.** Upstream's business features were removed along with the server they
   depended on.
 - **French UI only.** No German, Italian, or Romansh — a real Swiss app should be localized. There is

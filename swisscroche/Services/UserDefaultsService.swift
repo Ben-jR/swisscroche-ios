@@ -30,6 +30,20 @@ class UserDefaultsService {
     return Date().timeIntervalSince(lastUpdate) > AppConstants.listDownloadInterval
   }
 
+  /// Version of the list currently reflected in CoreData, used to skip redundant syncs
+  /// and to apply a new list as soon as its version changes.
+  func setAppliedListVersion(_ version: String) {
+    userDefaults.set(version, forKey: Keys.appliedListVersion)
+  }
+
+  func getAppliedListVersion() -> String? {
+    return userDefaults.string(forKey: Keys.appliedListVersion)
+  }
+
+  func clearAppliedListVersion() {
+    userDefaults.removeObject(forKey: Keys.appliedListVersion)
+  }
+
   func setLastListDownloadAt(_ date: Date) {
     userDefaults.set(date, forKey: Keys.lastListDownloadAt)
   }
@@ -113,5 +127,6 @@ class UserDefaultsService {
     clearNotificationReminderEnabled()
     clearLastKnownIOSVersion()
     clearDonationDismissedAt()
+    clearAppliedListVersion()
   }
 }
