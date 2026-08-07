@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "853F84872D904A1B00279342"
-               BuildableName = "saracroche.app"
-               BlueprintName = "saracroche"
-               ReferencedContainer = "container:saracroche.xcodeproj">
+               BuildableName = "swisscroche.app"
+               BlueprintName = "swisscroche"
+               ReferencedContainer = "container:swisscroche.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,9 +35,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "85A1B0032F40000100A1B003"
-               BuildableName = "saracrocheTests.xctest"
-               BlueprintName = "saracrocheTests"
-               ReferencedContainer = "container:saracroche.xcodeproj">
+               BuildableName = "swisscrocheTests.xctest"
+               BlueprintName = "swisscrocheTests"
+               ReferencedContainer = "container:swisscroche.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,9 +57,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "853F84872D904A1B00279342"
-            BuildableName = "saracroche.app"
-            BlueprintName = "saracroche"
-            ReferencedContainer = "container:saracroche.xcodeproj">
+            BuildableName = "swisscroche.app"
+            BlueprintName = "swisscroche"
+            ReferencedContainer = "container:swisscroche.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -74,9 +74,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "853F84872D904A1B00279342"
-            BuildableName = "saracroche.app"
-            BlueprintName = "saracroche"
-            ReferencedContainer = "container:saracroche.xcodeproj">
+            BuildableName = "swisscroche.app"
+            BlueprintName = "swisscroche"
+            ReferencedContainer = "container:swisscroche.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

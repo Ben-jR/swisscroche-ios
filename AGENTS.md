@@ -2,18 +2,20 @@
 
 ## Project Overview
 
-Saracroche is a privacy-focused iOS call blocking app using CallKit. Swift-only, no external dependencies. Target: iOS 15.0+, Swift 5.9+, Xcode 15.0+.
+SwissCroche is a privacy-focused iOS call blocking app using CallKit, adapted for Switzerland from the [Saracroche](https://codeberg.org/cbouvat/saracroche-ios) project (GPLv3). Swift-only, no external dependencies. Target: iOS 15.0+, Swift 5.9+, Xcode 15.0+.
 
 ## Architecture
 
 Four targets sharing data via App Groups (`group.ch.swisscroche.app`):
 
-- **saracroche** (main app): SwiftUI + MVVM. Stores patterns in CoreData, orchestrates updates.
+- **swisscroche** (main app): SwiftUI + MVVM. Stores patterns in CoreData, orchestrates updates.
 - **blocker** (Call Directory extension): Reads action/numbers from shared UserDefaults, applies block/identify/remove to CallKit directory.
 - **unwanted** (Unwanted Communication Reporting extension): Reports spam calls/SMS.
 - **filter** (Message Filter extension): Checks incoming SMS senders against CoreData patterns (read-only).
 
-Plus `shared/`, a synchronized folder compiled into `saracroche`, `blocker` and `filter`, and `saracrocheTests/`, a unit test bundle hosted by the main app.
+Plus `shared/`, a synchronized folder compiled into `swisscroche`, `blocker` and `filter`, and `swisscrocheTests/`, a unit test bundle hosted by the main app.
+
+`filter/DataModel.xcdatamodeld` is a symlink to `swisscroche/Database/DataModel.xcdatamodeld` — keep it pointing there if folders are ever renamed.
 
 **Inter-process data flow (critical):**
 
@@ -28,6 +30,7 @@ Plus `shared/`, a synchronized folder compiled into `saracroche`, `blocker` and 
 - All app configuration lives in `shared/AppConstants.swift` — do not hardcode values elsewhere. It is compiled into the app and the `blocker`/`filter` extensions, so both can reference it directly.
 - App Groups identifier: `group.ch.swisscroche.app`. Blocker extension bundle ID: `ch.swisscroche.app.blocker`.
 - Pure logic that extensions and the app both need (pattern expansion, matching) belongs in `shared/` so it stays unit-testable.
+- The block list is bundled at `swisscroche/Resources/SwissList.json` (BAKOM 090x premium-rate prefixes) and loaded by `ListService` — no network fetch.
 - CoreData entity `Pattern` uses Xcode code generation (`codeGenerationType="class"`, `representedClassName=".Pattern"`) — do not manually create a `Pattern.swift` file.
 
 ## Commands

@@ -1,6 +1,6 @@
 import XCTest
 
-@testable import saracroche
+@testable import swisscroche
 
 final class PhoneNumberHelpersTests: XCTestCase {
 

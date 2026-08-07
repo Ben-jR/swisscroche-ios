@@ -19,7 +19,7 @@
                BlueprintIdentifier = "85C9CE952D904D8C00584259"
                BuildableName = "blocker.appex"
                BlueprintName = "blocker"
-               ReferencedContainer = "container:saracroche.xcodeproj">
+               ReferencedContainer = "container:swisscroche.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -31,9 +31,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "853F84872D904A1B00279342"
-               BuildableName = "saracroche.app"
-               BlueprintName = "saracroche"
-               ReferencedContainer = "container:saracroche.xcodeproj">
+               BuildableName = "swisscroche.app"
+               BlueprintName = "swisscroche"
+               ReferencedContainer = "container:swisscroche.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "853F84872D904A1B00279342"
-            BuildableName = "saracroche.app"
-            BlueprintName = "saracroche"
-            ReferencedContainer = "container:saracroche.xcodeproj">
+            BuildableName = "swisscroche.app"
+            BlueprintName = "swisscroche"
+            ReferencedContainer = "container:swisscroche.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -81,9 +81,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "853F84872D904A1B00279342"
-            BuildableName = "saracroche.app"
-            BlueprintName = "saracroche"
-            ReferencedContainer = "container:saracroche.xcodeproj">
+            BuildableName = "swisscroche.app"
+            BlueprintName = "swisscroche"
+            ReferencedContainer = "container:swisscroche.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

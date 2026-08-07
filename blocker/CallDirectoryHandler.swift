@@ -9,7 +9,8 @@ enum CallDirectoryHandlerError: Error {
 
 /// Call Directory extension handler
 class CallDirectoryHandler: CXCallDirectoryProvider {
-  private let logger = Logger(subsystem: "com.saracroche.blocker", category: "CallDirectoryHandler")
+  private let logger = Logger(
+    subsystem: "ch.swisscroche.app.blocker", category: "CallDirectoryHandler")
 
   /// Get shared UserDefaults
   private func sharedUserDefaults() -> UserDefaults? {

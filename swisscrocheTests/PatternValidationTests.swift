@@ -1,6 +1,6 @@
 import XCTest
 
-@testable import saracroche
+@testable import swisscroche
 
 /// `validatePatternFormat` guards every user-entered prefix before it reaches CoreData and,
 /// ultimately, the Call Directory extension.

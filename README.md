@@ -40,11 +40,11 @@ Saracroche offers an **Enterprise edition** for business users with centralized 
 
 ```bash
 # Clone repository
-git clone https://codeberg.org/cbouvat/saracroche-ios.git
-cd saracroche-ios
+git clone https://github.com/Ben-jR/swisscroche-ios.git
+cd swisscroche-ios
 
 # Open in Xcode
-open saracroche.xcodeproj
+open swisscroche.xcodeproj
 ```
 
 **Requirements**:

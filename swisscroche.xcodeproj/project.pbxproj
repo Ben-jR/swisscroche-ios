@@ -32,7 +32,7 @@
 			containerPortal = 853F84802D904A1B00279342 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 853F84872D904A1B00279342;
-			remoteInfo = saracroche;
+			remoteInfo = swisscroche;
 		};
 		85C9CE9B2D904D8C00584259 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -60,10 +60,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		853F84882D904A1B00279342 /* saracroche.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = saracroche.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		853F84882D904A1B00279342 /* swisscroche.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = swisscroche.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		856E5AB52F2C056600F2A520 /* unwanted.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = unwanted.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		8576DA932F2D02ED00064165 /* filter.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = filter.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		85A1B0042F40000100A1B004 /* saracrocheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = saracrocheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		85A1B0042F40000100A1B004 /* swisscrocheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = swisscrocheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		85C9CE962D904D8C00584259 /* blocker.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = blocker.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -82,12 +82,12 @@
 			);
 			target = 8576DA922F2D02ED00064165 /* filter */;
 		};
-		8593F3A72D90CAB9007C294B /* Exceptions for "saracroche" folder in "saracroche" target */ = {
+		8593F3A72D90CAB9007C294B /* Exceptions for "swisscroche" folder in "swisscroche" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 853F84872D904A1B00279342 /* saracroche */;
+			target = 853F84872D904A1B00279342 /* swisscroche */;
 		};
 		85C9CE9E2D904D8C00584259 /* Exceptions for "blocker" folder in "blocker" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -99,12 +99,12 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		853F848A2D904A1B00279342 /* saracroche */ = {
+		853F848A2D904A1B00279342 /* swisscroche */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				8593F3A72D90CAB9007C294B /* Exceptions for "saracroche" folder in "saracroche" target */,
+				8593F3A72D90CAB9007C294B /* Exceptions for "swisscroche" folder in "swisscroche" target */,
 			);
-			path = saracroche;
+			path = swisscroche;
 			sourceTree = "<group>";
 		};
 		856E5AB62F2C056600F2A520 /* unwanted */ = {
@@ -128,9 +128,9 @@
 			path = shared;
 			sourceTree = "<group>";
 		};
-		85A1B0022F40000100A1B002 /* saracrocheTests */ = {
+		85A1B0022F40000100A1B002 /* swisscrocheTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = saracrocheTests;
+			path = swisscrocheTests;
 			sourceTree = "<group>";
 		};
 		85C9CE972D904D8C00584259 /* blocker */ = {
@@ -186,11 +186,11 @@
 			isa = PBXGroup;
 			children = (
 				85A1B0012F40000100A1B001 /* shared */,
-				853F848A2D904A1B00279342 /* saracroche */,
+				853F848A2D904A1B00279342 /* swisscroche */,
 				85C9CE972D904D8C00584259 /* blocker */,
 				856E5AB62F2C056600F2A520 /* unwanted */,
 				8576DA942F2D02ED00064165 /* filter */,
-				85A1B0022F40000100A1B002 /* saracrocheTests */,
+				85A1B0022F40000100A1B002 /* swisscrocheTests */,
 				853F84892D904A1B00279342 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -198,11 +198,11 @@
 		853F84892D904A1B00279342 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				853F84882D904A1B00279342 /* saracroche.app */,
+				853F84882D904A1B00279342 /* swisscroche.app */,
 				85C9CE962D904D8C00584259 /* blocker.appex */,
 				856E5AB52F2C056600F2A520 /* unwanted.appex */,
 				8576DA932F2D02ED00064165 /* filter.appex */,
-				85A1B0042F40000100A1B004 /* saracrocheTests.xctest */,
+				85A1B0042F40000100A1B004 /* swisscrocheTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -210,9 +210,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		853F84872D904A1B00279342 /* saracroche */ = {
+		853F84872D904A1B00279342 /* swisscroche */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 853F84962D904A1C00279342 /* Build configuration list for PBXNativeTarget "saracroche" */;
+			buildConfigurationList = 853F84962D904A1C00279342 /* Build configuration list for PBXNativeTarget "swisscroche" */;
 			buildPhases = (
 				853F84842D904A1B00279342 /* Sources */,
 				853F84852D904A1B00279342 /* Frameworks */,
@@ -227,14 +227,14 @@
 				8576DA992F2D02ED00064165 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				853F848A2D904A1B00279342 /* saracroche */,
+				853F848A2D904A1B00279342 /* swisscroche */,
 				85A1B0012F40000100A1B001 /* shared */,
 			);
-			name = saracroche;
+			name = swisscroche;
 			packageProductDependencies = (
 			);
-			productName = saracroche;
-			productReference = 853F84882D904A1B00279342 /* saracroche.app */;
+			productName = swisscroche;
+			productReference = 853F84882D904A1B00279342 /* swisscroche.app */;
 			productType = "com.apple.product-type.application";
 		};
 		856E5AB42F2C056600F2A520 /* unwanted */ = {
@@ -282,9 +282,9 @@
 			productReference = 8576DA932F2D02ED00064165 /* filter.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		85A1B0032F40000100A1B003 /* saracrocheTests */ = {
+		85A1B0032F40000100A1B003 /* swisscrocheTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 85A1B0082F40000100A1B008 /* Build configuration list for PBXNativeTarget "saracrocheTests" */;
+			buildConfigurationList = 85A1B0082F40000100A1B008 /* Build configuration list for PBXNativeTarget "swisscrocheTests" */;
 			buildPhases = (
 				85A1B0052F40000100A1B005 /* Sources */,
 				85A1B0062F40000100A1B006 /* Frameworks */,
@@ -296,13 +296,13 @@
 				85A1B00B2F40000100A1B00B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				85A1B0022F40000100A1B002 /* saracrocheTests */,
+				85A1B0022F40000100A1B002 /* swisscrocheTests */,
 			);
-			name = saracrocheTests;
+			name = swisscrocheTests;
 			packageProductDependencies = (
 			);
-			productName = saracrocheTests;
-			productReference = 85A1B0042F40000100A1B004 /* saracrocheTests.xctest */;
+			productName = swisscrocheTests;
+			productReference = 85A1B0042F40000100A1B004 /* swisscrocheTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		85C9CE952D904D8C00584259 /* blocker */ = {
@@ -356,7 +356,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 853F84832D904A1B00279342 /* Build configuration list for PBXProject "saracroche" */;
+			buildConfigurationList = 853F84832D904A1B00279342 /* Build configuration list for PBXProject "swisscroche" */;
 			developmentRegion = fr;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -370,8 +370,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				853F84872D904A1B00279342 /* saracroche */,
-				85A1B0032F40000100A1B003 /* saracrocheTests */,
+				853F84872D904A1B00279342 /* swisscroche */,
+				85A1B0032F40000100A1B003 /* swisscrocheTests */,
 				85C9CE952D904D8C00584259 /* blocker */,
 				856E5AB42F2C056600F2A520 /* unwanted */,
 				8576DA922F2D02ED00064165 /* filter */,
@@ -468,7 +468,7 @@
 		};
 		85A1B00B2F40000100A1B00B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 853F84872D904A1B00279342 /* saracroche */;
+			target = 853F84872D904A1B00279342 /* swisscroche */;
 			targetProxy = 85A1B00C2F40000100A1B00C /* PBXContainerItemProxy */;
 		};
 		85C9CE9C2D904D8C00584259 /* PBXTargetDependency */ = {
@@ -608,13 +608,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = saracroche/saracroche.entitlements;
+				CODE_SIGN_ENTITLEMENTS = swisscroche/swisscroche.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = saracroche/Info.plist;
+				INFOPLIST_FILE = swisscroche/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SwissCroche;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -646,13 +646,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = saracroche/saracroche.entitlements;
+				CODE_SIGN_ENTITLEMENTS = swisscroche/swisscroche.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = saracroche/Info.plist;
+				INFOPLIST_FILE = swisscroche/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SwissCroche;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -829,7 +829,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/saracroche.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/saracroche";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/swisscroche.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/swisscroche";
 			};
 			name = Debug;
 		};
@@ -852,7 +852,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/saracroche.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/saracroche";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/swisscroche.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/swisscroche";
 			};
 			name = Release;
 		};
@@ -921,7 +921,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		853F84832D904A1B00279342 /* Build configuration list for PBXProject "saracroche" */ = {
+		853F84832D904A1B00279342 /* Build configuration list for PBXProject "swisscroche" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				853F84942D904A1C00279342 /* Debug */,
@@ -930,7 +930,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		853F84962D904A1C00279342 /* Build configuration list for PBXNativeTarget "saracroche" */ = {
+		853F84962D904A1C00279342 /* Build configuration list for PBXNativeTarget "swisscroche" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				853F84972D904A1C00279342 /* Debug */,
@@ -957,7 +957,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		85A1B0082F40000100A1B008 /* Build configuration list for PBXNativeTarget "saracrocheTests" */ = {
+		85A1B0082F40000100A1B008 /* Build configuration list for PBXNativeTarget "swisscrocheTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				85A1B0092F40000100A1B009 /* Debug */,

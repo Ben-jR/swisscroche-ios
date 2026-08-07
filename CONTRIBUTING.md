@@ -14,7 +14,7 @@ Thank you for considering contributing to Saracroche! We welcome contributions o
 - Clone your forked repository to your local machine:
   ```bash
   git clone https://codeberg.org/your-username/saracroche-ios.git
-  cd saracroche
+  cd swisscroche-ios
   ```
 
 ### 3. Create a Branch
@@ -70,7 +70,7 @@ brew install swift-format
 You may notice the project may not compile on your device, because you need to change your local Apple configuration.
 
 1. Define in your Apple account a new App ID and a new App Group to
-2. In the targets and projects settings (*saracroche.xcodeproj/project.pbxproj*), use your own Apple team and apply the freshly crated App ID and App Group
+2. In the targets and projects settings (*swisscroche.xcodeproj/project.pbxproj*), use your own Apple team and apply the freshly crated App ID and App Group
 3. Use the suitable App ID and App Group in the *entitlements* files
 4. Change the App ID and App Group defined in the source code (*AppConstants*, *NotificationService*, *Logger*, *CallDirectoryHandler*, *MessageFilterExtension*, *MessageFilterService* )
 
@@ -107,7 +107,7 @@ If you encounter a bug or have a feature request, please open an issue in the [C
 
 ### Building the Project
 
-1. Open `saracroche.xcodeproj` in Xcode.
+1. Open `swisscroche.xcodeproj` in Xcode.
 2. Select your target device or simulator.
 3. Build and run the project.
 
